@@ -53,7 +53,7 @@ labels = ["Overall","Challenge","Moderate","Simple"]
 y = np.arange(len(labels))
 bar_h = 0.35
 
-fig, ax = plt.subplots(figsize=(10,6))
+fig, ax = plt.subplots(figsize=(11,6.8))
 b1 = ax.barh(y - bar_h/2, others, height=bar_h, label="Prompting")
 b2 = ax.barh(y + bar_h/2, finetuned, height=bar_h, label="Fine-tuned")
 
@@ -65,7 +65,7 @@ for bars in (b1, b2):
 
 ax.set_yticks(y)
 ax.set_yticklabels(labels, fontsize=16)
-ax.set_xlabel("Mean PROSE - EX", fontsize=16)
+ax.set_xlabel("Average of ROSE-EX", fontsize=16)
 plt.setp(ax.get_xticklabels(), fontsize=12)
 ax.grid(axis="x", alpha=0.3)
 ax.spines["top"].set_visible(False)
@@ -152,8 +152,8 @@ all_vals = pd.concat([system_df["overall_delta"], base_df["overall_delta"], pd.S
 span = all_vals.max() - all_vals.min()
 ax.set_ylim(all_vals.min() - max(0.06*span, 0.5), all_vals.max() + max(0.06*span, 0.5))
 
-ax.scatter(system_df["date"], system_df["overall_delta"], s=70, label="System")
-ax.scatter(base_df["date"],    base_df["overall_delta"],    s=90, marker="D", label="Base Model")
+ax.scatter(system_df["date"], system_df["overall_delta"], s=100, label="Engineered System")
+ax.scatter(base_df["date"],    base_df["overall_delta"],    s=120, marker="D", label="Base Model")
 
 x_eval_dates = mdates.num2date(x_eval_raw)
 ax.plot(x_eval_dates, y_eval, linestyle="--", linewidth=2.0, color="red", label="Logistic Trend")
@@ -177,51 +177,56 @@ for _, r in system_df.iterrows():
     txt = _point_label(r["method"], r["model"])
     if r["method"] == "OpenSearch-SQL":
         ax.annotate(txt, (r["date"], r["overall_delta"]),
-                    textcoords="offset points", xytext=(5, -7),
-                    ha="right", va="top", fontsize=12)
+                    textcoords="offset points", xytext=(5, -12),
+                    ha="right", va="top", fontsize=14)
     elif r["method"] == "DeepSeek-Chat":
         ax.annotate(txt, (r["date"], r["overall_delta"]),
                     textcoords="offset points", xytext=(-30, 15),
-                    ha="right", va="bottom", fontsize=12,
+                    ha="right", va="bottom", fontsize=14,
                     bbox=dict(fc="white", ec="none", alpha=0.85, pad=0.2))
+    elif r["method"] == "C3-SQL":
+        # 放到点的上方
+        ax.annotate(txt, (r["date"], r["overall_delta"]),
+                    textcoords="offset points", xytext=(0, 10),
+                    ha="center", va="bottom", fontsize=14)
     elif r["method"] == "Alpha-SQL-32B":
         ax.annotate(txt, (r["date"], r["overall_delta"]),
                     textcoords="offset points", xytext=(10, 0),
-                    ha="left", va="center", fontsize=12)
+                    ha="left", va="center", fontsize=14)
     elif r["method"] == "SuperSQL":
         ax.annotate(txt, (r["date"], r["overall_delta"]),
-                    textcoords="offset points", xytext=(6, -5),
-                    ha="left", va="top", fontsize=12)
+                    textcoords="offset points", xytext=(6, -10),
+                    ha="left", va="top", fontsize=14)
     elif r["method"] == "RSL-SQL":
         ax.annotate(txt, (r["date"], r["overall_delta"]),
-                    textcoords="offset points", xytext=(-5, -7),
-                    ha="left", va="top", fontsize=12)
+                    textcoords="offset points", xytext=(-5, -12),
+                    ha="left", va="top", fontsize=14)
     else:
         ax.annotate(txt, (r["date"], r["overall_delta"]),
-                    textcoords="offset points", xytext=(0, -8),
-                    ha="center", va="top", fontsize=12)
+                    textcoords="offset points", xytext=(0, -12),
+                    ha="center", va="top", fontsize=14)
 
 for _, r in base_df.iterrows():
     txt = _point_label(r["method"], r["model"])
     if r["method"] == "DeepSeek-Chat":
         ax.annotate(txt, (r["date"], r["overall_delta"]),
                     textcoords="offset points", xytext=(0, 8),
-                    ha="center", va="bottom", fontsize=12)
+                    ha="center", va="bottom", fontsize=14)
     else:
         ax.annotate(txt, (r["date"], r["overall_delta"]),
-                    textcoords="offset points", xytext=(0, -8),
-                    ha="center", va="top", fontsize=12)
+                    textcoords="offset points", xytext=(0, -12),
+                    ha="center", va="top", fontsize=14)
 
 ax.set_xlabel("Date", fontsize=16)
-ax.set_ylabel("PROSE − EX", fontsize=16)
+ax.set_ylabel("ROSE − EX", fontsize=16)
 ax.grid(True, axis="y", alpha=0.3)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
-ax.legend(frameon=False, ncol=3, loc="upper left", fontsize=14)
+ax.legend(frameon=False, ncol=1, loc="upper left", fontsize=14)
 ax.xaxis.set_major_locator(mdates.AutoDateLocator(minticks=6, maxticks=9))
 ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%b"))
-plt.setp(ax.get_xticklabels(), rotation=0, ha="center", fontsize=14)
-plt.setp(ax.get_yticklabels(), fontsize=14)
+plt.setp(ax.get_xticklabels(), rotation=0, ha="center", fontsize=12)
+plt.setp(ax.get_yticklabels(), fontsize=12)
 
 plt.tight_layout()
 plt.savefig("figure/diff_time.png", dpi=200, bbox_inches="tight")

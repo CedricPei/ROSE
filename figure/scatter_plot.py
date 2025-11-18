@@ -4,26 +4,26 @@ from matplotlib.lines import Line2D
 # ===== 数据（Overall） =====
 rows = [
     # Instruct Model Based
-    {"method":"GPT-5",            "model":"GPT-5",             "group":"base",     "EX":55.74, "PROSE":88.93},
-    {"method":"Alpha-SQL-32B",    "model":"Qwen2.5 Coder",     "group":"instruct", "EX":69.35, "PROSE":81.09},
-    {"method":"OpenSearch-SQL",       "model":"DeepSeek-Chat",       "group":"instruct", "EX":69.37, "PROSE":80.96},
-    {"method":"RSL-SQL (DS)",   "model":"DeepSeek-Chat",       "group":"instruct", "EX":62.50, "PROSE":74.15},
-    {"method":"DeepSeek-Chat",      "model":"DeepSeek-Chat",       "group":"base",     "EX":52.13, "PROSE":72.21},
-    {"method":"RSL-SQL (GPT)",     "model":"GPT-4o",            "group":"instruct", "EX":66.88, "PROSE":81.92},
-    {"method":"GPT-4o",           "model":"GPT-4o",            "group":"base",     "EX":52.20, "PROSE":71.37},
-    {"method":"SuperSQL",         "model":"GPT-4",             "group":"instruct", "EX":53.73, "PROSE":61.18},
-    {"method":"TA-SQL",           "model":"GPT-4",             "group":"instruct", "EX":51.06, "PROSE":57.63},
-    {"method":"DAIL-SQL",         "model":"GPT-4",             "group":"instruct", "EX":48.79, "PROSE":55.60},
-    {"method":"GPT-4",            "model":"GPT-4",             "group":"base",     "EX":48.98, "PROSE":66.53},
-    {"method":"CoT",              "model":"GPT-3.5",           "group":"instruct", "EX":25.87, "PROSE":32.83},
-    {"method":"C3-SQL",           "model":"GPT-3.5",           "group":"instruct", "EX":42.36, "PROSE":46.29},
-    {"method":"GPT-3.5",          "model":"GPT-3.5",           "group":"base",     "EX":41.22, "PROSE":50.61},
+    {"method":"GPT-5",            "model":"GPT-5",             "group":"base",     "EX":55.74, "ROSE":88.93},
+    {"method":"Alpha-SQL-32B",    "model":"Qwen2.5 Coder",     "group":"instruct", "EX":69.35, "ROSE":81.09},
+    {"method":"OpenSearch-SQL",       "model":"DeepSeek-Chat",       "group":"instruct", "EX":69.37, "ROSE":80.96},
+    {"method":"RSL-SQL (DS)",   "model":"DeepSeek-Chat",       "group":"instruct", "EX":62.50, "ROSE":74.15},
+    {"method":"DeepSeek-Chat",      "model":"DeepSeek-Chat",       "group":"base",     "EX":52.13, "ROSE":72.21},
+    {"method":"RSL-SQL (GPT)",     "model":"GPT-4o",            "group":"instruct", "EX":66.88, "ROSE":81.92},
+    {"method":"GPT-4o",           "model":"GPT-4o",            "group":"base",     "EX":52.20, "ROSE":71.37},
+    {"method":"SuperSQL",         "model":"GPT-4",             "group":"instruct", "EX":53.73, "ROSE":61.18},
+    {"method":"TA-SQL",           "model":"GPT-4",             "group":"instruct", "EX":51.06, "ROSE":57.63},
+    {"method":"DAIL-SQL",         "model":"GPT-4",             "group":"instruct", "EX":48.79, "ROSE":55.60},
+    {"method":"GPT-4",            "model":"GPT-4",             "group":"base",     "EX":48.98, "ROSE":66.53},
+    {"method":"CoT",              "model":"GPT-3.5",           "group":"instruct", "EX":25.87, "ROSE":32.83},
+    {"method":"C3-SQL",           "model":"GPT-3.5",           "group":"instruct", "EX":42.36, "ROSE":46.29},
+    {"method":"GPT-3.5",          "model":"GPT-3.5",           "group":"base",     "EX":41.22, "ROSE":50.61},
     # Fine-tuned Model Based
-    {"method":"CSC-SQL-32B",      "model":"FT (XiYan-Qwen2.5)","group":"finetune", "EX":71.52, "PROSE":78.27},
-    {"method":"OmniSQL-32B",      "model":"FT (Qwen2.5 Coder)","group":"finetune", "EX":68.92, "PROSE":79.49},
-    {"method":"CodeS-15B",        "model":"FT (StarCoder)",    "group":"finetune", "EX":50.77, "PROSE":49.01},
-    {"method":"CHESS-V1",         "model":"FT (Mixed)",        "group":"finetune", "EX":59.28, "PROSE":62.24},
-    {"method":"RESDSQL-3B",       "model":"FT (T5)",           "group":"finetune", "EX":35.87, "PROSE":34.57},
+    {"method":"CSC-SQL-32B",      "model":"FT (XiYan-Qwen2.5)","group":"finetune", "EX":71.52, "ROSE":78.27},
+    {"method":"OmniSQL-32B",      "model":"FT (Qwen2.5 Coder)","group":"finetune", "EX":68.92, "ROSE":79.49},
+    {"method":"CodeS-15B",        "model":"FT (StarCoder)",    "group":"finetune", "EX":50.77, "ROSE":49.01},
+    {"method":"CHESS-V1",         "model":"FT (Mixed)",        "group":"finetune", "EX":59.28, "ROSE":62.24},
+    {"method":"RESDSQL-3B",       "model":"FT (T5)",           "group":"finetune", "EX":35.87, "ROSE":34.57},
 ]
 
 # ===== 样式 =====
@@ -56,16 +56,17 @@ ymin, ymax = 30, 90
 x_range = xmax - xmin  # 78 - 25 = 53
 y_range = ymax - ymin  # 90 - 30 = 60
 aspect_ratio = y_range / x_range * 0.9  # 60/53 * 0.9 ≈ 1.02
-fig, ax = plt.subplots(figsize=(10, 10 * aspect_ratio))
+fig, ax = plt.subplots(figsize=(19, 20 * aspect_ratio))
 
 # 先画点
 points = []  # (name, x, y)
 for r in rows:
     mkr   = marker_of(r["group"])
     color = color_of(r["model"], r["group"])
-    size  = 170 if mkr == "*" else 110
+    # 继续小幅缩小点面积（s 为面积，非半径）
+    size  = 1200 if mkr == "*" else 950
     # 若低于下限则钳位在边界上（同时仍可读）
-    x, y = r["EX"], r["PROSE"]
+    x, y = r["EX"], r["ROSE"]
     cx, cy = (max(x, xmin), max(y, ymin))
     ax.scatter(cx, cy, s=size, marker=mkr,
                facecolors=color, edgecolors="black", linewidths=0.5, zorder=3)
@@ -75,63 +76,66 @@ for r in rows:
 texts = []
 for name, x, y in points:
     if name == "DeepSeek-Chat":
-        # 上方标签
-        texts.append(ax.text(x, y+0.5, name, fontsize=12, ha='center', va='bottom', zorder=4))
+        # 上方标签（上移）
+        texts.append(ax.text(x, y+0.9, name, fontsize=24, ha='center', va='bottom', zorder=4))
     elif name == "OpenSearch-SQL":
         # 右下角标签
-        texts.append(ax.text(x+0.2, y-0.7, name, fontsize=12, ha='left', va='top', zorder=4))
+        texts.append(ax.text(x+0.2, y-0.7, name, fontsize=24, ha='left', va='top', zorder=4))
     elif name in ["RSL-SQL (GPT)", "OmniSQL-32B"]:
-        # 左下角标签
-        texts.append(ax.text(x+0.5, y-0.7, name, fontsize=12, ha='right', va='top', zorder=4))
+        # 左下角标签（向左调整）
+        texts.append(ax.text(x-0.3, y-0.7, name, fontsize=24, ha='right', va='top', zorder=4))
     elif name == "Alpha-SQL-32B":
-        # 右上角标签
-        texts.append(ax.text(x-0.2, y+0.6, name, fontsize=12, ha='left', va='bottom', zorder=4))
+        # 右上角标签（上移）
+        texts.append(ax.text(x-0.2, y+1.0, name, fontsize=24, ha='left', va='bottom', zorder=4))
     elif name == "CoT":
         # 右下角标签
-        texts.append(ax.text(x+0.2, y-0.7, name, fontsize=12, ha='left', va='top', zorder=4))
+        texts.append(ax.text(x+0.2, y-0.7, name, fontsize=24, ha='left', va='top', zorder=4))
+    elif name == "TA-SQL":
+        # 右下角标签（右移并下移，左对齐、顶部对齐）
+        texts.append(ax.text(x+0.4, y-0.8, name, fontsize=24, ha='left', va='top', zorder=4))
     else:
         # 默认下方标签
-        texts.append(ax.text(x, y-1, name, fontsize=12, ha='center', va='top', zorder=4))
+        texts.append(ax.text(x, y-1, name, fontsize=24, ha='center', va='top', zorder=4))
 
-# 45° 参考线（PROSE=EX），从 (30,30) 到右上角
+# 45° 参考线（ROSE=EX），从 (30,30) 到右上角
 ax.plot([origin, xmax], [origin, xmax],
         linestyle="--", color="#888888", linewidth=1.2, zorder=1)
 # 在虚线上添加标签
-ax.text(65, 66, "PROSE=EX", fontsize=14, color="black", weight='bold', ha='left', va='bottom', 
+ax.text(65, 66, "ROSE=EX", fontsize=24, color="black", weight='bold', ha='left', va='bottom', 
         rotation=45)
 
 # 轴、网格、标题
 ax.set_xlim(xmin, xmax)
 ax.set_ylim(ymin, ymax)
-ax.set_xlabel("EX", fontsize=18)
-ax.set_ylabel("PROSE", fontsize=18)
-ax.tick_params(axis='both', which='major', labelsize=14)
+ax.set_xlabel("EX", fontsize=28)
+ax.set_ylabel("ROSE", fontsize=28)
+ax.tick_params(axis='both', which='major', labelsize=20)
 ax.grid(True, linestyle="--", alpha=0.35, zorder=0)
 
 # 颜色图例（左上）
 color_handles = [Line2D([0],[0], marker="o", color="w", markeredgecolor="black",
-                        markerfacecolor=c, markersize=9, label=lbl)
+                        markerfacecolor=c, markersize=20, label=lbl)
                  for lbl, c in model_colors.items()]
 leg_colors = ax.legend(handles=color_handles,
-                       loc="upper left", frameon=True, fontsize=14)
+                       loc="upper left", frameon=True, fontsize=23)
 ax.add_artist(leg_colors)
 
 # 形状图例（右下）
 shape_handles = [
     Line2D([0],[0], marker="*", color="w", markeredgecolor="black",
-           markerfacecolor="#bbbbbb", markersize=13, label="Base Model"),
+           markerfacecolor="#bbbbbb", markersize=20, label="Base Model"),
     Line2D([0],[0], marker="o", color="w", markeredgecolor="black",
-           markerfacecolor="#bbbbbb", markersize=10, label="Prompting Systems"),
+           markerfacecolor="#bbbbbb", markersize=20, label="Engineered System"),
     Line2D([0],[0], marker="^", color="w", markeredgecolor="black",
-           markerfacecolor=ft_color,   markersize=10, label="Fine-tuned Method"),
+           markerfacecolor=ft_color,   markersize=20, label="Fine-tuned Method"),
 ]
 ax.legend(handles=shape_handles,
-          loc="lower right", frameon=True, fontsize=14)
+          loc="lower right", frameon=True, fontsize=23)
 
 # 标签已经直接放在点的下方，无需额外处理
 
 plt.tight_layout()
-plt.savefig("figure/scatter.png", dpi=240)
+plt.savefig("figure/scatter.png", dpi=200)
 print("Saved figure to figure/scatter.png")
 
 # Convert PNG to PDF using Pillow

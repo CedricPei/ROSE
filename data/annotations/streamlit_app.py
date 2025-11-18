@@ -147,7 +147,7 @@ def load_items_from_file(path: str) -> List[Dict[str, Any]]:
             "question": row.get("question", ""),
             "evidence": row.get("evidence", ""),
             "predicted_sql": row.get("predicted_sql", row.get("pred_sql", "")),
-            "gold_sql": row.get("gold_sql", ""),
+            "gold_sql": row.get("gold_sql", row.get("SQL", "")),
         })
     return norm
 

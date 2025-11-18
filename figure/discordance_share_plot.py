@@ -65,17 +65,13 @@ def decompose_shares(gf: float, amb: float, overall: float) -> Tuple[float, floa
         gf:    Discordance Share attributed to GoldX (union-based)
         amb:   Discordance Share attributed to AmbQ (union-based)
         overall: Share of samples that fall in (AmbQ ∪ GoldX)
-    Returns (GoldX only, AmbQ only, Both, Others) as percentages that sum to ~100.
+    Returns (GoldX only, AmbQ only, Both, Others) as percentages that sum to exactly 100.
     Uses the identity: |A ∩ B| = |A| + |B| − |A ∪ B|.
     """
     both = max(0.0, gf + amb - overall)
     gf_only = max(0.0, gf - both)
     amb_only = max(0.0, amb - both)
-    others = max(0.0, 100.0 - overall)
-    s = gf_only + amb_only + both + others
-    if s > 0:
-        k = 100.0 / s
-        gf_only, amb_only, both, others = [v * k for v in (gf_only, amb_only, both, others)]
+    others = 100.0 - (gf_only + amb_only + both)
     return gf_only, amb_only, both, others
 
 def make_donut_tile(method: str, gf: float, amb: float, overall: float, out_path: str) -> str:

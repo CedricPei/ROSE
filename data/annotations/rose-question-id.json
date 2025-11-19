@@ -1,0 +1,123 @@
+[
+  {
+    "question_id": 381,
+    "db_id": "card_games",
+    "question": "List down the name of artists for cards in Chinese Simplified.",
+    "predicted_sql": "SELECT DISTINCT T1.artist FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T2.language = 'Chinese Simplified'",
+    "gold_sql": "SELECT T1.artist FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T2.language = 'Chinese Simplified'",
+    "label": true,
+    "evidence": "Chinese Simplified' is the language;",
+    "reason_1": "",
+    "reason_2": "different order"
+  },
+  {
+    "question_id": 397,
+    "db_id": "card_games",
+    "question": "What is the mana cost of cards with a normal layout, a 2003 frame version, with a black border color, and available in paper and mtgo?",
+    "predicted_sql": "SELECT manacost FROM cards WHERE layout = 'normal' AND frameversion = '2003' AND bordercolor = 'black' AND availability LIKE '%mtgo,paper%'",
+    "gold_sql": "SELECT manaCost FROM cards WHERE availability = 'mtgo,paper' AND borderColor = 'black' AND frameVersion = 2003 AND layout = 'normal'",
+    "label": true,
+    "evidence": "available in paper and mtgo refers to availability = 'mtgo,paper'; frameVersion = 2003;borderColor = 'black'",
+    "reason_1": "",
+    "reason_2": ""
+  },
+  {
+    "question_id": 406,
+    "db_id": "card_games",
+    "question": "Lists by ID all Creature-type cards with legal status.",
+    "predicted_sql": "SELECT DISTINCT T1.id FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T1.types = 'Creature' AND T2.status = 'Legal'",
+    "gold_sql": "SELECT T1.id FROM cards AS T1 INNER JOIN rulings AS T2 ON T1.uuid = T2.uuid INNER JOIN legalities AS T3 ON T1.uuid = T3.uuid WHERE T3.status = 'Legal' AND T1.types = 'Creature'",
+    "label": true,
+    "evidence": "legal status refer to status = 'legal'; Goblin-type cards refer to types = 'Creature';",
+    "reason_1": "\"INNER JOIN rulings\" may delete cards without rulings.",
+    "reason_2": "EVIDENCE FALSE\nGOLD FALSE: INNER JOIN rulings will exclude all the cards without rulings, significantly narrowing the result set, which does not meet the requirement of \"listing all legal cards\"."
+  },
+  {
+    "question_id": 452,
+    "db_id": "card_games",
+    "question": "Please list the names of the cards that have a text box.",
+    "predicted_sql": "SELECT name FROM cards WHERE isTextless = 0",
+    "gold_sql": "SELECT DISTINCT name FROM cards WHERE isTextless = 0",
+    "label": true,
+    "evidence": "have a text box refers to isTextless = 0",
+    "reason_1": "",
+    "reason_2": ""
+  },
+  {
+    "question_id": 1088,
+    "db_id": "european_football_2",
+    "question": "Please list the names of the players whose volley score and dribbling score are over 70.",
+    "predicted_sql": "SELECT Player.player_name FROM Player_Attributes INNER JOIN Player ON Player_Attributes.player_api_id = Player.player_api_id WHERE Player_Attributes.volleys > 70 AND Player_Attributes.dribbling > 70",
+    "gold_sql": "SELECT DISTINCT t1.player_name FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_api_id = t2.player_api_id WHERE t2.volleys > 70 AND t2.dribbling > 70",
+    "label": true,
+    "evidence": "volley score are over 70 refers to volleys > 70; dribbling score refers to dribbling are over 70 refers to dribbling > 70;",
+    "reason_1": "Note: Missing the DISTINCT keyword",
+    "reason_2": ""
+  },
+  {
+    "question_id": 1126,
+    "db_id": "european_football_2",
+    "question": "State the name of players who came from Belgium.",
+    "predicted_sql": "SELECT DISTINCT p.player_name FROM Player p JOIN Match m ON p.player_api_id = m.home_player_1 OR p.player_api_id = m.home_player_2 OR p.player_api_id = m.home_player_3 OR p.player_api_id = m.home_player_4 OR p.player_api_id = m.home_player_5 OR p.player_api_id = m.home_player_6 OR p.player_api_id = m.home_player_7 OR p.player_api_id = m.home_player_8 OR p.player_api_id = m.home_player_9 OR p.player_api_id = m.home_player_10 OR p.player_api_id = m.home_player_11 OR p.player_api_id = m.away_player_1 OR p.player_api_id = m.away_player_2 OR p.player_api_id = m.away_player_3 OR p.player_api_id = m.away_player_4 OR p.player_api_id = m.away_player_5 OR p.player_api_id = m.away_player_6 OR p.player_api_id = m.away_player_7 OR p.player_api_id = m.away_player_8 OR p.player_api_id = m.away_player_9 OR p.player_api_id = m.away_player_10 OR p.player_api_id = m.away_player_11",
+    "gold_sql": "SELECT t3.player_name FROM Country AS t1 INNER JOIN Match AS t2 ON t1.id = t2.country_id INNER JOIN Player AS t3 ON t2.home_player_1 = t3.player_api_id WHERE t1.name = 'Belgium'",
+    "label": false,
+    "evidence": "name of players refers to player_name; Belgium is name of country",
+    "reason_1": "Missing filter condition\nGOLD FALSE: Only the column \"home_player_1\" was checked, and the remaining 21 player columns were ignored. The result is incomplete.",
+    "reason_2": "Error WHERE condition"
+  },
+  {
+    "question_id": 1118,
+    "db_id": "european_football_2",
+    "question": "List down the name of players who are 35 years old and above.",
+    "predicted_sql": "SELECT T1.player_name FROM Player AS T1 WHERE (strftime('%Y', 'now') - strftime('%Y', T1.birthday)) >= 35",
+    "gold_sql": "SELECT player_name FROM Player WHERE CAST((JULIANDAY('now') - JULIANDAY(birthday)) AS REAL) / 365 >= 35",
+    "label": false,
+    "evidence": "35 years old and above refers to datetime(CURRENT_TIMESTAMP,'localtime') - datetime(birthday) > 34",
+    "reason_1": "The predicted SQL uses year subtraction and can overestimate ages",
+    "reason_2": "GOLD FALSE. Predicted SQL doesn't consider the case that the birthday hasn't been passed and gold SQL wrongly considers 34.6."
+  },
+  {
+    "question_id": 27,
+    "db_id": "california_schools",
+    "question": "What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school names along with the score. Also, list the communication number of the schools if there is any.",
+    "predicted_sql": "SELECT T1.School, T2.AvgScrWrite, T1.Phone FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE STRFTIME('%Y', T1.OpenDate) > '1991' OR STRFTIME('%Y', T1.ClosedDate) < '2000'",
+    "gold_sql": "SELECT T2.School, T1.AvgScrWrite, T2.Phone FROM schools AS T2 LEFT JOIN satscores AS T1 ON T2.CDSCode = T1.cds WHERE strftime('%Y', T2.OpenDate) > '1991' OR strftime('%Y', T2.ClosedDate) < '2000'",
+    "label": true,
+    "evidence": "Communication number refers to phone number.",
+    "reason_1": "",
+    "reason_2": "GOLD FALSE: Using Left Join will include schools that lack records in the stascores table, which is not aligned with the intent"
+  },
+  {
+    "question_id": 340,
+    "db_id": "card_games",
+    "question": "Which are the cards that have incredibly powerful foils.",
+    "predicted_sql": "SELECT cards.name FROM cards WHERE cards.cardKingdomId IS NOT NULL AND cards.cardKingdomFoilId = cards.cardKingdomId;",
+    "gold_sql": "SELECT id FROM cards WHERE cardKingdomFoilId IS NOT NULL AND cardKingdomId IS NOT NULL",
+    "label": false,
+    "evidence": "incredibly poweful foils refers to cardKingdomFoilId is not null AND cardKingdomId is not null",
+    "reason_1": "In Predicted SQL, cardKingdomFoilId and cardKingdomId must be equal, but they just need not be empty",
+    "reason_2": "Wrong filter condition"
+  },
+  {
+    "question_id": 621,
+    "db_id": "codebase_community",
+    "question": "What are the name of badges that users who have the lowest reputation obtained?",
+    "predicted_sql": "SELECT DISTINCT badges.Name FROM badges INNER JOIN users ON badges.UserId = users.Id WHERE users.Reputation = (SELECT MIN(Reputation) FROM users) AND badges.Name IS NOT NULL;",
+    "gold_sql": "SELECT T2.Name, T1.Reputation FROM users AS T1 INNER JOIN badges AS T2 ON T1.Id = T2.UserId WHERE T1.Reputation = (SELECT MIN(Reputation) FROM users)",
+    "label": true,
+    "evidence": "lowest reputation refers to Min(Reputation); user refers to UserId",
+    "reason_1": "",
+    "reason_2": "GOLD FALSE: missing DISTINCT keyword"
+  },
+  {
+    "question_id": 1124,
+    "db_id": "european_football_2",
+    "question": "Who are the players that tend to be attacking when their mates were doing attack moves? List down their name.",
+    "predicted_sql": "SELECT Player.player_name FROM Player_Attributes JOIN Player ON Player_Attributes.player_api_id = Player.player_api_id WHERE Player_Attributes.attacking_work_rate = 'high';",
+    "gold_sql": "SELECT DISTINCT t1.player_name FROM Player AS t1 INNER JOIN Player_Attributes AS t2 ON t1.player_api_id = t2.player_api_id WHERE t2.attacking_work_rate = 'high'",
+    "label": true,
+    "evidence": "tend to be attacking when their mates were doing attack moves refers to attacking_work_rate = 'high';",
+    "reason_1": "",
+    "reason_2": ""
+  }
+]

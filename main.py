@@ -59,7 +59,7 @@ if __name__ == "__main__":
     parser.add_argument("--threads", type=int, default=1)
     parser.add_argument("--input", type=str, default="sample.json")
     args = parser.parse_args()
-    reasoning_model = "o3"
+    reasoning_model = "qwen/qwen3-30b-a3b-thinking-2507"
     instruct_model = "deepseek-chat"
     partial = False
 

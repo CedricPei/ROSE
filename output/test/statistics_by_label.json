@@ -1,236 +1,80 @@
 {
-  "decisive": {
-    "EM-test-eval": {
-      "total_items": 322,
-      "confusion_matrix": {
-        "tp": 0,
-        "tn": 106,
-        "fp": 0,
-        "fn": 216
-      },
-      "performance_metrics": {
-        "accuracy": "32.92%",
-        "cohen_kappa": "0.00%",
-        "mcc": "0.00%",
-        "f1_score": "0.00%"
-      }
-    },
-    "ETM-test-eval": {
-      "total_items": 322,
-      "confusion_matrix": {
-        "tp": 27,
-        "tn": 106,
-        "fp": 0,
-        "fn": 189
-      },
-      "performance_metrics": {
-        "accuracy": "41.30%",
-        "cohen_kappa": "8.60%",
-        "mcc": "21.19%",
-        "f1_score": "22.22%"
-      }
-    },
-    "EX-test-eval": {
-      "total_items": 322,
-      "confusion_matrix": {
-        "tp": 121,
-        "tn": 103,
-        "fp": 3,
-        "fn": 95
-      },
-      "performance_metrics": {
-        "accuracy": "69.57%",
-        "cohen_kappa": "43.56%",
-        "mcc": "51.36%",
-        "f1_score": "71.18%"
-      }
-    }
-  },
-  "deepseek-distill-llama-70B": {
-    "FLEX-test-eval": {
-      "total_items": 322,
-      "confusion_matrix": {
-        "tp": 173,
-        "tn": 90,
-        "fp": 16,
-        "fn": 43
-      },
-      "performance_metrics": {
-        "accuracy": "81.68%",
-        "cohen_kappa": "61.04%",
-        "mcc": "62.03%",
-        "f1_score": "85.43%"
-      }
-    }
-  },
-  "deepseek-reasoner": {
-    "FLEX-test-eval": {
-      "total_items": 322,
-      "confusion_matrix": {
-        "tp": 145,
-        "tn": 101,
-        "fp": 5,
-        "fn": 71
-      },
-      "performance_metrics": {
-        "accuracy": "76.40%",
-        "cohen_kappa": "53.87%",
-        "mcc": "58.80%",
-        "f1_score": "79.23%"
-      }
-    },
-    "llmsolver-test-eval": {
-      "total_items": 322,
-      "confusion_matrix": {
-        "tp": 53,
-        "tn": 102,
-        "fp": 4,
-        "fn": 163
-      },
-      "performance_metrics": {
-        "accuracy": "48.14%",
-        "cohen_kappa": "15.02%",
-        "mcc": "25.56%",
-        "f1_score": "38.83%"
-      }
-    },
-    "ProverOnly-test-eval": {
-      "total_items": 322,
-      "confusion_matrix": {
-        "tp": 183,
-        "tn": 72,
-        "fp": 34,
-        "fn": 33
-      },
-      "performance_metrics": {
-        "accuracy": "79.19%",
-        "cohen_kappa": "52.77%",
-        "mcc": "52.77%",
-        "f1_score": "84.53%"
-      }
-    },
-    "ROSE-test-eval": {
-      "total_items": 322,
-      "confusion_matrix": {
-        "tp": 171,
-        "tn": 93,
-        "fp": 13,
-        "fn": 45
-      },
-      "performance_metrics": {
-        "accuracy": "81.99%",
-        "cohen_kappa": "62.13%",
-        "mcc": "63.53%",
-        "f1_score": "85.50%"
-      }
-    }
-  },
-  "gemini-2.5-pro-thinking": {
-    "FLEX-test-eval": {
-      "total_items": 322,
-      "confusion_matrix": {
-        "tp": 151,
-        "tn": 102,
-        "fp": 4,
-        "fn": 65
-      },
-      "performance_metrics": {
-        "accuracy": "78.57%",
-        "cohen_kappa": "57.68%",
-        "mcc": "62.20%",
-        "f1_score": "81.40%"
-      }
-    },
-    "llmsolver-test-eval": {
-      "total_items": 322,
-      "confusion_matrix": {
-        "tp": 50,
-        "tn": 106,
-        "fp": 0,
-        "fn": 166
-      },
-      "performance_metrics": {
-        "accuracy": "48.45%",
-        "cohen_kappa": "16.55%",
-        "mcc": "30.03%",
-        "f1_score": "37.59%"
-      }
-    },
-    "ProverOnly-test-eval": {
-      "total_items": 322,
-      "confusion_matrix": {
-        "tp": 207,
-        "tn": 53,
-        "fp": 53,
-        "fn": 9
-      },
-      "performance_metrics": {
-        "accuracy": "80.75%",
-        "cohen_kappa": "51.25%",
-        "mcc": "54.62%",
-        "f1_score": "86.97%"
-      }
-    },
+  "qwen3-235b-thinking-2507": {
     "ROSE-test-eval": {
       "total_items": 322,
       "confusion_matrix": {
         "tp": 168,
-        "tn": 99,
-        "fp": 7,
+        "tn": 96,
+        "fp": 10,
         "fn": 48
       },
       "performance_metrics": {
-        "accuracy": "82.92%",
-        "cohen_kappa": "64.79%",
-        "mcc": "67.15%",
-        "f1_score": "85.93%"
+        "accuracy": "81.99%",
+        "cohen_kappa": "62.63%",
+        "mcc": "64.59%",
+        "f1_score": "85.28%"
       }
     }
   },
   "o3": {
-    "FLEX-test-eval": {
+    "ROSE-test-eval": {
       "total_items": 322,
       "confusion_matrix": {
-        "tp": 143,
+        "tp": 190,
         "tn": 103,
         "fp": 3,
-        "fn": 73
+        "fn": 26
       },
       "performance_metrics": {
-        "accuracy": "76.40%",
-        "cohen_kappa": "54.25%",
-        "mcc": "59.82%",
-        "f1_score": "79.01%"
+        "accuracy": "90.99%",
+        "cohen_kappa": "80.68%",
+        "mcc": "81.64%",
+        "f1_score": "92.91%"
       }
     },
-    "llmsolver-test-eval": {
-      "total_items": 322,
+    "FLEX-test-eval": {
+      "total_items": 333,
       "confusion_matrix": {
-        "tp": 30,
+        "tp": 149,
         "tn": 106,
-        "fp": 0,
-        "fn": 186
+        "fp": 3,
+        "fn": 75
       },
       "performance_metrics": {
-        "accuracy": "42.24%",
-        "cohen_kappa": "9.60%",
-        "mcc": "22.45%",
-        "f1_score": "24.39%"
+        "accuracy": "76.58%",
+        "cohen_kappa": "54.52%",
+        "mcc": "60.07%",
+        "f1_score": "79.26%"
       }
     },
     "ProverOnly-test-eval": {
-      "total_items": 322,
+      "total_items": 326,
       "confusion_matrix": {
-        "tp": 201,
-        "tn": 76,
+        "tp": 204,
+        "tn": 77,
         "fp": 30,
         "fn": 15
       },
       "performance_metrics": {
-        "accuracy": "86.02%",
-        "cohen_kappa": "67.17%",
-        "mcc": "67.58%",
-        "f1_score": "89.93%"
+        "accuracy": "86.20%",
+        "cohen_kappa": "67.53%",
+        "mcc": "67.93%",
+        "f1_score": "90.07%"
+      }
+    },
+    "llmsolver-test-eval": {
+      "total_items": 333,
+      "confusion_matrix": {
+        "tp": 30,
+        "tn": 109,
+        "fp": 0,
+        "fn": 194
+      },
+      "performance_metrics": {
+        "accuracy": "41.74%",
+        "cohen_kappa": "9.19%",
+        "mcc": "21.95%",
+        "f1_score": "23.62%"
       }
     },
     "ROSE-o3-thread-4-test-eval": {
@@ -262,20 +106,67 @@
         "mcc": "86.97%",
         "f1_score": "95.19%"
       }
-    },
+    }
+  },
+  "deepseek-reasoner": {
     "ROSE-test-eval": {
       "total_items": 322,
       "confusion_matrix": {
-        "tp": 190,
-        "tn": 103,
-        "fp": 3,
-        "fn": 26
+        "tp": 171,
+        "tn": 93,
+        "fp": 13,
+        "fn": 45
       },
       "performance_metrics": {
-        "accuracy": "90.99%",
-        "cohen_kappa": "80.68%",
-        "mcc": "81.64%",
-        "f1_score": "92.91%"
+        "accuracy": "81.99%",
+        "cohen_kappa": "62.13%",
+        "mcc": "63.53%",
+        "f1_score": "85.50%"
+      }
+    },
+    "FLEX-test-eval": {
+      "total_items": 333,
+      "confusion_matrix": {
+        "tp": 150,
+        "tn": 104,
+        "fp": 5,
+        "fn": 74
+      },
+      "performance_metrics": {
+        "accuracy": "76.28%",
+        "cohen_kappa": "53.66%",
+        "mcc": "58.68%",
+        "f1_score": "79.16%"
+      }
+    },
+    "ProverOnly-test-eval": {
+      "total_items": 326,
+      "confusion_matrix": {
+        "tp": 185,
+        "tn": 73,
+        "fp": 34,
+        "fn": 34
+      },
+      "performance_metrics": {
+        "accuracy": "79.14%",
+        "cohen_kappa": "52.70%",
+        "mcc": "52.70%",
+        "f1_score": "84.47%"
+      }
+    },
+    "llmsolver-test-eval": {
+      "total_items": 333,
+      "confusion_matrix": {
+        "tp": 53,
+        "tn": 105,
+        "fp": 4,
+        "fn": 171
+      },
+      "performance_metrics": {
+        "accuracy": "47.45%",
+        "cohen_kappa": "14.35%",
+        "mcc": "24.90%",
+        "f1_score": "37.72%"
       }
     }
   },
@@ -293,6 +184,149 @@
         "cohen_kappa": "65.11%",
         "mcc": "65.71%",
         "f1_score": "87.38%"
+      }
+    }
+  },
+  "deepseek-r1-distill-llama-70b": {
+    "ROSE-test-eval": {
+      "total_items": 322,
+      "confusion_matrix": {
+        "tp": 175,
+        "tn": 83,
+        "fp": 23,
+        "fn": 41
+      },
+      "performance_metrics": {
+        "accuracy": "80.12%",
+        "cohen_kappa": "56.86%",
+        "mcc": "57.28%",
+        "f1_score": "84.54%"
+      }
+    }
+  },
+  "decisive": {
+    "ETM-test-eval": {
+      "total_items": 333,
+      "confusion_matrix": {
+        "tp": 27,
+        "tn": 109,
+        "fp": 0,
+        "fn": 197
+      },
+      "performance_metrics": {
+        "accuracy": "40.84%",
+        "cohen_kappa": "8.23%",
+        "mcc": "20.72%",
+        "f1_score": "21.51%"
+      }
+    },
+    "EX-test-eval": {
+      "total_items": 333,
+      "confusion_matrix": {
+        "tp": 121,
+        "tn": 106,
+        "fp": 3,
+        "fn": 103
+      },
+      "performance_metrics": {
+        "accuracy": "68.17%",
+        "cohen_kappa": "41.49%",
+        "mcc": "49.76%",
+        "f1_score": "69.54%"
+      }
+    },
+    "EM-test-eval": {
+      "total_items": 333,
+      "confusion_matrix": {
+        "tp": 0,
+        "tn": 109,
+        "fp": 0,
+        "fn": 224
+      },
+      "performance_metrics": {
+        "accuracy": "32.73%",
+        "cohen_kappa": "0.00%",
+        "mcc": "0.00%",
+        "f1_score": "0.00%"
+      }
+    }
+  },
+  "deepseek-r1-distill-qwen-32b": {
+    "ROSE-test-eval": {
+      "total_items": 322,
+      "confusion_matrix": {
+        "tp": 175,
+        "tn": 83,
+        "fp": 23,
+        "fn": 41
+      },
+      "performance_metrics": {
+        "accuracy": "80.12%",
+        "cohen_kappa": "56.86%",
+        "mcc": "57.28%",
+        "f1_score": "84.54%"
+      }
+    }
+  },
+  "gemini-2.5-pro-thinking": {
+    "ROSE-test-eval": {
+      "total_items": 322,
+      "confusion_matrix": {
+        "tp": 168,
+        "tn": 99,
+        "fp": 7,
+        "fn": 48
+      },
+      "performance_metrics": {
+        "accuracy": "82.92%",
+        "cohen_kappa": "64.79%",
+        "mcc": "67.15%",
+        "f1_score": "85.93%"
+      }
+    },
+    "FLEX-test-eval": {
+      "total_items": 333,
+      "confusion_matrix": {
+        "tp": 158,
+        "tn": 105,
+        "fp": 4,
+        "fn": 66
+      },
+      "performance_metrics": {
+        "accuracy": "78.98%",
+        "cohen_kappa": "58.35%",
+        "mcc": "62.78%",
+        "f1_score": "81.87%"
+      }
+    },
+    "ProverOnly-test-eval": {
+      "total_items": 326,
+      "confusion_matrix": {
+        "tp": 210,
+        "tn": 54,
+        "fp": 53,
+        "fn": 9
+      },
+      "performance_metrics": {
+        "accuracy": "80.98%",
+        "cohen_kappa": "51.81%",
+        "mcc": "55.13%",
+        "f1_score": "87.14%"
+      }
+    },
+    "llmsolver-test-eval": {
+      "total_items": 333,
+      "confusion_matrix": {
+        "tp": 50,
+        "tn": 109,
+        "fp": 0,
+        "fn": 174
+      },
+      "performance_metrics": {
+        "accuracy": "47.75%",
+        "cohen_kappa": "15.83%",
+        "mcc": "29.32%",
+        "f1_score": "36.50%"
       }
     }
   }

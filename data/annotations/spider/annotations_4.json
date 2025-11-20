@@ -1,0 +1,1002 @@
+[
+  {
+    "question_id": 820,
+    "db_id": "address_1",
+    "question": "What are the city codes of cities with distance greater than average?",
+    "predicted_sql": "SELECT city1_code FROM Direct_distance WHERE distance > (SELECT avg(distance) FROM Direct_distance) UNION SELECT city2_code FROM Direct_distance WHERE distance > (SELECT avg(distance) FROM Direct_distance)",
+    "gold_sql": "SELECT city1_code ,  city2_code FROM Direct_distance WHERE distance  >  (SELECT avg(distance) FROM Direct_distance)",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 827,
+    "db_id": "address_1",
+    "question": "What is the name of the city closest to Chicago?",
+    "predicted_sql": "SELECT city_name FROM City ORDER BY ((latitude - 41.8781) * (latitude - 41.8781) + (longitude + 87.6298) * (longitude + 87.6298)) ASC LIMIT 1",
+    "gold_sql": "SELECT T3.city_name FROM Direct_distance AS T1 JOIN City AS T2 ON T1.city1_code  =  T2.city_code JOIN City AS T3 ON T1.city2_code  =  T3.city_code WHERE T2.city_name  =  \"Chicago\" ORDER BY distance LIMIT 1",
+    "label": false,
+    "reason": "PredSQL Error: Incorrect calculation distance logic",
+    "evidence": ""
+  },
+  {
+    "question_id": 832,
+    "db_id": "address_1",
+    "question": "For each city, what is the the city code and sum of distances from each?",
+    "predicted_sql": "SELECT      city_code,      SUM(distance) AS total_distance FROM (     SELECT city1_code AS city_code, distance     FROM Direct_distance     UNION ALL     SELECT city2_code AS city_code, distance     FROM Direct_distance ) AS combined_distances GROUP BY city_code",
+    "gold_sql": "SELECT city1_code ,  sum(distance) FROM Direct_distance GROUP BY city1_code",
+    "label": false,
+    "reason": "PredSQL Error: Each city was calculated twice.",
+    "evidence": ""
+  },
+  {
+    "question_id": 833,
+    "db_id": "address_1",
+    "question": "Show all city names and the average distance to all other cities.",
+    "predicted_sql": "SELECT C.city_name, AVG(D.distance) FROM City AS C LEFT JOIN Direct_distance AS D ON C.city_code = D.city1_code GROUP BY C.city_name",
+    "gold_sql": "SELECT T2.city_name ,  avg(distance) FROM Direct_distance AS T1 JOIN City AS T2 ON T1.city1_code  =  T2.city_code GROUP BY T1.city1_code",
+    "label": true,
+    "reason": "GOLD FALSE: Should use a LEFT JOIN.",
+    "evidence": ""
+  },
+  {
+    "question_id": 838,
+    "db_id": "address_1",
+    "question": "What is the full name of the student who lives furthest from Linda Smith?",
+    "predicted_sql": "SELECT fname, lname FROM student WHERE city_code = ( SELECT city1_code FROM direct_distance WHERE distance = ( SELECT MAX(distance) FROM direct_distance WHERE city1_code = ( SELECT city_code FROM student s WHERE s.fname = 'Linda' AND s.lname = 'Smith' ) ) );",
+    "gold_sql": "SELECT T3.Fname ,  T3.Lname FROM Direct_distance AS T1 JOIN Student AS T2 ON T1.city1_code  =  T2.city_code JOIN Student AS T3 ON T1.city2_code  =  T3.city_code WHERE T2.Fname  =  \"Linda\" AND T2.Lname  =  \"Smith\" ORDER BY distance DESC LIMIT 1",
+    "label": false,
+    "reason": "PredSQL Error: Should use city2_code to filter the final students",
+    "evidence": ""
+  },
+  {
+    "question_id": 860,
+    "db_id": "boat_1",
+    "question": "What are the different names of sailors who reserved two or more boats ?",
+    "predicted_sql": "SELECT S.name FROM Sailors AS S JOIN Reserves AS R ON S.sid = R.sid GROUP BY R.sid HAVING COUNT(*) >= 2",
+    "gold_sql": "select distinct t1.name ,  t1.sid from sailors as t1 join reserves as t2 on t1.sid  =  t2.sid group by t2.sid having count(*)  >=  2",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 871,
+    "db_id": "boat_1",
+    "question": "what is the name and id of sailors who do not have a reservation of a boat?",
+    "predicted_sql": "SELECT name, sid FROM sailors EXCEPT SELECT T1.name, T1.sid FROM sailors AS T1 JOIN reserves AS T2 ON T1.sid = T2.sid",
+    "gold_sql": "SELECT sid ,  name FROM Sailors EXCEPT SELECT T1.sid ,  T1.name FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid  =  T2.sid",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 872,
+    "db_id": "boat_1",
+    "question": "What are the names and ids of all sailors who do not have boat reservations?",
+    "predicted_sql": "SELECT name, sid FROM sailors EXCEPT SELECT T1.name, T1.sid FROM sailors AS T1 JOIN reserves AS T2 ON T1.sid = T2.sid",
+    "gold_sql": "SELECT sid ,  name FROM Sailors EXCEPT SELECT T1.sid ,  T1.name FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid  =  T2.sid",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 901,
+    "db_id": "boat_1",
+    "question": "What is the rating and average age for sailors who have reserved red boat grouped by rating?",
+    "predicted_sql": "SELECT avg(sailors.age), sailors.rating FROM sailors JOIN reserves ON sailors.sid = reserves.sid JOIN boats ON reserves.bid = boats.bid and boats.color = 'red' GROUP BY sailors.rating",
+    "gold_sql": "SELECT T1.rating ,  avg(T1.age) FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid  =  T2.sid JOIN Boats AS T3 ON T3.bid  =  T2.bid WHERE T3.color  =  'red' GROUP BY T1.rating",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 902,
+    "db_id": "boat_1",
+    "question": "What are the rating and average age for sailors who reserved red boats for each rating?",
+    "predicted_sql": "SELECT avg(T1.age), T1.rating FROM sailors AS T1 JOIN reserves AS T2 ON T1.sid = T2.sid JOIN boats AS T3 ON T2.bid = T3.bid WHERE T3.color = 'red' GROUP BY T1.rating",
+    "gold_sql": "SELECT T1.rating ,  avg(T1.age) FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid  =  T2.sid JOIN Boats AS T3 ON T3.bid  =  T2.bid WHERE T3.color  =  'red' GROUP BY T1.rating",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 926,
+    "db_id": "headphone_store",
+    "question": "Find the headphone class that does not contain more than two headphones.",
+    "predicted_sql": "SELECT Class FROM headphone GROUP BY Class HAVING count(*) <= 2",
+    "gold_sql": "SELECT CLASS FROM headphone GROUP BY CLASS HAVING count(*)  >  2",
+    "label": true,
+    "reason": "GOLD FALSE: \"does not contain...\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 939,
+    "db_id": "headphone_store",
+    "question": "Which earpads never use plastic construction?",
+    "predicted_sql": "SELECT DISTINCT Earpads FROM headphone WHERE Construction != 'Plastic'",
+    "gold_sql": "SELECT earpads FROM headphone EXCEPT SELECT earpads FROM headphone WHERE construction  =  'Plastic'",
+    "label": false,
+    "reason": "PredSQL Error: \"Never use\" means excluding all items that have been used at least once.",
+    "evidence": ""
+  },
+  {
+    "question_id": 940,
+    "db_id": "headphone_store",
+    "question": "Find all earpads that do not use plastic construction.",
+    "predicted_sql": "SELECT Earpads  FROM headphone  WHERE Construction != \"Plastic\"",
+    "gold_sql": "SELECT earpads FROM headphone EXCEPT SELECT earpads FROM headphone WHERE construction  =  'Plastic'",
+    "label": false,
+    "reason": "PredSQL Error: \"Never use\" means excluding all items that have been used at least once.",
+    "evidence": ""
+  },
+  {
+    "question_id": 949,
+    "db_id": "headphone_store",
+    "question": "find the number of stores in each neighborhood.",
+    "predicted_sql": "SELECT Neighborhood, count(*) FROM store GROUP BY Neighborhood",
+    "gold_sql": "SELECT count(*) ,  neighborhood FROM store GROUP BY neighborhood",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 952,
+    "db_id": "headphone_store",
+    "question": "Which store has the headphones in stock? Give me the store name and the total quantity.",
+    "predicted_sql": "SELECT      store.Name,      SUM(stock.Quantity) AS Total_Quantity FROM      store JOIN      stock  ON      store.Store_ID = stock.Store_ID GROUP BY      store.Store_ID",
+    "gold_sql": "SELECT t1.name ,  sum(t2.quantity) FROM store AS t1 JOIN stock AS t2 ON t1.store_id  =  t2.store_id GROUP BY t2.store_id ORDER BY sum(t2.quantity) DESC LIMIT 1",
+    "label": true,
+    "reason": "GOLD FALSE: No \"Limit 1\" requirement in the question.",
+    "evidence": ""
+  },
+  {
+    "question_id": 962,
+    "db_id": "headphone_store",
+    "question": "Find the neighborhood where no headphones are in stock.",
+    "predicted_sql": "SELECT Neighborhood FROM store WHERE Store_ID NOT IN (SELECT Store_ID FROM stock)",
+    "gold_sql": "SELECT Neighborhood FROM store EXCEPT SELECT t1.Neighborhood FROM store AS t1 JOIN stock AS t2 ON t1.store_id  =  t2.store_id",
+    "label": false,
+    "reason": "PredSQL Error: \"Except\" can ensure \"no headphones are in stock\" strictly.",
+    "evidence": ""
+  },
+  {
+    "question_id": 971,
+    "db_id": "aan_1",
+    "question": "How many papers are published in year 2009 by Columbia University?",
+    "predicted_sql": "SELECT count(*) FROM paper AS T1 JOIN author_list AS T2 ON T2.paper_id = T1.paper_id JOIN affiliation AS T3 ON T3.affiliation_id = T2.affiliation_id WHERE T1.year = 2009 AND T3.name = \"Columbia University\";",
+    "gold_sql": "SELECT count(DISTINCT T1.paper_id) FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id  =  T2.paper_id JOIN Affiliation AS T3 ON T2.affiliation_id  =  T3.affiliation_id WHERE T3.name LIKE \"Columbia University\" AND T1.year  =  2009",
+    "label": false,
+    "reason": "Duplicated statistic in PredSQL",
+    "evidence": ""
+  },
+  {
+    "question_id": 975,
+    "db_id": "aan_1",
+    "question": "List all venues and years for papers ordered by year.",
+    "predicted_sql": "SELECT venue, year FROM paper ORDER BY year",
+    "gold_sql": "SELECT DISTINCT venue ,  YEAR FROM paper ORDER BY YEAR",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 976,
+    "db_id": "aan_1",
+    "question": "What are the distinct venues for papers, ordered by year?",
+    "predicted_sql": "SELECT DISTINCT venue FROM Paper ORDER BY year",
+    "gold_sql": "SELECT DISTINCT venue ,  YEAR FROM paper ORDER BY YEAR",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 980,
+    "db_id": "aan_1",
+    "question": "What are the titles and paper ids for papers written by Mckeown?",
+    "predicted_sql": "SELECT `Paper`.`title`, `Paper`.`paper_id` FROM `Paper` JOIN `Author_list` ON `Paper`.`paper_id` = `Author_list`.`paper_id` JOIN `Author` ON `Author_list`.`author_id` = `Author`.`author_id` WHERE `Author`.`name` = 'Mckeown'",
+    "gold_sql": "SELECT T1.title ,  T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id  =  T2.paper_id JOIN Author AS T3 ON T3.author_id  =  T2.author_id WHERE T3.name LIKE \"%Mckeown%\"",
+    "label": false,
+    "reason": "PredSQL Error: WHERE condition value false",
+    "evidence": ""
+  },
+  {
+    "question_id": 981,
+    "db_id": "aan_1",
+    "question": "Find all papers with titles and paper IDs collaborated by Stanford University and Columbia University.",
+    "predicted_sql": "SELECT T1.paper_id, T1.title FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN Affiliation AS T3 ON T2.affiliation_id = T3.affiliation_id WHERE T3.name IN ('Stanford University', 'Columbia University') GROUP BY T1.paper_id HAVING COUNT(DISTINCT T3.name) = 2",
+    "gold_sql": "SELECT T1.title ,  T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id  =  T2.paper_id JOIN Affiliation AS T3 ON T2.affiliation_id  =  T3.affiliation_id WHERE T3.name LIKE \"Stanford University\" INTERSECT SELECT T1.title ,  T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id  =  T2.paper_id JOIN Affiliation AS T3 ON T2.affiliation_id  =  T3.affiliation_id WHERE T3.name LIKE \"Columbia University\"",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 986,
+    "db_id": "aan_1",
+    "question": "What are the titles and paper ids which have Mckeown as an author, but not Rambow?",
+    "predicted_sql": "SELECT      T3.title,      T2.paper_id  FROM      Author AS T1  JOIN      Author_list AS T2  ON      T1.author_id = T2.author_id  JOIN      Paper AS T3  ON      T2.paper_id = T3.paper_id  WHERE      T1.name = \"McKeown\" EXCEPT SELECT      T3.title,      T2.paper_id  FROM      Author AS T1  JOIN      Author_list AS T2  ON      T1.author_id = T2.author_id  JOIN      Paper AS T3  ON      T2.paper_id = T3.paper_id  WHERE      T1.name = \"Rambow\"",
+    "gold_sql": "SELECT T1.title ,  T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id  =  T2.paper_id JOIN Author AS T3 ON T2.author_id  =  T3.author_id WHERE T3.name LIKE \"%Mckeown%\" EXCEPT SELECT T1.title ,  T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id  =  T2.paper_id JOIN Author AS T3 ON T2.author_id  =  T3.author_id WHERE T3.name LIKE \"%Rambow%\"",
+    "label": false,
+    "reason": "PredSQL Error: WHERE condition",
+    "evidence": ""
+  },
+  {
+    "question_id": 987,
+    "db_id": "aan_1",
+    "question": "Find the titles and paper IDs for papers which have Mckeown, Kathleen or Rambow, Owen in author list.",
+    "predicted_sql": "SELECT      Paper.title,      Paper.paper_id FROM      Paper JOIN      Author_list ON Paper.paper_id = Author_list.paper_id JOIN      Author ON Author_list.author_id = Author.author_id WHERE      Author.name = 'McKeown, Kathleen'      OR Author.name = 'Rambow, Owen'",
+    "gold_sql": "SELECT DISTINCT T1.title ,  T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id  =  T2.paper_id JOIN Author AS T3 ON T2.author_id  =  T3.author_id WHERE  T3.name LIKE \"%Mckeown ,  Kathleen%\" OR T3.name LIKE \"%Rambow ,  Owen%\"",
+    "label": true,
+    "reason": "GOLD FALSE: error condition value",
+    "evidence": ""
+  },
+  {
+    "question_id": 997,
+    "db_id": "aan_1",
+    "question": "What is the venue and year with the most number of publications?",
+    "predicted_sql": "SELECT venue, year, COUNT(*) FROM paper GROUP BY venue, year ORDER BY COUNT(*) DESC LIMIT 1;",
+    "gold_sql": "SELECT venue ,  YEAR FROM paper GROUP BY venue ,  YEAR ORDER BY count(*) DESC LIMIT 1",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1005,
+    "db_id": "aan_1",
+    "question": "What is the id and the number of citations of the most cited paper?",
+    "predicted_sql": "SELECT cited_paper_id, COUNT(*) AS citation_count FROM Citation GROUP BY cited_paper_id ORDER BY citation_count DESC LIMIT 1",
+    "gold_sql": "SELECT paper_id ,  count(*) FROM Citation GROUP BY cited_paper_id ORDER BY count(*) DESC LIMIT 1",
+    "label": true,
+    "reason": "GOLD FALSE: should use cited_paper_id",
+    "evidence": ""
+  },
+  {
+    "question_id": 1309,
+    "db_id": "art_1",
+    "question": "List the year, location, and name of all paintings that are taller than 1000 in alphabetical order.",
+    "predicted_sql": "SELECT year, location, title FROM paintings WHERE height_mm > 1000 ORDER BY title",
+    "gold_sql": "SELECT title ,  LOCATION ,  YEAR FROM paintings WHERE height_mm  >  1000 ORDER BY title",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1310,
+    "db_id": "art_1",
+    "question": "Find the first and last name of artists who have painting but no sculpture work.",
+    "predicted_sql": "SELECT DISTINCT A.fname, A.lname FROM Artists AS A JOIN Paintings AS P ON A.artistID = P.painterID WHERE A.artistID NOT IN (SELECT sculptorID FROM Sculptures)",
+    "gold_sql": "SELECT T1.lname ,  T1.fname FROM artists AS T1 JOIN paintings AS T2 ON T1.artistID  =  T2.painterID EXCEPT SELECT T3.lname ,  T3.fname FROM artists AS T3 JOIN sculptures AS T4 ON T3.artistID  =  T4.sculptorID",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1386,
+    "db_id": "country_language",
+    "question": "Show the three official languages that are most commonly spoken.",
+    "predicted_sql": "SELECT l.name FROM languages AS l JOIN official_languages AS ol ON l.id = ol.language_id GROUP BY l.name ORDER BY COUNT(*) DESC LIMIT 3",
+    "gold_sql": "SELECT T2.name FROM official_languages AS T1 JOIN languages AS T2 ON T1.language_id  =  T2.id GROUP BY T2.id ORDER BY COUNT(*) DESC LIMIT 3",
+    "label": true,
+    "reason": "I think both are ok.",
+    "evidence": ""
+  },
+  {
+    "question_id": 1387,
+    "db_id": "country_language",
+    "question": "What are the names of the three official languages spoken in the most countries?",
+    "predicted_sql": "SELECT languages.name FROM languages JOIN official_languages ON languages.id = official_languages.language_id GROUP BY languages.name ORDER BY count(*) DESC LIMIT 3",
+    "gold_sql": "SELECT T2.name FROM official_languages AS T1 JOIN languages AS T2 ON T1.language_id  =  T2.id GROUP BY T2.id ORDER BY COUNT(*) DESC LIMIT 3",
+    "label": true,
+    "reason": "I think both are ok.",
+    "evidence": ""
+  },
+  {
+    "question_id": 1388,
+    "db_id": "country_language",
+    "question": "Show the official languages sorted in descending order by the average overall scores among countries speaking them.",
+    "predicted_sql": "SELECT      languages.name,      AVG(countries.overall_score) AS avg_overall_score FROM      languages JOIN      official_languages  ON      languages.id = official_languages.language_id JOIN      countries  ON      official_languages.country_id = countries.id GROUP BY      languages.name ORDER BY      avg_overall_score DESC",
+    "gold_sql": "SELECT T3.name FROM countries AS T1 JOIN official_languages AS T2 ON T1.id  =  T2.country_id JOIN languages AS T3 ON T2.language_id  =  T3.id GROUP BY T3.id ORDER BY avg(T1.overall_score) DESC",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1389,
+    "db_id": "country_language",
+    "question": "What are the names of the official languages, sorted descending by the average overall scores across the countries that correspond to each?",
+    "predicted_sql": "SELECT      L.name,      AVG(C.overall_score) AS avg_overall_score FROM      languages AS L JOIN      official_languages AS OL      ON L.id = OL.language_id JOIN      countries AS C      ON OL.country_id = C.id GROUP BY      L.name ORDER BY      avg_overall_score DESC",
+    "gold_sql": "SELECT T3.name FROM countries AS T1 JOIN official_languages AS T2 ON T1.id  =  T2.country_id JOIN languages AS T3 ON T2.language_id  =  T3.id GROUP BY T3.id ORDER BY avg(T1.overall_score) DESC",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1408,
+    "db_id": "real_estate_rentals",
+    "question": "How many properties have 1 parking lot or 1 garage?",
+    "predicted_sql": "SELECT count(*) FROM properties WHERE parking_lots = \"1\" OR garage_yn = \"Yes\"",
+    "gold_sql": "SELECT count(*) FROM Properties WHERE parking_lots  =  1 OR garage_yn  =  1;",
+    "label": false,
+    "reason": "PredSQL Error: garage_yn = \"1\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 1409,
+    "db_id": "real_estate_rentals",
+    "question": "Count the number of properties that have 1 parking lot or 1 garage.",
+    "predicted_sql": "SELECT count(*) FROM properties WHERE parking_lots = 1 OR garage_yn = 'yes'",
+    "gold_sql": "SELECT count(*) FROM Properties WHERE parking_lots  =  1 OR garage_yn  =  1;",
+    "label": false,
+    "reason": "PredSQL Error: garage_yn = \"1\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 1417,
+    "db_id": "real_estate_rentals",
+    "question": "Return the cities in which there exist properties that have swimming pools.",
+    "predicted_sql": "SELECT town_city FROM addresses WHERE address_id IN ( SELECT property_address_id FROM properties WHERE property_id IN ( SELECT property_id FROM property_features WHERE feature_id IN ( SELECT feature_id FROM features WHERE feature_name = 'Swimming Pool' ) ) )",
+    "gold_sql": "SELECT T2.town_city FROM Properties AS T1 JOIN Addresses AS T2 ON T1.property_address_id  =  T2.address_id JOIN Property_Features AS T3 ON T1.property_id  =  T3.property_id JOIN Features AS T4 ON T4.feature_id  =  T3.feature_id WHERE T4.feature_name  =  'swimming pool';",
+    "label": false,
+    "reason": "PredSQL Error: value false",
+    "evidence": ""
+  },
+  {
+    "question_id": 1424,
+    "db_id": "real_estate_rentals",
+    "question": "What are the ids of users who have searched at least twice, and what did they search?",
+    "predicted_sql": "SELECT user_id, search_string FROM User_Searches GROUP BY user_id HAVING COUNT(*) >= 2",
+    "gold_sql": "SELECT search_seq ,  user_id FROM User_Searches GROUP BY user_id HAVING count(*) >= 2;",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1429,
+    "db_id": "real_estate_rentals",
+    "question": "Return the search strings and corresonding time stamps for all user searches, sorted by search string descending.",
+    "predicted_sql": "SELECT search_string, search_datetime FROM User_Searches ORDER BY search_string DESC",
+    "gold_sql": "SELECT search_datetime ,  search_string FROM User_Searches ORDER BY search_string DESC;",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1432,
+    "db_id": "real_estate_rentals",
+    "question": "What are the users making only one search? List both category and user id.",
+    "predicted_sql": "SELECT Users.user_id, Users.user_category_code FROM Users JOIN User_Searches ON Users.user_id = User_Searches.user_id GROUP BY Users.user_id HAVING COUNT(User_Searches.search_seq) = 1",
+    "gold_sql": "SELECT T1.user_category_code ,  T1.user_id FROM Users AS T1 JOIN User_Searches AS T2 ON T1.user_id  =  T2.user_id GROUP BY T1.user_id HAVING count(*)  =  1;",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1443,
+    "db_id": "real_estate_rentals",
+    "question": "What are the first, middle, last, and login names for all users who are sellers?",
+    "predicted_sql": "SELECT first_name, middle_name, last_name, login_name FROM users WHERE is_seller = \"Yes\"",
+    "gold_sql": "SELECT first_name ,  middle_name ,  last_name ,  login_name FROM Users WHERE is_seller  =  1;",
+    "label": false,
+    "reason": "PredSQL Error: false condition value",
+    "evidence": ""
+  },
+  {
+    "question_id": 1446,
+    "db_id": "real_estate_rentals",
+    "question": "How many properties are there with at least 2 features?",
+    "predicted_sql": "SELECT count(*) FROM ( SELECT property_id FROM property_features GROUP BY property_id HAVING count(feature_id) >= 2 )",
+    "gold_sql": "SELECT count(*) FROM Properties GROUP BY property_id HAVING count(*)  >= 2;",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"features\" column",
+    "evidence": ""
+  },
+  {
+    "question_id": 1448,
+    "db_id": "real_estate_rentals",
+    "question": "How many photos does each property have?",
+    "predicted_sql": "SELECT property_id, COUNT(*)  FROM Property_Photos  GROUP BY property_id",
+    "gold_sql": "SELECT count(*) ,  property_id FROM Property_Photos GROUP BY property_id;",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1449,
+    "db_id": "real_estate_rentals",
+    "question": "Count the number of property photos each property has by id.",
+    "predicted_sql": "SELECT property_id, COUNT(*) FROM Property_Photos GROUP BY property_id",
+    "gold_sql": "SELECT count(*) ,  property_id FROM Property_Photos GROUP BY property_id;",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1461,
+    "db_id": "real_estate_rentals",
+    "question": "Return the number of rooms with each different room size.",
+    "predicted_sql": "SELECT COUNT(*) AS room_count, room_size FROM Rooms GROUP BY room_size",
+    "gold_sql": "SELECT room_size ,  count(*) FROM Rooms GROUP BY room_size",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1465,
+    "db_id": "real_estate_rentals",
+    "question": "Return the full names of users who live in properties that they own.",
+    "predicted_sql": "SELECT u.first_name || ' ' || u.middle_name || ' ' || u.last_name AS full_name FROM Users u JOIN Properties p ON u.user_id = p.owner_user_id WHERE u.user_address_id = p.property_address_id",
+    "gold_sql": "SELECT first_name ,  middle_name ,  last_name FROM Properties AS T1 JOIN Users AS T2 ON T1.owner_user_id  =  T2.user_id WHERE T1.property_address_id  =  T2.user_address_id;",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1489,
+    "db_id": "bakery_1",
+    "question": "What is the cheapest cookie and its flavor?",
+    "predicted_sql": "SELECT Flavor  FROM goods  WHERE Food = 'Cookie'  ORDER BY Price  LIMIT 1",
+    "gold_sql": "SELECT id ,  flavor FROM goods WHERE food  =  \"Cookie\" ORDER BY price LIMIT 1",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1510,
+    "db_id": "bakery_1",
+    "question": "What are the average, minimum and maximum prices for each food?",
+    "predicted_sql": "SELECT food , avg(price) , min(price) , max(price) FROM goods GROUP BY food",
+    "gold_sql": "SELECT food ,  avg(price) ,  max(price) ,  min(price) FROM goods GROUP BY food",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1519,
+    "db_id": "bakery_1",
+    "question": "How many goods are available for each food type?",
+    "predicted_sql": "SELECT Food, COUNT(*) FROM goods GROUP BY Food",
+    "gold_sql": "SELECT count(*) ,  food FROM goods GROUP BY food",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1521,
+    "db_id": "bakery_1",
+    "question": "What is the average price for each food type?",
+    "predicted_sql": "SELECT Food, AVG(Price) AS AveragePrice FROM goods GROUP BY Food",
+    "gold_sql": "SELECT avg(price) ,  food FROM goods GROUP BY food",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1537,
+    "db_id": "bakery_1",
+    "question": "Which good has \"70\" in its id? And what is its price?",
+    "predicted_sql": "SELECT Price FROM goods WHERE Id LIKE '%70%'",
+    "gold_sql": "SELECT id ,  price FROM goods WHERE id LIKE \"%70%\"",
+    "label": false,
+    "reason": "PredSQL Error:Missing ID column",
+    "evidence": ""
+  },
+  {
+    "question_id": 1546,
+    "db_id": "bakery_1",
+    "question": "What is the receipt number with the latest date, and what is that date?",
+    "predicted_sql": "SELECT ReceiptNumber, Date FROM receipts ORDER BY Date DESC LIMIT 1",
+    "gold_sql": "SELECT ReceiptNumber ,  date FROM receipts WHERE date  =  (SELECT date FROM receipts ORDER BY date DESC LIMIT 1)",
+    "label": false,
+    "reason": "PredSQL Error: The same date may have multiple receipts",
+    "evidence": ""
+  },
+  {
+    "question_id": 1550,
+    "db_id": "bakery_1",
+    "question": "Give the ids of Cookies or Cakes that cost between 3 and 7 dollars.",
+    "predicted_sql": "SELECT Id FROM goods WHERE (Food LIKE '%Cookies%' OR Food LIKE '%Cake%') AND Price BETWEEN 3 AND 7",
+    "gold_sql": "SELECT id FROM goods WHERE food  =  \"Cookie\" OR food  =  \"Cake\" AND price BETWEEN 3 AND 7",
+    "label": false,
+    "reason": "PredSQL Error: false condition value",
+    "evidence": ""
+  },
+  {
+    "question_id": 1742,
+    "db_id": "warehouse_1",
+    "question": "For each warehouse location, what is the value of the most expensive box?",
+    "predicted_sql": "SELECT      Warehouses.Location,      MAX(Boxes.Value) AS MostExpensiveBoxValue FROM      Boxes JOIN      Warehouses  ON      Boxes.Warehouse = Warehouses.Code GROUP BY      Warehouses.Location",
+    "gold_sql": "SELECT max(T1.value) ,  T2.location FROM boxes AS T1 JOIN warehouses AS T2 ON T1.warehouse  =  T2.code GROUP BY T2.location",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1773,
+    "db_id": "university_rank",
+    "question": "Show all home conferences with average enrollment of universities above 2000.",
+    "predicted_sql": "SELECT avg(enrollment), home_conference FROM university GROUP BY home_conference HAVING avg(enrollment) > 2000",
+    "gold_sql": "SELECT home_conference FROM University GROUP BY home_conference HAVING avg(enrollment)  >  2000",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1779,
+    "db_id": "university_rank",
+    "question": "Show all majors and major ranks for the university with name Augustana College.",
+    "predicted_sql": "SELECT major.major_name, major_ranking.rank FROM major_ranking JOIN major ON major_ranking.major_id = major.major_id JOIN university ON major_ranking.university_id = university.university_id WHERE university.university_name = 'Augustana College'",
+    "gold_sql": "SELECT T1.rank ,  T3.major_name FROM Major_Ranking AS T1 JOIN University AS T2 JOIN Major AS T3 ON T1.university_id  =  T2.university_id AND T1.major_id  =  T3.major_id WHERE T2.university_name  =  'Augustana College'",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1797,
+    "db_id": "university_rank",
+    "question": "What is the total enrollment of universities with a overall rank 5 or below?",
+    "predicted_sql": "SELECT SUM(T1.Enrollment) FROM university AS T1 JOIN overall_ranking AS T2 ON T1.University_ID = T2.University_ID WHERE T2.Rank <= 5",
+    "gold_sql": "SELECT sum(enrollment) FROM University AS T1 JOIN Overall_ranking AS T2 ON T1.university_id  =  T2.university_id WHERE T2.rank  >=  5",
+    "label": true,
+    "reason": "GOLD FALSE: rank <= 5",
+    "evidence": ""
+  },
+  {
+    "question_id": 1798,
+    "db_id": "university_rank",
+    "question": "What is the total number of students enrolled in an university with a rank of 5 or below?",
+    "predicted_sql": "SELECT sum(enrollment) FROM university WHERE university_id IN (SELECT university_id FROM overall_ranking WHERE rank <= 5)",
+    "gold_sql": "SELECT sum(enrollment) FROM University AS T1 JOIN Overall_ranking AS T2 ON T1.university_id  =  T2.university_id WHERE T2.rank  >=  5",
+    "label": true,
+    "reason": "GOLD FALSE: rank <= 5",
+    "evidence": ""
+  },
+  {
+    "question_id": 1803,
+    "db_id": "movie_2",
+    "question": "Find the titles of movies that don’t have any rating.",
+    "predicted_sql": "SELECT title FROM movies WHERE rating IS NULL",
+    "gold_sql": "SELECT title FROM movies WHERE rating  =  'null'",
+    "label": true,
+    "reason": "GOLD FALSE: rating should IS NULL",
+    "evidence": ""
+  },
+  {
+    "question_id": 1804,
+    "db_id": "movie_2",
+    "question": "What are the names of movies that do not have any ratings?",
+    "predicted_sql": "SELECT Title FROM Movies WHERE Rating IS NULL",
+    "gold_sql": "SELECT title FROM movies WHERE rating  =  'null'",
+    "label": true,
+    "reason": "GOLD FALSE: rating should IS NULL",
+    "evidence": ""
+  },
+  {
+    "question_id": 1821,
+    "db_id": "movie_2",
+    "question": "Find the name of the cinemas that are playing movies with either rating ‘G’ or rating ‘PG’.",
+    "predicted_sql": "SELECT MovieTheaters.Name FROM Movies JOIN MovieTheaters ON Movies.Code = MovieTheaters.Movie WHERE Movies.Rating = 'G' OR Movies.Rating = 'PG'",
+    "gold_sql": "SELECT title FROM movies WHERE rating  =  'G' OR rating  =  'PG'",
+    "label": true,
+    "reason": "GOLD FALSE: selected column error",
+    "evidence": ""
+  },
+  {
+    "question_id": 1835,
+    "db_id": "movie_2",
+    "question": "Find the name of the movie that is played in the most number of theaters.",
+    "predicted_sql": "SELECT      Movies.Title FROM      MovieTheaters JOIN      Movies  ON      MovieTheaters.Movie = Movies.Code GROUP BY      MovieTheaters.Movie ORDER BY      COUNT(*) DESC LIMIT 1",
+    "gold_sql": "SELECT T1.title FROM movies AS T1 JOIN movietheaters AS T2 ON T1.code  =  T2.movie GROUP BY T1.title ORDER BY count(*) DESC LIMIT 1",
+    "label": true,
+    "reason": "I think both are ok.",
+    "evidence": ""
+  },
+  {
+    "question_id": 1837,
+    "db_id": "movie_2",
+    "question": "Find the number of movies in each rating.",
+    "predicted_sql": "SELECT Rating, COUNT(*)  FROM Movies  GROUP BY Rating",
+    "gold_sql": "SELECT count(*) ,  rating FROM movies GROUP BY rating",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1838,
+    "db_id": "movie_2",
+    "question": "How many movies exist for each rating?",
+    "predicted_sql": "SELECT Rating, COUNT(*) FROM Movies GROUP BY Rating",
+    "gold_sql": "SELECT count(*) ,  rating FROM movies GROUP BY rating",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1840,
+    "db_id": "movie_2",
+    "question": "How many movies have a rating that is not null?",
+    "predicted_sql": "SELECT count(*) FROM movies WHERE rating IS NOT NULL",
+    "gold_sql": "SELECT count(*) ,  rating FROM movies WHERE rating != 'null' GROUP BY rating",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"IS NOT NULL\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 1841,
+    "db_id": "movie_2",
+    "question": "Find the name of theaters that has at least one movie playing.",
+    "predicted_sql": "SELECT Name  FROM MovieTheaters  WHERE Movie IS NOT NULL",
+    "gold_sql": "SELECT name FROM movietheaters GROUP BY name HAVING count(*)  >=  1",
+    "label": true,
+    "reason": "GOLD FALSE:  count(*) will also count \"NULL\" value",
+    "evidence": ""
+  },
+  {
+    "question_id": 1843,
+    "db_id": "movie_2",
+    "question": "Select the name of all movie theaters that are not currently showing a movie.",
+    "predicted_sql": "SELECT name FROM movietheaters WHERE movie IS NULL",
+    "gold_sql": "SELECT DISTINCT name FROM MovieTheaters WHERE Movie  =  'null'",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"IS NULL\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 1844,
+    "db_id": "movie_2",
+    "question": "What are the names of all cinemas not showing any movies?",
+    "predicted_sql": "SELECT Name FROM MovieTheaters WHERE Movie IS NULL",
+    "gold_sql": "SELECT DISTINCT name FROM MovieTheaters WHERE Movie  =  'null'",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"IS NULL\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 1851,
+    "db_id": "movie_2",
+    "question": "Show all information of all unrated movies.",
+    "predicted_sql": "SELECT * FROM movies WHERE rating IS NULL;",
+    "gold_sql": "SELECT * FROM movies WHERE rating  =  'null'",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"IS NULL\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 1852,
+    "db_id": "movie_2",
+    "question": "What is all the information about the unrated movies?",
+    "predicted_sql": "SELECT * FROM movies WHERE rating IS NULL",
+    "gold_sql": "SELECT * FROM movies WHERE rating  =  'null'",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"IS NULL\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 1853,
+    "db_id": "movie_2",
+    "question": "Show the titles of movies not currently being shown in any theaters.",
+    "predicted_sql": "SELECT Title FROM Movies WHERE Code NOT IN (     SELECT Movie     FROM MovieTheaters )",
+    "gold_sql": "SELECT Title FROM Movies WHERE Code NOT IN (SELECT Movie FROM MovieTheaters WHERE Movie != 'null')",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"IS NOT NULL\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 1854,
+    "db_id": "movie_2",
+    "question": "What are the names of the movies not being shown in any theaters?",
+    "predicted_sql": "SELECT title FROM movies WHERE code NOT IN (SELECT movie FROM movietheaters)",
+    "gold_sql": "SELECT Title FROM Movies WHERE Code NOT IN (SELECT Movie FROM MovieTheaters WHERE Movie != 'null')",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"IS NOT NULL\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 1855,
+    "db_id": "planet_1",
+    "question": "Who receieved the heaviest package?",
+    "predicted_sql": "SELECT Recipient FROM package ORDER BY Weight DESC LIMIT 1",
+    "gold_sql": "SELECT T2.Name FROM PACKAGE AS T1 JOIN Client AS T2 ON T1.Recipient  =  T2.AccountNumber ORDER BY T1.Weight DESC LIMIT 1",
+    "label": false,
+    "reason": "PredSQL Error: fasle selected column",
+    "evidence": ""
+  },
+  {
+    "question_id": 1868,
+    "db_id": "planet_1",
+    "question": "What is the number of all packages that Leo Wong sent?",
+    "predicted_sql": "SELECT COUNT(*)  FROM Client AS T1  JOIN Package AS T2  ON T1.AccountNumber = T2.Sender  WHERE T1.Name = \"Leo Wong\"",
+    "gold_sql": "SELECT T1.PackageNumber FROM PACKAGE AS T1 JOIN Client AS T2 ON T1.Sender  =  T2.AccountNumber WHERE T2.Name  =  \"Leo Wong\";",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1869,
+    "db_id": "planet_1",
+    "question": "List all package numbers received by Leo Wong ?",
+    "predicted_sql": "SELECT Package.PackageNumber FROM Package JOIN Client ON Package.Recipient = Client.AccountNumber WHERE Client.Name = 'Leo Wong'",
+    "gold_sql": "select t1.packagenumber from package as t1 join client as t2 on t1.recipient  =  t2.accountnumber where t2.name = \"leo wong\";",
+    "label": true,
+    "reason": "GOLD FALSE: false condition value",
+    "evidence": ""
+  },
+  {
+    "question_id": 1877,
+    "db_id": "planet_1",
+    "question": "What is the heaviest package sent by the clients which 'John' is part of their name? List package number and weight.",
+    "predicted_sql": "SELECT Package.PackageNumber, Package.Weight FROM Package JOIN Client ON Package.Sender = Client.AccountNumber WHERE Client.Name LIKE '%John%' ORDER BY Package.Weight DESC LIMIT 1",
+    "gold_sql": "SELECT T1.PackageNumber ,  max(T1.Weight) FROM PACKAGE AS T1 JOIN Client AS T2 ON T1.Sender  =  T2.AccountNumber WHERE T2.Name LIKE \"John\";",
+    "label": true,
+    "reason": "GOLD FALSE: Improper Use of LIKE",
+    "evidence": ""
+  },
+  {
+    "question_id": 1878,
+    "db_id": "planet_1",
+    "question": "What is the package number and weight of the heaviest package that was sent by a client named John or something similar?",
+    "predicted_sql": "SELECT packagenumber, weight FROM package INNER JOIN client ON package.sender = client.accountnumber WHERE LOWER(client.name) LIKE 'john%' ORDER BY package.weight DESC LIMIT 1;",
+    "gold_sql": "SELECT T1.PackageNumber ,  max(T1.Weight) FROM PACKAGE AS T1 JOIN Client AS T2 ON T1.Sender  =  T2.AccountNumber WHERE T2.Name LIKE \"John\";",
+    "label": true,
+    "reason": "GOLD FALSE: Improper Use of LIKE",
+    "evidence": ""
+  },
+  {
+    "question_id": 1881,
+    "db_id": "planet_1",
+    "question": "Who sent most number of packages? List client name and number of packages sent by that client.",
+    "predicted_sql": "SELECT      Client.Name,      COUNT(*) AS PackageCount FROM      Client JOIN      Package  ON      Client.AccountNumber = Package.Sender GROUP BY      Client.Name ORDER BY      PackageCount DESC LIMIT 1",
+    "gold_sql": "SELECT T2.Name ,  count(*) FROM PACKAGE AS T1 JOIN Client AS T2 ON T1.Sender  =  T2.AccountNumber GROUP BY T1.Sender ORDER BY count(*) DESC LIMIT 1;",
+    "label": false,
+    "reason": "PredSQL Error: should group by senders",
+    "evidence": ""
+  },
+  {
+    "question_id": 1882,
+    "db_id": "planet_1",
+    "question": "What is the name of the client who sent the most packages and how many were there?",
+    "predicted_sql": "SELECT      Client.Name,      COUNT(*) AS PackageCount FROM      Package JOIN      Client  ON      Package.Sender = Client.AccountNumber GROUP BY      Client.Name ORDER BY      PackageCount DESC LIMIT 1",
+    "gold_sql": "SELECT T2.Name ,  count(*) FROM PACKAGE AS T1 JOIN Client AS T2 ON T1.Sender  =  T2.AccountNumber GROUP BY T1.Sender ORDER BY count(*) DESC LIMIT 1;",
+    "label": false,
+    "reason": "PredSQL Error: should group by senders",
+    "evidence": ""
+  },
+  {
+    "question_id": 1885,
+    "db_id": "planet_1",
+    "question": "Who sent more than one packages? List the client's name.",
+    "predicted_sql": "SELECT      Client.Name FROM      Client JOIN      Package ON      Client.AccountNumber = Package.Sender GROUP BY      Client.AccountNumber HAVING      COUNT(*) > 1",
+    "gold_sql": "SELECT T2.Name ,  count(*) FROM PACKAGE AS T1 JOIN Client AS T2 ON T1.Sender  =  T2.AccountNumber GROUP BY T1.Sender HAVING count(*)  >  1;",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1900,
+    "db_id": "planet_1",
+    "question": "What are the ids for all shipments on the planet Mars that Turanga Leela manages?",
+    "predicted_sql": "SELECT      S.ShipmentID FROM      Shipment AS S JOIN      Employee AS E ON      S.Manager = E.EmployeeID JOIN      Planet AS P ON      S.Planet = P.PlanetID WHERE      E.Name = 'Turanga Leela'     AND P.Name = 'Mars'",
+    "gold_sql": "SELECT T1.ShipmentID FROM Shipment AS T1 JOIN Planet AS T2 ON T1.Planet = T2.PlanetID JOIN Employee AS T3 ON T3.EmployeeID = T1.Manager WHERE T2.Name = \"Mars\" OR T3.Name = \"Turanga Leela\";",
+    "label": true,
+    "reason": "GOLD FALSE: should use AND to connect",
+    "evidence": ""
+  },
+  {
+    "question_id": 1906,
+    "db_id": "planet_1",
+    "question": "What are the number of shipments managed and names of each manager?",
+    "predicted_sql": "SELECT      COUNT(*) AS NumberOfShipments,      T2.Name AS ManagerName FROM      Shipment AS T1 JOIN      Employee AS T2  ON      T1.Manager = T2.EmployeeID GROUP BY      T2.Name",
+    "gold_sql": "SELECT T2.Name ,  count(*) FROM Shipment AS T1 JOIN Employee AS T2 ON T1.Manager = T2.EmployeeID GROUP BY T1.Manager;",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1929,
+    "db_id": "planet_1",
+    "question": "Find the number of employees who do not have clearance in Mars .",
+    "predicted_sql": "SELECT COUNT(*)  FROM Employee  WHERE EmployeeID NOT IN (     SELECT Employee      FROM Has_Clearance      WHERE Planet = (SELECT PlanetID FROM Planet WHERE Name = 'Mars') )",
+    "gold_sql": "select count(*) from employee where employeeid not in ( select t2.employeeid from has_clearance as t1 join employee as t2 on t1.employee = t2.employeeid join planet as t3 on t1.planet = t3.planetid where t3.name = \"mars\" );",
+    "label": false,
+    "reason": "ALL FALSE:  both \"mars\" or \"Mars\" should be considered.",
+    "evidence": ""
+  },
+  {
+    "question_id": 1930,
+    "db_id": "planet_1",
+    "question": "What is the number of employees that do not have clearance on Mars ?",
+    "predicted_sql": "SELECT COUNT(*)  FROM Employee  WHERE EmployeeID NOT IN (     SELECT Employee      FROM Has_Clearance      JOIN Planet      ON Has_Clearance.Planet = Planet.PlanetID      WHERE Planet.Name = 'Mars' )",
+    "gold_sql": "select count(*) from employee where employeeid not in ( select t2.employeeid from has_clearance as t1 join employee as t2 on t1.employee = t2.employeeid join planet as t3 on t1.planet = t3.planetid where t3.name = \"mars\" );",
+    "label": false,
+    "reason": "ALL FALSE:  both \"mars\" or \"Mars\" should be considered.",
+    "evidence": ""
+  },
+  {
+    "question_id": 1935,
+    "db_id": "video_game",
+    "question": "What is the average units sold in millions of the games that are not developed by Nintendo?",
+    "predicted_sql": "SELECT AVG(Units_sold_Millions)  FROM game  WHERE Developers NOT LIKE '%Nintendo%'",
+    "gold_sql": "SELECT avg(Units_sold_Millions) FROM game WHERE developers != 'Nintendo'",
+    "label": false,
+    "reason": "PredSQL Error: should use accurate name",
+    "evidence": ""
+  },
+  {
+    "question_id": 1939,
+    "db_id": "video_game",
+    "question": "What are the names and id of platforms whose download rank is 1?",
+    "predicted_sql": "SELECT Platform_ID, Platform_name FROM platform WHERE Download_rank = 1",
+    "gold_sql": "SELECT Platform_name ,  Platform_ID FROM platform WHERE Download_rank  =  1",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1940,
+    "db_id": "video_game",
+    "question": "Return the names and ids of all platforms with the download rank of 1.",
+    "predicted_sql": "SELECT Platform_ID, Platform_name FROM platform WHERE Download_rank = 1",
+    "gold_sql": "SELECT Platform_name ,  Platform_ID FROM platform WHERE Download_rank  =  1",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1968,
+    "db_id": "video_game",
+    "question": "What are the titles of games that are played by players from Oklahoma college or Auburn college?",
+    "predicted_sql": "SELECT DISTINCT T1.Title FROM game AS T1 JOIN game_player AS T2 ON T1.Game_ID = T2.Game_ID JOIN player AS T3 ON T2.Player_ID = T3.Player_ID WHERE T3.College = 'Oklahoma' OR T3.College = 'Auburn'",
+    "gold_sql": "SELECT T1.Title FROM game AS T1 JOIN game_player AS T2 ON T1.Game_ID  =  T2.Game_ID JOIN player AS T3 ON T2.Player_ID  =  T3.Player_ID WHERE T3.College  =  \"Oklahoma\" INTERSECT SELECT T1.Title FROM game AS T1 JOIN game_player AS T2 ON T1.Game_ID  =  T2.Game_ID JOIN player AS T3 ON T2.Player_ID  =  T3.Player_ID WHERE T3.College  =  \"Auburn\"",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"UNION ALL\" instead of \"INTERSECT\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 1978,
+    "db_id": "book_press",
+    "question": "Find the average and maximum yearly profit for each press.",
+    "predicted_sql": "SELECT      Name,      AVG(Year_Profits_billion) AS Average_Yearly_Profit,      MAX(Year_Profits_billion) AS Maximum_Yearly_Profit FROM      press GROUP BY      Name",
+    "gold_sql": "SELECT avg(Year_Profits_billion) ,  max(Year_Profits_billion) FROM press",
+    "label": true,
+    "reason": "GOLD FALSE: \"for each press\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 1986,
+    "db_id": "book_press",
+    "question": "For each gender, return gender and the average age of authors.",
+    "predicted_sql": "SELECT gender, AVG(age) FROM author GROUP BY gender",
+    "gold_sql": "SELECT avg(age) ,  gender FROM author GROUP BY gender",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1988,
+    "db_id": "book_press",
+    "question": "How many authors are of age above 30 for each gender?",
+    "predicted_sql": "SELECT gender, COUNT(*) FROM author WHERE age > 30 GROUP BY gender",
+    "gold_sql": "SELECT count(*) ,  gender FROM author WHERE age  >  30 GROUP BY gender",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 1993,
+    "db_id": "book_press",
+    "question": "Find the titles and publish dates of the top 5 best sale books.",
+    "predicted_sql": "SELECT Title, Release_date FROM book ORDER BY CAST(Sale_Amount AS REAL) DESC LIMIT 5",
+    "gold_sql": "SELECT title ,  release_date FROM book ORDER BY sale_amount DESC LIMIT 5",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 2003,
+    "db_id": "book_press",
+    "question": "Find the title, author name, and publisher name for the top 3 best sales books.",
+    "predicted_sql": "SELECT book.Title, author.Name, press.Name FROM book JOIN author ON book.Author_ID = author.Author_ID JOIN press ON book.Press_ID = press.Press_ID ORDER BY book.Sale_Amount DESC LIMIT 3",
+    "gold_sql": "SELECT t1.name ,  t2.title ,  t3.name FROM author AS t1 JOIN book AS t2 ON t1.author_id  =  t2.author_id JOIN press AS t3 ON t2.press_id  =  t3.press_id ORDER BY t2.sale_amount DESC LIMIT 3",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 2005,
+    "db_id": "book_press",
+    "question": "Find the name and total book sale amount of each press.",
+    "predicted_sql": "SELECT p.Name, SUM(b.Sale_Amount) AS Total_Sale_Amount FROM press AS p JOIN book AS b ON p.Press_ID = b.Press_ID GROUP BY p.Name",
+    "gold_sql": "SELECT sum(t1.sale_amount) ,  t2.name FROM book AS t1 JOIN press AS t2 ON t1.press_id  =  t2.press_id GROUP BY t1.press_id",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 2008,
+    "db_id": "book_press",
+    "question": "For each press, return its name and the number of books that have sale amount above 1000.",
+    "predicted_sql": "SELECT p.Name, COUNT(b.Book_ID) FROM press p JOIN book b ON p.Press_ID = b.Press_ID WHERE b.Sale_Amount > 1000 GROUP BY p.Press_ID",
+    "gold_sql": "SELECT count(*) ,  t2.name FROM book AS t1 JOIN press AS t2 ON t1.press_id  =  t2.press_id WHERE sale_amount  >  1000 GROUP BY t2.name",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 2028,
+    "db_id": "cre_Doc_Workflow",
+    "question": "Show all author names and number of documents corresponding to each.",
+    "predicted_sql": "SELECT Authors.author_name, COUNT(Documents.document_id) FROM Authors LEFT JOIN Documents ON Authors.author_name = Documents.author_name GROUP BY Authors.author_name",
+    "gold_sql": "SELECT author_name ,  count(*) FROM Documents GROUP BY author_name",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"LEFT JOIN\" to ensure \"all authors\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 2066,
+    "db_id": "advertising_agencies",
+    "question": "How many clients does each agency have?",
+    "predicted_sql": "SELECT Agencies.agency_id, COUNT(Clients.client_id) FROM Agencies LEFT JOIN Clients ON Agencies.agency_id = Clients.agency_id GROUP BY Agencies.agency_id",
+    "gold_sql": "SELECT agency_id ,  count(*) FROM Clients GROUP BY agency_id",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"LEFT JOIN\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 2078,
+    "db_id": "advertising_agencies",
+    "question": "What are the client ideas and details for clients with the sic code Bad?",
+    "predicted_sql": "SELECT      Invoices.invoice_details,      Clients.client_details  FROM      Clients  JOIN      Invoices  ON      Clients.client_id = Invoices.client_id  WHERE      Clients.sic_code = 'Bad'",
+    "gold_sql": "SELECT client_id ,  client_details FROM Clients WHERE sic_code  =  \"Bad\";",
+    "label": false,
+    "reason": "PredSQL Error: false selected column",
+    "evidence": ""
+  },
+  {
+    "question_id": 2113,
+    "db_id": "advertising_agencies",
+    "question": "Show all invoice ids and the number of payments for each invoice.",
+    "predicted_sql": "SELECT Invoices.invoice_id, COUNT(Payments.invoice_id) FROM Invoices LEFT JOIN Payments ON Invoices.invoice_id = Payments.invoice_id GROUP BY Invoices.invoice_id",
+    "gold_sql": "SELECT invoice_id ,  count(*) FROM Payments GROUP BY invoice_id",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"LEFT JOIN\" to ensure \"all invoice\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 2119,
+    "db_id": "advertising_agencies",
+    "question": "Show the agency ids and the number of staff in each agent?",
+    "predicted_sql": "SELECT Agencies.agency_id, COUNT(Staff.staff_id) FROM Agencies LEFT JOIN Staff ON Agencies.agency_id = Staff.agency_id GROUP BY Agencies.agency_id",
+    "gold_sql": "SELECT agency_id ,  count(*) FROM Staff GROUP BY agency_id",
+    "label": true,
+    "reason": "GOLD FALSE: should use \"LEFT JOIN\" to ensure \"all agency ids\"",
+    "evidence": ""
+  },
+  {
+    "question_id": 2134,
+    "db_id": "advertising_agencies",
+    "question": "What is the staff id of the staff who attended the least meetings but attended some meeting?",
+    "predicted_sql": "SELECT staff_id FROM staff_in_meetings GROUP BY staff_id HAVING count(*) > 0 ORDER BY count(*) ASC LIMIT 1",
+    "gold_sql": "SELECT staff_id ,  count(*) FROM Staff_in_meetings GROUP BY staff_id ORDER BY count(*) ASC LIMIT 1;",
+    "label": true,
+    "reason": "",
+    "evidence": ""
+  },
+  {
+    "question_id": 2141,
+    "db_id": "advertising_agencies",
+    "question": "What are the ids and details of the staff who have attended at least 1 meetings and have the detail with letter 's'?",
+    "predicted_sql": "SELECT      Staff.staff_id,      Staff.staff_details FROM      Staff JOIN      Staff_in_Meetings  ON      Staff.staff_id = Staff_in_Meetings.staff_id WHERE      Staff.staff_details LIKE '%s%'",
+    "gold_sql": "SELECT staff_id ,  staff_details FROM staff WHERE staff_details LIKE \"%s%\" GROUP BY staff_id HAVING count(*)  >=  1",
+    "label": true,
+    "reason": "GOLD FALSE: should join tables",
+    "evidence": ""
+  },
+  {
+    "question_id": 2143,
+    "db_id": "advertising_agencies",
+    "question": "What are the id, sic code and agency id of the client who has attended 1 meeting and has any invoice.",
+    "predicted_sql": "SELECT c.client_id, c.sic_code, c.agency_id FROM clients c JOIN invoices i ON c.client_id = i.client_id JOIN meetings m ON c.client_id = m.client_id GROUP BY c.client_id, c.sic_code, c.agency_id HAVING COUNT(m.meeting_id) = 1 AND COUNT(i.invoice_id) >= 1",
+    "gold_sql": "SELECT T1.client_id ,  T1.sic_code ,  T1.agency_id FROM clients AS T1 JOIN meetings AS T2 ON T1.client_id  =  T2.client_id GROUP BY T1.client_id HAVING count(*)  =  1 INTERSECT SELECT T1.client_id ,  T1.sic_code ,  T1.agency_id FROM clients AS T1 JOIN invoices AS T2 ON T1.client_id  =  T2.client_id",
+    "label": false,
+    "reason": "PredSQL Error： This is equivalent to requiring that the customer has exactly 1 invoice record and exactly 1 meeting record.",
+    "evidence": ""
+  }
+]

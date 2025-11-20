@@ -1,0 +1,1002 @@
+[
+    {
+        "question_id": 603,
+        "db_id": "book_review",
+        "question": "What is the title of the book with the highest rank in the review?",
+        "predicted_sql": "SELECT book.Title FROM book JOIN review ON book.Book_ID = review.Book_ID ORDER BY review.Rank DESC LIMIT 1",
+        "gold_sql": "SELECT T1.Title FROM book AS T1 JOIN review AS T2 ON T1.Book_ID  =  T2.Book_ID ORDER BY T2.Rank LIMIT 1",
+        "label": true,
+        "reason": "GOLD FALSE. Gold SQL uses ascending order by default. It cannot find the one with the highest rank but the one with the lowest rank.",
+        "evidence": ""
+    },
+    {
+        "question_id": 647,
+        "db_id": "club_leader",
+        "question": "List the names of members whose nationality is not `` England '' .",
+        "predicted_sql": "SELECT Name FROM member WHERE Nationality != 'England'",
+        "gold_sql": "select name from member where nationality != \"england\"",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 654,
+        "db_id": "club_leader",
+        "question": "Show the names of club leaders of clubs with overall ranking higher than 100.",
+        "predicted_sql": "SELECT member.Name FROM club JOIN club_leader ON club.Club_ID = club_leader.Club_ID JOIN member ON club_leader.Member_ID = member.Member_ID WHERE club.Overall_Ranking > 100",
+        "gold_sql": "SELECT T3.Name ,  T2.Club_Name FROM club_leader AS T1 JOIN club AS T2 ON T1.Club_ID  =  T2.Club_ID JOIN member AS T3 ON T1.Member_ID  =  T3.Member_ID WHERE T2.Overall_Ranking  <  100",
+        "label": true,
+        "reason": "GOLD FALSE. Gold SQL is looking for leaders‘ rank below 100. It should be above 100.",
+        "evidence": ""
+    },
+    {
+        "question_id": 655,
+        "db_id": "club_leader",
+        "question": "Show the names of club leaders that joined their club before 2018.",
+        "predicted_sql": "SELECT T2.name FROM club_leader AS T1 JOIN member AS T2 ON T1.member_id = T2.member_id WHERE T1.year_join < '2018'",
+        "gold_sql": "SELECT T3.Name ,  T2.Club_Name FROM club_leader AS T1 JOIN club AS T2 ON T1.Club_ID  =  T2.Club_ID JOIN member AS T3 ON T1.Member_ID  =  T3.Member_ID WHERE T1.Year_Join  <  2018",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 678,
+        "db_id": "cre_Doc_and_collections",
+        "question": "What is the unique description of every parent document?",
+        "predicted_sql": "SELECT DISTINCT description FROM document_objects WHERE parent_document_object_id IS NOT NULL",
+        "gold_sql": "SELECT DISTINCT T2.Description FROM Document_Objects AS T1 JOIN Document_Objects AS T2 ON T1.Parent_Document_Object_ID = T2.Document_Object_ID",
+        "label": false,
+        "reason": "\"parent_document_object_id IS NOT NULL\"  does not mean that description is a parent document.",
+        "evidence": ""
+    },
+    {
+        "question_id": 697,
+        "db_id": "cre_Doc_and_collections",
+        "question": "List all document which is related to document owned by Ransom . List the document id .",
+        "predicted_sql": "SELECT DISTINCT Document_Subset_Members.Related_Document_Object_ID FROM Document_Subset_Members JOIN Document_Objects ON Document_Subset_Members.Document_Object_ID = Document_Objects.Document_Object_ID WHERE Document_Objects.Owner = 'Ransom'",
+        "gold_sql": "select t1.document_object_id from document_subset_members as t1 join document_objects as t2 on t1.document_object_id  =  t2.document_object_id where t2.owner  =  'ransom'",
+        "label": true,
+        "reason": "GOLD FALSE.Gold SQL only returns the document itself owned by Ransom, does not return the related document, and does not use related_document_object_id.",
+        "evidence": ""
+    },
+    {
+        "question_id": 698,
+        "db_id": "cre_Doc_and_collections",
+        "question": "What are the document object ids of the related to the document owned by Ransom ?",
+        "predicted_sql": "SELECT T1.Related_Document_Object_ID FROM Document_Subset_Members AS T1 JOIN Document_Objects AS T2 ON T1.Document_Object_ID = T2.Document_Object_ID WHERE T2.Owner = \"Ransom\"",
+        "gold_sql": "select t1.document_object_id from document_subset_members as t1 join document_objects as t2 on t1.document_object_id  =  t2.document_object_id where t2.owner  =  'ransom'",
+        "label": true,
+        "reason": "GOLD FALSE. Gold SQL does not take Related_Document_Object_ID; it merely returns the ID of the original document.",
+        "evidence": ""
+    },
+    {
+        "question_id": 700,
+        "db_id": "cre_Doc_and_collections",
+        "question": "What are the collection subset ids, names, and number of collections for each subset?",
+        "predicted_sql": "SELECT T1.Collection_Subset_ID, T1.Collection_Subset_Name, COUNT(T2.Collection_ID) FROM Collection_Subsets AS T1 LEFT JOIN Collection_Subset_Members AS T2 ON T1.Collection_Subset_ID = T2.Collection_Subset_ID GROUP BY T1.Collection_Subset_ID",
+        "gold_sql": "SELECT T2.Collection_Subset_ID ,  T1.Collection_Subset_Name ,  count(*) FROM Collection_Subsets AS T1 JOIN Collection_Subset_Members AS T2 ON T1.Collection_Subset_ID =  T2.Collection_Subset_ID GROUP BY T2.Collection_Subset_ID;",
+        "label": false,
+        "reason": "GOLD FALSE. Gold SQL uses INNER JOIN, so subsets without collections are excluded.",
+        "evidence": ""
+    },
+    {
+        "question_id": 704,
+        "db_id": "cre_Doc_and_collections",
+        "question": "What is the document object id with the least number of documents ?",
+        "predicted_sql": "SELECT document_object_id FROM documents_in_collections GROUP BY document_object_id ORDER BY count(*) LIMIT 1",
+        "gold_sql": "select document_object_id , count(*) from document_subset_members group by document_object_id order by count(*) asc limit 1;",
+        "label": false,
+        "reason": "Table document_object_id should be used.",
+        "evidence": ""
+    },
+    {
+        "question_id": 707,
+        "db_id": "cre_Doc_and_collections",
+        "question": "List all owner of documents that is related to documents owned by Braeden.",
+        "predicted_sql": "SELECT DISTINCT T1.Owner FROM Document_Objects AS T1 JOIN Document_Subset_Members AS T2 ON T1.Document_Object_ID = T2.Related_Document_Object_ID WHERE T2.Document_Object_ID IN (SELECT Document_Object_ID FROM Document_Objects WHERE Owner = 'Braeden')",
+        "gold_sql": "SELECT DISTINCT OWNER FROM Document_Subset_Members AS T1 JOIN Document_Objects AS T2 ON T1.Related_Document_Object_ID  =  T2.Document_Object_ID WHERE T2.Owner  =  'Braeden';",
+        "label": true,
+        "reason": "GOLD FALSE.The question is looking for the owner of the related document, not the Braeden. T2.Owner = 'Braeden' restricts that the related document must be the Braeden.",
+        "evidence": ""
+    },
+    {
+        "question_id": 708,
+        "db_id": "cre_Doc_and_collections",
+        "question": "What are the different owners of documents that are related to ones owned by Braeden?",
+        "predicted_sql": "SELECT DISTINCT T1.Owner FROM Document_Objects AS T1 JOIN Document_Subset_Members AS T2 ON T1.Document_Object_ID = T2.Related_Document_Object_ID WHERE T2.Document_Object_ID IN (SELECT Document_Object_ID FROM Document_Objects WHERE Owner = 'Braeden')",
+        "gold_sql": "SELECT DISTINCT OWNER FROM Document_Subset_Members AS T1 JOIN Document_Objects AS T2 ON T1.Related_Document_Object_ID  =  T2.Document_Object_ID WHERE T2.Owner  =  'Braeden';",
+        "label": true,
+        "reason": "GOLD FALSE.The question is looking for the owner of the related document, not the Braeden. T2.Owner = 'Braeden' restricts that the related document must be the Braeden.",
+        "evidence": ""
+    },
+    {
+        "question_id": 713,
+        "db_id": "cre_Doc_and_collections",
+        "question": "Which document subset has most of number of distinct documents ? List subset id , name and number of documents .",
+        "predicted_sql": "SELECT T1.document_subset_id , T1.document_subset_name , count(distinct T2.document_object_id) FROM document_subsets AS T1 JOIN document_subset_members AS T2 ON T1.document_subset_id = T2.document_subset_id GROUP BY T1.document_subset_id , T1.document_subset_name ORDER BY count(distinct T2.document_object_id) DESC LIMIT 1",
+        "gold_sql": "select t1.document_subset_id ,  t2.document_subset_name , count(distinct t1.document_object_id) from document_subset_members as t1 join document_subsets as t2 on t1.document_subset_id =  t2.document_subset_id group by t1.document_subset_id order by count(*) desc limit 1;",
+        "label": true,
+        "reason": "GOLD FALSE. Gold SQL \"ORDER BY\"uses count(document_subset_id) instead of count(document_object_id), looking for the subset with the most records.",
+        "evidence": ""
+    },
+    {
+        "question_id": 714,
+        "db_id": "cre_Doc_and_collections",
+        "question": "For the document subset with the most number of different documents , what are the ids and names of the subset , as well as the number of documents ?",
+        "predicted_sql": "SELECT T1.document_subset_id, T1.document_subset_name, COUNT(*) FROM document_subsets T1 JOIN document_subset_members T2 ON T1.document_subset_id = T2.document_subset_id GROUP BY T1.document_subset_id, T1.document_subset_name ORDER BY COUNT(*) DESC LIMIT 1;",
+        "gold_sql": "select t1.document_subset_id ,  t2.document_subset_name , count(distinct t1.document_object_id) from document_subset_members as t1 join document_subsets as t2 on t1.document_subset_id =  t2.document_subset_id group by t1.document_subset_id order by count(*) desc limit 1;",
+        "label": false,
+        "reason": "Not using distinct will result in finding the ones with the most \"different documents\".",
+        "evidence": ""
+    },
+    {
+        "question_id": 717,
+        "db_id": "cre_Doc_and_collections",
+        "question": "List all document subsets of documents that related to each document id. List the name of document subset and the document id.",
+        "predicted_sql": "SELECT DS.Document_Subset_Name, DSM.Document_Object_ID FROM Document_Subset_Members AS DSM JOIN Document_Subsets AS DS ON DSM.Document_Subset_ID = DS.Document_Subset_ID",
+        "gold_sql": "SELECT DISTINCT T3.Document_Subset_Name ,  T1.Document_Object_ID FROM Document_Subset_Members AS T1 JOIN Document_Subset_Members  AS T2 ON T1.Related_Document_Object_ID = T2.Document_Object_ID JOIN Document_Subsets AS T3 ON T2.Document_Subset_ID =  T3.Document_Subset_ID",
+        "label": false,
+        "reason": "The relevant documents were not found using the related_document_object_id relationship at all.",
+        "evidence": ""
+    },
+    {
+        "question_id": 718,
+        "db_id": "cre_Doc_and_collections",
+        "question": "What are the different subsets of documents related to each document id , list the name of the document subset and id of the actual document ?",
+        "predicted_sql": "SELECT T1.document_subset_name , T2.related_document_object_id FROM document_subsets AS T1 JOIN document_subset_members AS T2 ON T1.document_subset_id = T2.document_subset_id",
+        "gold_sql": "select distinct t3.document_subset_name ,  t1.document_object_id from document_subset_members as t1 join document_subset_members  as t2 on t1.related_document_object_id = t2.document_object_id join document_subsets as t3 on t2.document_subset_id =  t3.document_subset_id",
+        "label": false,
+        "reason": "The relevant documents were not found using the related_document_object_id relationship at all.",
+        "evidence": ""
+    },
+    {
+        "question_id": 719,
+        "db_id": "cre_Doc_and_collections",
+        "question": "List the Collection Name that document owned by 'Ransom ' belong to .",
+        "predicted_sql": "SELECT C.collection_name FROM collections AS C JOIN documents_in_collections AS DC ON C.collection_id = DC.collection_id JOIN document_objects AS D ON DC.document_object_id = D.document_object_id WHERE D.owner = 'Ransom'",
+        "gold_sql": "select t1.collection_name from collections as t1 join documents_in_collections as t2 on t1.collection_id = t2.collection_id join document_objects as t3 on t2.document_object_id  =  t3.document_object_id where t3.owner  =  'ransom'",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 721,
+        "db_id": "cre_Doc_and_collections",
+        "question": "How many collections does each document belong to? List the count and the document id.",
+        "predicted_sql": "SELECT T1.Document_Object_ID, COUNT(DISTINCT T2.Collection_ID) FROM Document_Objects AS T1 JOIN Documents_in_Collections AS T2 ON T1.Document_Object_ID = T2.Document_Object_ID GROUP BY T1.Document_Object_ID",
+        "gold_sql": "SELECT count(*) ,  T2.Document_Object_ID FROM Collections AS T1 JOIN Documents_in_Collections AS T2 ON T1.Collection_ID = T2.Collection_ID GROUP BY T2.Document_Object_ID",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 722,
+        "db_id": "cre_Doc_and_collections",
+        "question": "For each document object id, how many collections does it belong to?",
+        "predicted_sql": "SELECT document_object_id , count(*) FROM documents_in_collections GROUP BY document_object_id",
+        "gold_sql": "SELECT count(*) ,  T2.Document_Object_ID FROM Collections AS T1 JOIN Documents_in_Collections AS T2 ON T1.Collection_ID = T2.Collection_ID GROUP BY T2.Document_Object_ID",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 727,
+        "db_id": "cre_Doc_and_collections",
+        "question": "Which collection have most number of documents? List collection name, id and number of documents.",
+        "predicted_sql": "SELECT      T1.Collection_Name,      T1.Collection_ID,      COUNT(*) AS Document_Count FROM      Collections AS T1 JOIN      Documents_in_Collections AS T2 ON      T1.Collection_ID = T2.Collection_ID GROUP BY      T1.Collection_ID ORDER BY      Document_Count DESC LIMIT 1",
+        "gold_sql": "SELECT T1.Collection_Name ,  T1.Collection_ID ,  count(*) FROM Collections AS T1 JOIN Documents_in_Collections AS T2 ON T1.Collection_ID = T2.Collection_ID WHERE T1.Collection_Name = \"Best\" GROUP BY T1.Collection_ID ORDER BY count(*) DESC LIMIT 1;",
+        "label": true,
+        "reason": "GOLD FALSE. Gold SQL added WHERE T1.Collection_Name = \"Best\", which was not mentioned in the question.",
+        "evidence": ""
+    },
+    {
+        "question_id": 730,
+        "db_id": "cre_Doc_and_collections",
+        "question": "What are the different document object ids in the subset named 'Best for 2000' and in the collection named 'Best'?",
+        "predicted_sql": "SELECT document_object_id FROM document_subset_members INNER JOIN document_subsets ON document_subset_members.document_subset_id = document_subsets.document_subset_id WHERE document_subset_name = 'Best for 2000' UNION SELECT document_object_id FROM documents_in_collections INNER JOIN collections ON documents_in_collections.collection_id = collections.collection_id WHERE collection_name = 'Best'",
+        "gold_sql": "SELECT DISTINCT T1.Document_Object_ID FROM Document_Subset_Members AS T1 JOIN Document_Subsets AS T2 ON T1.Document_Subset_ID =  T2.Document_Subset_ID JOIN Documents_in_Collections AS T3 ON T1.Document_Object_ID  =  T3.Document_Object_ID JOIN Collections AS T4 ON T3.Collection_ID  =  T4.Collection_ID WHERE T2.Document_Subset_Name = \"Best for 2000\" AND T4.Collection_Name = \"Best\";",
+        "label": true,
+        "reason": "GOLD FALSE. Gold SQL is seeking the intersection. According to the meaning of the question, it should be the union.",
+        "evidence": ""
+    },
+    {
+        "question_id": 774,
+        "db_id": "address_1",
+        "question": "Count the number of cities in Canada.",
+        "predicted_sql": "SELECT count(*) FROM City WHERE country = 'Canada'",
+        "gold_sql": "SELECT count(*) FROM City WHERE country  =  \"CANADA\"",
+        "label": false,
+        "reason": "\"Canada\" should be capitalized.",
+        "evidence": ""
+    },
+    {
+        "question_id": 780,
+        "db_id": "address_1",
+        "question": "How many cities are there in each country?",
+        "predicted_sql": "SELECT count(*) , country FROM city GROUP BY country",
+        "gold_sql": "SELECT country ,  count(*) FROM City GROUP BY country",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 789,
+        "db_id": "address_1",
+        "question": "How many students live in China?",
+        "predicted_sql": "SELECT count(*) FROM Student AS T1 JOIN City AS T2 ON T1.city_code = T2.city_code WHERE T2.country = 'China';",
+        "gold_sql": "SELECT count(*) FROM City AS T1 JOIN Student AS T2 ON T1.city_code  =  T2.city_code WHERE T1.country  =  \"CHINA\"",
+        "label": false,
+        "reason": "\"China\" should be capitalized.",
+        "evidence": ""
+    },
+    {
+        "question_id": 790,
+        "db_id": "address_1",
+        "question": "Count the number of students living in China.",
+        "predicted_sql": "SELECT count(*) FROM student AS t1 JOIN city AS t2 ON t1.city_code = t2.city_code WHERE t2.country = 'China'",
+        "gold_sql": "SELECT count(*) FROM City AS T1 JOIN Student AS T2 ON T1.city_code  =  T2.city_code WHERE T1.country  =  \"CHINA\"",
+        "label": false,
+        "reason": "\"China\" should be capitalized.",
+        "evidence": ""
+    },
+    {
+        "question_id": 816,
+        "db_id": "address_1",
+        "question": "Give the average, minimum, and maximum distances between two cities.",
+        "predicted_sql": "SELECT min(distance) , avg(distance) , max(distance) FROM direct_distance",
+        "gold_sql": "SELECT avg(distance) ,  min(distance) ,  max(distance) FROM Direct_distance",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1184,
+        "db_id": "district_spokesman",
+        "question": "List the ids, names, and government websites of all districts sorted by population.",
+        "predicted_sql": "SELECT District_ID, Name, Government_website FROM district ORDER BY Population",
+        "gold_sql": "SELECT name ,  Government_website ,  district_id FROM district ORDER BY Population",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1203,
+        "db_id": "art_1",
+        "question": "What is the name of the oldest painting and where is it located?",
+        "predicted_sql": "SELECT title, location FROM paintings ORDER BY year ASC LIMIT 1",
+        "gold_sql": "SELECT title ,  LOCATION ,  YEAR FROM paintings ORDER BY YEAR LIMIT 1",
+        "label": false,
+        "reason": "The case where 'year' is null has not been excluded, and in SQLite, null values are sorted at the top by default.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1213,
+        "db_id": "art_1",
+        "question": "What are the full names of artists born after 1850?",
+        "predicted_sql": "SELECT fname, lname FROM Artists WHERE birthYear > 1850",
+        "gold_sql": "SELECT lname ,  fname FROM artists WHERE birthYear  >  1850",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1216,
+        "db_id": "art_1",
+        "question": "What are the first and last names of all distinct artists who made sculptures before 1900?",
+        "predicted_sql": "SELECT DISTINCT artists.fname, artists.lname FROM sculptures JOIN artists ON sculptures.sculptorID = artists.artistID WHERE sculptures.year < 1900",
+        "gold_sql": "SELECT DISTINCT T1.lname ,  T1.fname FROM artists AS T1 JOIN sculptures AS T2 ON T1.artistID  =  T2.sculptorID WHERE T2.year  <  1900",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1217,
+        "db_id": "art_1",
+        "question": "What is the first and last name of each distinct artists who made a sculpture before 1900?",
+        "predicted_sql": "SELECT DISTINCT T1.fname, T1.lname FROM Artists AS T1 JOIN Sculptures AS T2 ON T1.artistID = T2.sculptorID WHERE T2.year < 1900",
+        "gold_sql": "SELECT DISTINCT T1.lname ,  T1.fname FROM artists AS T1 JOIN sculptures AS T2 ON T1.artistID  =  T2.sculptorID WHERE T2.year  <  1900",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1220,
+        "db_id": "art_1",
+        "question": "What are the first and last names of the artist who lived the longest?",
+        "predicted_sql": "SELECT fname, lname FROM artists WHERE (deathyear - birthyear) = (SELECT max(deathyear - birthyear) FROM artists)",
+        "gold_sql": "SELECT lname ,  fname FROM artists ORDER BY deathYear - birthYear DESC LIMIT 1",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1221,
+        "db_id": "art_1",
+        "question": "Give the full name of the artist who lived the longest.",
+        "predicted_sql": "SELECT fname, lname FROM Artists ORDER BY deathYear - birthYear DESC LIMIT 1",
+        "gold_sql": "SELECT lname ,  fname FROM artists ORDER BY deathYear - birthYear DESC LIMIT 1",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1236,
+        "db_id": "art_1",
+        "question": "Find the first and last names of the artists who have both works of paintings and sculptures?",
+        "predicted_sql": "SELECT      Artists.fname,      Artists.lname FROM      Artists JOIN      Paintings  ON      Artists.artistID = Paintings.painterID  INTERSECT  SELECT      Artists.fname,      Artists.lname FROM      Artists JOIN      Sculptures  ON      Artists.artistID = Sculptures.sculptorID",
+        "gold_sql": "SELECT T1.lname ,  T1.fname FROM artists AS T1 JOIN sculptures AS T2 ON T1.artistID  =  T2.sculptorID INTERSECT SELECT T3.lname ,  T3.fname FROM artists AS T3 JOIN paintings AS T4 ON T3.artistID  =  T4.painterID",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1237,
+        "db_id": "art_1",
+        "question": "Give the full names of artists who have created paintings and sculptures.",
+        "predicted_sql": "SELECT DISTINCT T1.fname || ' ' || T1.lname AS full_name FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID JOIN Sculptures AS T3 ON T1.artistID = T3.sculptorID",
+        "gold_sql": "SELECT T1.lname ,  T1.fname FROM artists AS T1 JOIN sculptures AS T2 ON T1.artistID  =  T2.sculptorID INTERSECT SELECT T3.lname ,  T3.fname FROM artists AS T3 JOIN paintings AS T4 ON T3.artistID  =  T4.painterID",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1239,
+        "db_id": "art_1",
+        "question": "What are the first and last names of artists who have painted using both oil and lithographic mediums?",
+        "predicted_sql": "SELECT DISTINCT a.fname, a.lname FROM Artists AS a JOIN Paintings AS p ON a.artistID = p.painterID WHERE p.medium = 'oil'  INTERSECT  SELECT DISTINCT a.fname, a.lname FROM Artists AS a JOIN Paintings AS p ON a.artistID = p.painterID WHERE p.medium = 'lithograph'",
+        "gold_sql": "SELECT T1.lname ,  T1.fname FROM artists AS T1 JOIN paintings AS T2 ON T1.artistID  =  T2.painterID WHERE T2.medium  =  \"oil\" INTERSECT SELECT T3.lname ,  T3.fname FROM artists AS T3 JOIN paintings AS T4 ON T3.artistID  =  T4.painterID WHERE T4.medium  =  \"lithograph\"",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1244,
+        "db_id": "art_1",
+        "question": "What are the numbers of works for different medium type?",
+        "predicted_sql": "SELECT medium, COUNT(*) FROM (SELECT medium FROM Paintings UNION ALL SELECT medium FROM Sculptures) GROUP BY medium",
+        "gold_sql": "SELECT count(*) ,  medium FROM paintings GROUP BY medium",
+        "label": true,
+        "reason": "GOLD FALSE. Gold SQL miss the listing of medium in Sculptures",
+        "evidence": ""
+    },
+    {
+        "question_id": 1245,
+        "db_id": "art_1",
+        "question": "How many works are there in each medium?",
+        "predicted_sql": "SELECT medium, COUNT(*) AS work_count FROM (     SELECT medium FROM Paintings     UNION ALL     SELECT medium FROM Sculptures ) AS combined_mediums GROUP BY medium",
+        "gold_sql": "SELECT count(*) ,  medium FROM paintings GROUP BY medium",
+        "label": true,
+        "reason": "GOLD FALSE. Gold SQL miss the listing of medium in Sculptures",
+        "evidence": ""
+    },
+    {
+        "question_id": 1254,
+        "db_id": "art_1",
+        "question": "Find the distinct titles of all the paintings that have a longer height than some painting on canvas?",
+        "predicted_sql": "SELECT DISTINCT title FROM Paintings WHERE height_mm > (SELECT height_mm FROM Paintings WHERE mediumOn = 'canvas' LIMIT 1)",
+        "gold_sql": "SELECT DISTINCT title FROM paintings WHERE height_mm  >  (SELECT min(height_mm) FROM paintings WHERE mediumOn  =  \"canvas\")",
+        "label": false,
+        "reason": "Semantic error, understanding more than one painting as more than one random painting",
+        "evidence": ""
+    },
+    {
+        "question_id": 1256,
+        "db_id": "art_1",
+        "question": "Find the distinct ids of all paintings that are older than some painting at location gallery 240.",
+        "predicted_sql": "SELECT DISTINCT paintingID  FROM Paintings  WHERE year < (SELECT MIN(year) FROM Paintings WHERE location = \"Gallery 240\")",
+        "gold_sql": "SELECT paintingID FROM paintings WHERE YEAR  <  (SELECT max(YEAR) FROM paintings WHERE LOCATION  =  \"Gallery 240\")",
+        "label": false,
+        "reason": "The filtering condition \"MIN(YEAR) \" are too strict",
+        "evidence": ""
+    },
+    {
+        "question_id": 1257,
+        "db_id": "art_1",
+        "question": "What are the distinct ids of every painting that is older than some painting in gallery 240?",
+        "predicted_sql": "SELECT DISTINCT paintingid FROM paintings WHERE year < (SELECT min(year) FROM paintings WHERE location = 'Gallery 240')",
+        "gold_sql": "SELECT paintingID FROM paintings WHERE YEAR  <  (SELECT max(YEAR) FROM paintings WHERE LOCATION  =  \"Gallery 240\")",
+        "label": false,
+        "reason": "The filtering condition \"MIN(YEAR) \" are too strict",
+        "evidence": ""
+    },
+    {
+        "question_id": 1260,
+        "db_id": "art_1",
+        "question": "What are the first and last name of the artist who had a sculpture work whose title has the word “female” in it?",
+        "predicted_sql": "SELECT t1.fname, t1.lname FROM Artists AS t1 JOIN Sculptures AS t2 ON t1.artistID = t2.sculptorID WHERE t2.title LIKE '%female%'",
+        "gold_sql": "SELECT T1.lname ,  T1.fname FROM artists AS T1 JOIN sculptures AS T2 ON T1.artistID  =  T2.sculptorID WHERE T2.title LIKE \"%female%\"",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1261,
+        "db_id": "art_1",
+        "question": "What is the full name of the artist with a sculpture whose title includes the word \"female\"?",
+        "predicted_sql": "SELECT Artists.fname, Artists.lname FROM Artists JOIN Sculptures ON Sculptures.sculptorID = Artists.artistID WHERE Sculptures.title LIKE \"%female%\"",
+        "gold_sql": "SELECT T1.lname ,  T1.fname FROM artists AS T1 JOIN sculptures AS T2 ON T1.artistID  =  T2.sculptorID WHERE T2.title LIKE \"%female%\"",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1281,
+        "db_id": "art_1",
+        "question": "What are the locations that have paintings in the mediums of on panels and on canvas?",
+        "predicted_sql": "SELECT location FROM Paintings WHERE mediumOn = 'panel' OR mediumOn = 'canvas'",
+        "gold_sql": "SELECT DISTINCT LOCATION FROM paintings WHERE mediumOn  =  \"panel\" INTERSECT SELECT DISTINCT LOCATION FROM paintings WHERE mediumOn  =  \"canvas\"",
+        "label": false,
+        "reason": "Should use intersection rather than union",
+        "evidence": ""
+    },
+    {
+        "question_id": 1282,
+        "db_id": "art_1",
+        "question": "Find the locations that have paintings created before 1885 and after 1930?",
+        "predicted_sql": "SELECT location FROM paintings WHERE year < 1885 OR year > 1930",
+        "gold_sql": "SELECT DISTINCT LOCATION FROM paintings WHERE YEAR  <  1885 INTERSECT SELECT DISTINCT LOCATION FROM paintings WHERE YEAR  >  1930",
+        "label": false,
+        "reason": "Should use conjunction constraints instead of disjunction constraints",
+        "evidence": ""
+    },
+    {
+        "question_id": 1283,
+        "db_id": "art_1",
+        "question": "What are the locations that have works painted before 1885 and after 1930?",
+        "predicted_sql": "SELECT location FROM Paintings WHERE year < 1885 UNION SELECT location FROM Sculptures WHERE year > 1930",
+        "gold_sql": "SELECT DISTINCT LOCATION FROM paintings WHERE YEAR  <  1885 INTERSECT SELECT DISTINCT LOCATION FROM paintings WHERE YEAR  >  1930",
+        "label": false,
+        "reason": "Should operate on the Painting table instead of the Sculptures table",
+        "evidence": ""
+    },
+    {
+        "question_id": 1289,
+        "db_id": "art_1",
+        "question": "What are largest height and width dimensions for paintings in each year?",
+        "predicted_sql": "SELECT year, MAX(height_mm) AS largest_height, MAX(width_mm) AS largest_width FROM Paintings GROUP BY year",
+        "gold_sql": "SELECT max(height_mm) ,  max(width_mm) ,  YEAR FROM paintings GROUP BY YEAR ORDER BY YEAR",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1290,
+        "db_id": "art_1",
+        "question": "What are the average height and width of paintings grouped by painters and ordered by name?",
+        "predicted_sql": "SELECT avg(height_mm) , avg(width_mm) , T2.lname , T2.fname FROM paintings AS T1 JOIN artists AS T2 ON T1.painterid = T2.artistid GROUP BY T2.lname, T2.fname ORDER BY T2.lname, T2.fname",
+        "gold_sql": "SELECT avg(height_mm) ,  avg(width_mm) ,  painterID FROM paintings GROUP BY painterID ORDER BY title",
+        "label": true,
+        "reason": "GOLD FALSE. GOLD SQL did not select the name",
+        "evidence": ""
+    },
+    {
+        "question_id": 1299,
+        "db_id": "art_1",
+        "question": "Tell me the height and id number of the widest painting in gallery 240.",
+        "predicted_sql": "SELECT height_mm, paintingid FROM paintings WHERE location = 'Gallery 240' ORDER BY width_mm DESC LIMIT 1;",
+        "gold_sql": "SELECT paintingID ,  height_mm FROM paintings WHERE LOCATION  =  'Gallery 240' ORDER BY width_mm DESC LIMIT 1",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1304,
+        "db_id": "art_1",
+        "question": "Find the top 3 artists who have the biggest number of painting works whose medium is oil?",
+        "predicted_sql": "SELECT Artists.fname, Artists.lname FROM Artists JOIN Paintings ON Artists.artistID = Paintings.painterID WHERE Paintings.medium = 'oil' GROUP BY Artists.artistID ORDER BY count(*) DESC LIMIT 3",
+        "gold_sql": "SELECT T1.lname ,  T1.fname FROM artists AS T1 JOIN paintings AS T2 ON T1.artistID  =  T2.painterID WHERE T2.medium  =  \"oil\" GROUP BY T2.painterID ORDER BY count(*) DESC LIMIT 3",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1307,
+        "db_id": "art_1",
+        "question": "Order all of the oil paintings by date of creation and list their ids, locations, and titles.",
+        "predicted_sql": "SELECT paintingID, location, title FROM Paintings WHERE medium = 'oil' ORDER BY year",
+        "gold_sql": "SELECT paintingID ,  title ,  LOCATION FROM paintings WHERE medium  =  \"oil\" ORDER BY YEAR",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1553,
+        "db_id": "bakery_1",
+        "question": "What is average price of goods whose flavor is blackberry or blueberry?",
+        "predicted_sql": "SELECT avg(Price) FROM goods WHERE Flavor = 'blackberry' OR Flavor = 'blueberry'",
+        "gold_sql": "SELECT avg(price) FROM goods WHERE flavor  =  \"Blackberry\" OR flavor  =  \"Blueberry\"",
+        "label": false,
+        "reason": "The \"b\" in blackberry is not capitalized",
+        "evidence": ""
+    },
+    {
+        "question_id": 1557,
+        "db_id": "bakery_1",
+        "question": "What are highest, lowest, and average prices of goods, grouped and ordered by flavor?",
+        "predicted_sql": "SELECT flavor , max(price) , min(price) , avg(price) FROM goods GROUP BY flavor ORDER BY flavor",
+        "gold_sql": "SELECT max(price) ,  min(price) ,  avg(price) ,  flavor FROM goods GROUP BY flavor ORDER BY flavor",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1558,
+        "db_id": "bakery_1",
+        "question": "What are the maximum, minimum, and average prices of goods of each flavor, ordered by flavor?",
+        "predicted_sql": "SELECT Flavor, max(Price), min(Price), avg(Price) FROM goods GROUP BY Flavor ORDER BY Flavor",
+        "gold_sql": "SELECT max(price) ,  min(price) ,  avg(price) ,  flavor FROM goods GROUP BY flavor ORDER BY flavor",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1559,
+        "db_id": "bakery_1",
+        "question": "Return the lowest and highest prices of goods grouped and ordered by food type.",
+        "predicted_sql": "SELECT Food, min(Price), max(Price) FROM goods GROUP BY Food ORDER BY Food",
+        "gold_sql": "SELECT min(price) ,  max(price) ,  food FROM goods GROUP BY food ORDER BY food",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1563,
+        "db_id": "bakery_1",
+        "question": "Which customer shopped most often? How many times?",
+        "predicted_sql": "SELECT t1.LastName, t1.FirstName, COUNT(t2.ReceiptNumber) AS shop_count FROM customers AS t1 JOIN receipts AS t2 ON t1.Id = t2.CustomerId GROUP BY t1.Id ORDER BY shop_count DESC LIMIT 1",
+        "gold_sql": "SELECT CustomerId ,  count(*) FROM receipts GROUP BY CustomerId ORDER BY count(*) DESC LIMIT 1",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1566,
+        "db_id": "bakery_1",
+        "question": "How many cusomters visited on each date?",
+        "predicted_sql": "SELECT Date, COUNT(*) AS CustomerCount FROM receipts GROUP BY Date",
+        "gold_sql": "SELECT date ,  COUNT (DISTINCT CustomerId) FROM receipts GROUP BY date",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1574,
+        "db_id": "bakery_1",
+        "question": "Give the ids of goods that are more than twice as expensive as the average good.",
+        "predicted_sql": "SELECT Id FROM goods WHERE Price > 2 * (SELECT avg(Price) FROM goods)",
+        "gold_sql": "SELECT id FROM goods WHERE price  >  (SELECT avg(price) FROM goods)",
+        "label": true,
+        "reason": "GOLD FALSE. Gold SQL does not show that it is twice as expensive. It is only slightly higher than the average price.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1580,
+        "db_id": "bakery_1",
+        "question": "What are the items with chocolate flavor that were purchased at most 10 times.",
+        "predicted_sql": "SELECT g.flavor, g.id, g.food, COUNT(*) as purchase_count FROM goods g JOIN items i ON g.id = i.item WHERE g.flavor = 'Chocolate' GROUP BY g.id, g.flavor, g.food HAVING COUNT(*) <= 10;",
+        "gold_sql": "SELECT DISTINCT T1.item FROM items AS T1 JOIN goods AS T2 ON T1.item  =  T2.id WHERE T2.flavor  =  \"Chocolate\" GROUP BY item HAVING count(*)  <=  10",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1583,
+        "db_id": "bakery_1",
+        "question": "What is the three most popular goods in this bakery?",
+        "predicted_sql": "SELECT      T1.Item,      COUNT(*) AS Popularity FROM      items AS T1 JOIN      goods AS T2  ON      T1.Item = T2.Id GROUP BY      T1.Item ORDER BY      Popularity DESC LIMIT 3",
+        "gold_sql": "SELECT item FROM items GROUP BY item ORDER BY COUNT (*) DESC LIMIT 3",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1595,
+        "db_id": "car_racing",
+        "question": "Find the average age of drivers for each make.",
+        "predicted_sql": "SELECT make, avg(age) FROM driver GROUP BY make",
+        "gold_sql": "SELECT avg(age) ,  Make FROM driver GROUP BY make",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1601,
+        "db_id": "car_racing",
+        "question": "Find the make that has more than one team.",
+        "predicted_sql": "SELECT T1.Make FROM team AS T1 JOIN team_driver AS T2 ON T1.Team_ID = T2.Team_ID GROUP BY T1.Make HAVING COUNT(*) > 1",
+        "gold_sql": "SELECT make FROM team GROUP BY team HAVING count(*)  >  1",
+        "label": false,
+        "reason": "team_driver should not be joined. It has nothing to do with semantics.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1602,
+        "db_id": "car_racing",
+        "question": "Which make has more than one team?",
+        "predicted_sql": "SELECT make FROM team GROUP BY make HAVING COUNT(*) > 1",
+        "gold_sql": "SELECT make FROM team GROUP BY team HAVING count(*)  >  1",
+        "label": true,
+        "reason": "GOLD FALSE. In gold sql, \"GROUP BY team\" aggregates with the keyword \"team\", which does not conform to the semantics.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1628,
+        "db_id": "car_racing",
+        "question": "Which make is associated with 3 or more drivers?",
+        "predicted_sql": "SELECT T1.Make FROM team AS T1 JOIN team_driver AS T2 ON T1.Team_ID = T2.Team_ID JOIN driver AS T3 ON T2.Driver_ID = T3.Driver_ID GROUP BY T1.Make HAVING COUNT(DISTINCT T3.Driver_ID) >= 3",
+        "gold_sql": "SELECT Make FROM driver GROUP BY Make HAVING COUNT(*)  >=  3",
+        "label": false,
+        "reason": "Searching for \"make\" in team does not match the semantics of question.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1631,
+        "db_id": "car_racing",
+        "question": "Which country has both drivers with make \"Dodge\" and drivers with make \"Chevrolet\"?",
+        "predicted_sql": "SELECT country FROM driver WHERE make = \"Dodge\" INTERSECT SELECT country FROM driver WHERE make = \"Chevrolet\"",
+        "gold_sql": "SELECT t2.country FROM driver AS t1 JOIN country AS t2 ON t1.country  =  t2.country_id WHERE t1.Make  =  \"Dodge\" INTERSECT SELECT t2.country FROM driver AS t1 JOIN country AS t2 ON t1.country  =  t2.country_id WHERE t1.Make  =  \"Chevrolet\"",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1671,
+        "db_id": "institution_sports",
+        "question": "In which years were more than one institution founded?",
+        "predicted_sql": "SELECT Founded FROM institution GROUP BY Founded HAVING count(*) > 1",
+        "gold_sql": "SELECT Founded ,  COUNT(*) FROM institution GROUP BY Founded HAVING COUNT(*)  >  1",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1688,
+        "db_id": "warehouse_1",
+        "question": "What is the average value of boxes for each warehouse?",
+        "predicted_sql": "SELECT avg(value), warehouse FROM boxes GROUP BY warehouse",
+        "gold_sql": "SELECT warehouse ,  avg(value) FROM boxes GROUP BY warehouse",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1704,
+        "db_id": "warehouse_1",
+        "question": "What are the different locations of warehouses?",
+        "predicted_sql": "SELECT DISTINCT location FROM warehouses",
+        "gold_sql": "SELECT count(DISTINCT LOCATION) FROM warehouses",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1709,
+        "db_id": "warehouse_1",
+        "question": "Find all contents present in warehouses located in Chicago and those located in New York.",
+        "predicted_sql": "SELECT Boxes.Contents FROM Boxes JOIN Warehouses ON Boxes.Warehouse = Warehouses.Code WHERE Warehouses.Location = 'Chicago' OR Warehouses.Location = 'New York'",
+        "gold_sql": "SELECT T1.contents FROM boxes AS T1 JOIN warehouses AS T2 ON T1.warehouse  =  T2.code WHERE T2.location  =  'Chicago' INTERSECT SELECT T1.contents FROM boxes AS T1 JOIN warehouses AS T2 ON T1.warehouse  =  T2.code WHERE T2.location  =  'New York'",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1711,
+        "db_id": "warehouse_1",
+        "question": "Find the type of contents that are not in the warehouses located at New York.",
+        "predicted_sql": "SELECT DISTINCT Boxes.Contents FROM Boxes JOIN Warehouses ON Boxes.Warehouse = Warehouses.Code WHERE Warehouses.Location != 'New York'",
+        "gold_sql": "SELECT CONTENTS FROM boxes EXCEPT SELECT T1.contents FROM boxes AS T1 JOIN warehouses AS T2 ON T1.warehouse  =  T2.code WHERE T2.location  =  'New York'",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1717,
+        "db_id": "warehouse_1",
+        "question": "Find the location of the warehouses which store contents Rocks and Scissors.",
+        "predicted_sql": "SELECT location FROM warehouses WHERE code IN ( SELECT warehouse FROM boxes WHERE contents IN ('Rocks', 'Scissors') )",
+        "gold_sql": "SELECT T2.location FROM boxes AS T1 JOIN warehouses AS T2 ON T1.warehouse  =  T2.code WHERE T1.contents  =  'Rocks' INTERSECT SELECT T2.location FROM boxes AS T1 JOIN warehouses AS T2 ON T1.warehouse  =  T2.code WHERE T1.contents  =  'Scissors'",
+        "label": false,
+        "reason": "The statement returns that the repository contains Rocks or Scissors. The semantic meaning is a repository that contains Rocks and Scissors, so it does not match the semantic meaning.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1718,
+        "db_id": "warehouse_1",
+        "question": "What are the locations of warehouses in which boxes that contain Rocks and Scissors are kept?",
+        "predicted_sql": "SELECT location FROM warehouses WHERE code IN (SELECT warehouse FROM boxes WHERE contents IN ('Rocks', 'Scissors'))",
+        "gold_sql": "SELECT T2.location FROM boxes AS T1 JOIN warehouses AS T2 ON T1.warehouse  =  T2.code WHERE T1.contents  =  'Rocks' INTERSECT SELECT T2.location FROM boxes AS T1 JOIN warehouses AS T2 ON T1.warehouse  =  T2.code WHERE T1.contents  =  'Scissors'",
+        "label": false,
+        "reason": "The statement returns that the repository contains Rocks or Scissors. The semantic meaning is a repository that contains Rocks and Scissors, so it does not match the semantic meaning.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1727,
+        "db_id": "warehouse_1",
+        "question": "Find the code of all boxes whose value is higher than the value of any boxes with Rocks as content.",
+        "predicted_sql": "SELECT Code FROM Boxes WHERE Value > (SELECT MAX(Value) FROM Boxes WHERE Contents = 'Rocks')",
+        "gold_sql": "SELECT code FROM boxes WHERE value  >  (SELECT min(value) FROM boxes WHERE CONTENTS  =  'Rocks')",
+        "label": true,
+        "reason": "GOLD FALSE. The gold statement returns a box that is greater than the minimum value of the box in CONTENTS = 'Rocks', which is inconsistent with the semantics.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1732,
+        "db_id": "warehouse_1",
+        "question": "What is the total value of boxes kept in the warehouse with the greatest capacity?",
+        "predicted_sql": "SELECT SUM(B.Value) AS TotalValue FROM Boxes AS B JOIN Warehouses AS W ON B.Warehouse = W.Code WHERE W.Capacity = (SELECT MAX(Capacity) FROM Warehouses)",
+        "gold_sql": "SELECT sum(T1.value) FROM boxes AS T1 JOIN warehouses AS T2 ON T1.warehouse  =  T2.code ORDER BY T2.capacity DESC LIMIT 1",
+        "label": true,
+        "reason": "GOLD FALSE. \"limit 1\" takes effect for the outermost select.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1735,
+        "db_id": "warehouse_1",
+        "question": "Find the total value and number of boxes for each content type.",
+        "predicted_sql": "SELECT      Contents,      SUM(Value) AS TotalValue,      COUNT(*) AS NumberOfBoxes FROM      Boxes GROUP BY      Contents",
+        "gold_sql": "SELECT sum(value) ,  count(*) ,  CONTENTS FROM boxes GROUP BY CONTENTS",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1741,
+        "db_id": "warehouse_1",
+        "question": "Find the value of the most expensive boxes saved in each warehouse location.",
+        "predicted_sql": "SELECT      Warehouses.Location,      MAX(Boxes.Value) AS MostExpensiveBoxValue FROM      Boxes JOIN      Warehouses  ON      Boxes.Warehouse = Warehouses.Code GROUP BY      Warehouses.Location",
+        "gold_sql": "SELECT max(T1.value) ,  T2.location FROM boxes AS T1 JOIN warehouses AS T2 ON T1.warehouse  =  T2.code GROUP BY T2.location",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1882,
+        "db_id": "planet_1",
+        "question": "What is the name of the client who sent the most packages and how many were there?",
+        "predicted_sql": "SELECT      Client.Name,      COUNT(*) AS PackageCount FROM      Package JOIN      Client  ON      Package.Sender = Client.AccountNumber GROUP BY      Client.Name ORDER BY      PackageCount DESC LIMIT 1",
+        "gold_sql": "SELECT T2.Name ,  count(*) FROM PACKAGE AS T1 JOIN Client AS T2 ON T1.Sender  =  T2.AccountNumber GROUP BY T1.Sender ORDER BY count(*) DESC LIMIT 1;",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1885,
+        "db_id": "planet_1",
+        "question": "Who sent more than one packages? List the client's name.",
+        "predicted_sql": "SELECT      Client.Name FROM      Client JOIN      Package ON      Client.AccountNumber = Package.Sender GROUP BY      Client.AccountNumber HAVING      COUNT(*) > 1",
+        "gold_sql": "SELECT T2.Name ,  count(*) FROM PACKAGE AS T1 JOIN Client AS T2 ON T1.Sender  =  T2.AccountNumber GROUP BY T1.Sender HAVING count(*)  >  1;",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1900,
+        "db_id": "planet_1",
+        "question": "What are the ids for all shipments on the planet Mars that Turanga Leela manages?",
+        "predicted_sql": "SELECT      S.ShipmentID FROM      Shipment AS S JOIN      Employee AS E ON      S.Manager = E.EmployeeID JOIN      Planet AS P ON      S.Planet = P.PlanetID WHERE      E.Name = 'Turanga Leela'     AND P.Name = 'Mars'",
+        "gold_sql": "SELECT T1.ShipmentID FROM Shipment AS T1 JOIN Planet AS T2 ON T1.Planet = T2.PlanetID JOIN Employee AS T3 ON T3.EmployeeID = T1.Manager WHERE T2.Name = \"Mars\" OR T3.Name = \"Turanga Leela\";",
+        "label": true,
+        "reason": "GOLD FALSE. Shipments should be returned that are both on Mars and managed by Turanga Leela, but the returned shipments are either on Mars or managed by Turanga Leela.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1906,
+        "db_id": "planet_1",
+        "question": "What are the number of shipments managed and names of each manager?",
+        "predicted_sql": "SELECT      COUNT(*) AS NumberOfShipments,      T2.Name AS ManagerName FROM      Shipment AS T1 JOIN      Employee AS T2  ON      T1.Manager = T2.EmployeeID GROUP BY      T2.Name",
+        "gold_sql": "SELECT T2.Name ,  count(*) FROM Shipment AS T1 JOIN Employee AS T2 ON T1.Manager = T2.EmployeeID GROUP BY T1.Manager;",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1929,
+        "db_id": "planet_1",
+        "question": "Find the number of employees who do not have clearance in Mars .",
+        "predicted_sql": "SELECT COUNT(*)  FROM Employee  WHERE EmployeeID NOT IN (     SELECT Employee      FROM Has_Clearance      WHERE Planet = (SELECT PlanetID FROM Planet WHERE Name = 'Mars') )",
+        "gold_sql": "select count(*) from employee where employeeid not in ( select t2.employeeid from has_clearance as t1 join employee as t2 on t1.employee = t2.employeeid join planet as t3 on t1.planet = t3.planetid where t3.name = \"mars\" );",
+        "label": true,
+        "reason": "GLOD FALSE. In the gold SQL statement, it is \"mars\" rather than \"Mars\". The database is case-sensitive for field names, which causes the results to be incorrect.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1930,
+        "db_id": "planet_1",
+        "question": "What is the number of employees that do not have clearance on Mars ?",
+        "predicted_sql": "SELECT COUNT(*)  FROM Employee  WHERE EmployeeID NOT IN (     SELECT Employee      FROM Has_Clearance      JOIN Planet      ON Has_Clearance.Planet = Planet.PlanetID      WHERE Planet.Name = 'Mars' )",
+        "gold_sql": "select count(*) from employee where employeeid not in ( select t2.employeeid from has_clearance as t1 join employee as t2 on t1.employee = t2.employeeid join planet as t3 on t1.planet = t3.planetid where t3.name = \"mars\" );",
+        "label": true,
+        "reason": "GLOD FALSE. In the gold SQL statement, it is \"mars\" rather than \"Mars\". The database is case-sensitive for field names, which causes the results to be incorrect.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1935,
+        "db_id": "video_game",
+        "question": "What is the average units sold in millions of the games that are not developed by Nintendo?",
+        "predicted_sql": "SELECT AVG(Units_sold_Millions)  FROM game  WHERE Developers NOT LIKE '%Nintendo%'",
+        "gold_sql": "SELECT avg(Units_sold_Millions) FROM game WHERE developers != 'Nintendo'",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1939,
+        "db_id": "video_game",
+        "question": "What are the names and id of platforms whose download rank is 1?",
+        "predicted_sql": "SELECT Platform_ID, Platform_name FROM platform WHERE Download_rank = 1",
+        "gold_sql": "SELECT Platform_name ,  Platform_ID FROM platform WHERE Download_rank  =  1",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1940,
+        "db_id": "video_game",
+        "question": "Return the names and ids of all platforms with the download rank of 1.",
+        "predicted_sql": "SELECT Platform_ID, Platform_name FROM platform WHERE Download_rank = 1",
+        "gold_sql": "SELECT Platform_name ,  Platform_ID FROM platform WHERE Download_rank  =  1",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1968,
+        "db_id": "video_game",
+        "question": "What are the titles of games that are played by players from Oklahoma college or Auburn college?",
+        "predicted_sql": "SELECT DISTINCT T1.Title FROM game AS T1 JOIN game_player AS T2 ON T1.Game_ID = T2.Game_ID JOIN player AS T3 ON T2.Player_ID = T3.Player_ID WHERE T3.College = 'Oklahoma' OR T3.College = 'Auburn'",
+        "gold_sql": "SELECT T1.Title FROM game AS T1 JOIN game_player AS T2 ON T1.Game_ID  =  T2.Game_ID JOIN player AS T3 ON T2.Player_ID  =  T3.Player_ID WHERE T3.College  =  \"Oklahoma\" INTERSECT SELECT T1.Title FROM game AS T1 JOIN game_player AS T2 ON T1.Game_ID  =  T2.Game_ID JOIN player AS T3 ON T2.Player_ID  =  T3.Player_ID WHERE T3.College  =  \"Auburn\"",
+        "label": true,
+        "reason": "GOLD FALSE. In the gold sql statement, only games participated by players from both Oklahoma college and Auburn college can be returned.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1978,
+        "db_id": "book_press",
+        "question": "Find the average and maximum yearly profit for each press.",
+        "predicted_sql": "SELECT      Name,      AVG(Year_Profits_billion) AS Average_Yearly_Profit,      MAX(Year_Profits_billion) AS Maximum_Yearly_Profit FROM      press GROUP BY      Name",
+        "gold_sql": "SELECT avg(Year_Profits_billion) ,  max(Year_Profits_billion) FROM press",
+        "label": true,
+        "reason": "GOLD FALSE. In the gold sql statement, only games participated by players from both Oklahoma college and Auburn college can be returned.",
+        "evidence": ""
+    },
+    {
+        "question_id": 1986,
+        "db_id": "book_press",
+        "question": "For each gender, return gender and the average age of authors.",
+        "predicted_sql": "SELECT gender, AVG(age) FROM author GROUP BY gender",
+        "gold_sql": "SELECT avg(age) ,  gender FROM author GROUP BY gender",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1988,
+        "db_id": "book_press",
+        "question": "How many authors are of age above 30 for each gender?",
+        "predicted_sql": "SELECT gender, COUNT(*) FROM author WHERE age > 30 GROUP BY gender",
+        "gold_sql": "SELECT count(*) ,  gender FROM author WHERE age  >  30 GROUP BY gender",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 1993,
+        "db_id": "book_press",
+        "question": "Find the titles and publish dates of the top 5 best sale books.",
+        "predicted_sql": "SELECT Title, Release_date FROM book ORDER BY CAST(Sale_Amount AS REAL) DESC LIMIT 5",
+        "gold_sql": "SELECT title ,  release_date FROM book ORDER BY sale_amount DESC LIMIT 5",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 2003,
+        "db_id": "book_press",
+        "question": "Find the title, author name, and publisher name for the top 3 best sales books.",
+        "predicted_sql": "SELECT book.Title, author.Name, press.Name FROM book JOIN author ON book.Author_ID = author.Author_ID JOIN press ON book.Press_ID = press.Press_ID ORDER BY book.Sale_Amount DESC LIMIT 3",
+        "gold_sql": "SELECT t1.name ,  t2.title ,  t3.name FROM author AS t1 JOIN book AS t2 ON t1.author_id  =  t2.author_id JOIN press AS t3 ON t2.press_id  =  t3.press_id ORDER BY t2.sale_amount DESC LIMIT 3",
+        "label": false,
+        "reason": "ValueError: Duplicate column names found: ['Title', 'Name', 'Name']",
+        "evidence": ""
+    },
+    {
+        "question_id": 2005,
+        "db_id": "book_press",
+        "question": "Find the name and total book sale amount of each press.",
+        "predicted_sql": "SELECT p.Name, SUM(b.Sale_Amount) AS Total_Sale_Amount FROM press AS p JOIN book AS b ON p.Press_ID = b.Press_ID GROUP BY p.Name",
+        "gold_sql": "SELECT sum(t1.sale_amount) ,  t2.name FROM book AS t1 JOIN press AS t2 ON t1.press_id  =  t2.press_id GROUP BY t1.press_id",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 2008,
+        "db_id": "book_press",
+        "question": "For each press, return its name and the number of books that have sale amount above 1000.",
+        "predicted_sql": "SELECT p.Name, COUNT(b.Book_ID) FROM press p JOIN book b ON p.Press_ID = b.Press_ID WHERE b.Sale_Amount > 1000 GROUP BY p.Press_ID",
+        "gold_sql": "SELECT count(*) ,  t2.name FROM book AS t1 JOIN press AS t2 ON t1.press_id  =  t2.press_id WHERE sale_amount  >  1000 GROUP BY t2.name",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 2028,
+        "db_id": "cre_Doc_Workflow",
+        "question": "Show all author names and number of documents corresponding to each.",
+        "predicted_sql": "SELECT Authors.author_name, COUNT(Documents.document_id) FROM Authors LEFT JOIN Documents ON Authors.author_name = Documents.author_name GROUP BY Authors.author_name",
+        "gold_sql": "SELECT author_name ,  count(*) FROM Documents GROUP BY author_name",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 2066,
+        "db_id": "advertising_agencies",
+        "question": "How many clients does each agency have?",
+        "predicted_sql": "SELECT Agencies.agency_id, COUNT(Clients.client_id) FROM Agencies LEFT JOIN Clients ON Agencies.agency_id = Clients.agency_id GROUP BY Agencies.agency_id",
+        "gold_sql": "SELECT agency_id ,  count(*) FROM Clients GROUP BY agency_id",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 2078,
+        "db_id": "advertising_agencies",
+        "question": "What are the client ideas and details for clients with the sic code Bad?",
+        "predicted_sql": "SELECT      Invoices.invoice_details,      Clients.client_details  FROM      Clients  JOIN      Invoices  ON      Clients.client_id = Invoices.client_id  WHERE      Clients.sic_code = 'Bad'",
+        "gold_sql": "SELECT client_id ,  client_details FROM Clients WHERE sic_code  =  \"Bad\";",
+        "label": false,
+        "reason": "In the question, client_id and client_details need to be returned. In fact, Predicted SQL returns invoice_details and client_details.",
+        "evidence": ""
+    },
+    {
+        "question_id": 2113,
+        "db_id": "advertising_agencies",
+        "question": "Show all invoice ids and the number of payments for each invoice.",
+        "predicted_sql": "SELECT Invoices.invoice_id, COUNT(Payments.invoice_id) FROM Invoices LEFT JOIN Payments ON Invoices.invoice_id = Payments.invoice_id GROUP BY Invoices.invoice_id",
+        "gold_sql": "SELECT invoice_id ,  count(*) FROM Payments GROUP BY invoice_id",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 2119,
+        "db_id": "advertising_agencies",
+        "question": "Show the agency ids and the number of staff in each agent?",
+        "predicted_sql": "SELECT Agencies.agency_id, COUNT(Staff.staff_id) FROM Agencies LEFT JOIN Staff ON Agencies.agency_id = Staff.agency_id GROUP BY Agencies.agency_id",
+        "gold_sql": "SELECT agency_id ,  count(*) FROM Staff GROUP BY agency_id",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 2134,
+        "db_id": "advertising_agencies",
+        "question": "What is the staff id of the staff who attended the least meetings but attended some meeting?",
+        "predicted_sql": "SELECT staff_id FROM staff_in_meetings GROUP BY staff_id HAVING count(*) > 0 ORDER BY count(*) ASC LIMIT 1",
+        "gold_sql": "SELECT staff_id ,  count(*) FROM Staff_in_meetings GROUP BY staff_id ORDER BY count(*) ASC LIMIT 1;",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    },
+    {
+        "question_id": 2141,
+        "db_id": "advertising_agencies",
+        "question": "What are the ids and details of the staff who have attended at least 1 meetings and have the detail with letter 's'?",
+        "predicted_sql": "SELECT      Staff.staff_id,      Staff.staff_details FROM      Staff JOIN      Staff_in_Meetings  ON      Staff.staff_id = Staff_in_Meetings.staff_id WHERE      Staff.staff_details LIKE '%s%'",
+        "gold_sql": "SELECT staff_id ,  staff_details FROM staff WHERE staff_details LIKE \"%s%\" GROUP BY staff_id HAVING count(*)  >=  1",
+        "label": true,
+        "reason": "GOLD FALSE. The Meetings table was not connected correctly, so it cannot be ensured that a staff attended at least one meeting",
+        "evidence": ""
+    },
+    {
+        "question_id": 2143,
+        "db_id": "advertising_agencies",
+        "question": "What are the id, sic code and agency id of the client who has attended 1 meeting and has any invoice.",
+        "predicted_sql": "SELECT c.client_id, c.sic_code, c.agency_id FROM clients c JOIN invoices i ON c.client_id = i.client_id JOIN meetings m ON c.client_id = m.client_id GROUP BY c.client_id, c.sic_code, c.agency_id HAVING COUNT(m.meeting_id) = 1 AND COUNT(i.invoice_id) >= 1",
+        "gold_sql": "SELECT T1.client_id ,  T1.sic_code ,  T1.agency_id FROM clients AS T1 JOIN meetings AS T2 ON T1.client_id  =  T2.client_id GROUP BY T1.client_id HAVING count(*)  =  1 INTERSECT SELECT T1.client_id ,  T1.sic_code ,  T1.agency_id FROM clients AS T1 JOIN invoices AS T2 ON T1.client_id  =  T2.client_id",
+        "label": true,
+        "reason": "",
+        "evidence": ""
+    }
+]

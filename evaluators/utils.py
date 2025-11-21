@@ -97,7 +97,7 @@ def write_result_to_file(question, pred_sql, score, prover_result, refuter_resul
     result = {
         "question_id": question["question_id"], 
         "question": question["question"], 
-        "evidence": question["evidence"],
+        "evidence": question.get("evidence", ""),
         "gold_sql": question["gold_sql"],
         "predicted_sql": pred_sql, 
         "score": score,

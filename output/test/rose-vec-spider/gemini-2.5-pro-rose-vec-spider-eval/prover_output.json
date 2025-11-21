@@ -1,0 +1,1465 @@
+[
+  {
+    "question_id": 70,
+    "result": {
+      "expected_answer": "A list of product names and colors for items that are part of an order which has been shipped.",
+      "sql_description": "The SQL query joins the Products, Order_Items, and Shipments tables to retrieve the product name and color for every item belonging to an order that has a corresponding entry in the Shipments table, implying it has been shipped.",
+      "reason": "The query correctly identifies shipped items. The presence of an order_id in the 'Shipments' table signifies that the corresponding order has been shipped. By joining 'Products' to 'Order_Items' and then to 'Shipments', the query successfully filters for products that were part of these shipped orders and returns their name and color as requested.",
+      "verdict": true,
+      "evidence": "The result set correctly provides the requested columns 'product_name' and 'product_color' for shipped items. For instance, the first row indicates that a 'Red' 'iWatch' was part of a shipped order."
+    }
+  },
+  {
+    "question_id": 65,
+    "result": {
+      "expected_answer": "A list of invoice statuses, invoice dates, and corresponding shipment dates for all invoices. Since not all invoices may have a shipment, some shipment dates could be null.",
+      "sql_description": "The SQL query selects the invoice status code, invoice date, and shipment date by joining the `Invoices` table with the `Shipments` table using a LEFT JOIN on the invoice number, ensuring that all records from the `Invoices` table are included.",
+      "reason": "The query correctly retrieves the three requested columns. The use of a LEFT JOIN starting from the `Invoices` table correctly implements the requirement to get information \"for all invoices\", including those that may not have an associated shipment, which will show a NULL shipment date.",
+      "verdict": true,
+      "evidence": "The result table contains the three requested columns: `invoice_status_code`, `invoice_date`, and `shipment_date`. Row 0, for example, shows an invoice with a `None` shipment date, correctly handling cases where an invoice has not been shipped. Rows 1 and 2 show the same invoice with two different shipment dates, correctly handling invoices with multiple shipments."
+    }
+  },
+  {
+    "question_id": 71,
+    "result": {
+      "expected_answer": "A list of product names and their colors, for all products that are part of an order which has an entry in the Shipments table.",
+      "sql_description": "This SQL query joins the Products, Order_Items, Orders, and Shipments tables to find the name and color of every product item that belongs to an order that has been shipped. It returns a row for each instance of a shipped item.",
+      "reason": "The query correctly joins across four tables (Products, Order_Items, Orders, Shipments) to link products to their shipments. The presence of an entry in the 'Shipments' table for a given 'order_id' is the correct logical condition for a product being 'shipped'. The query returns the requested columns (product_name, product_color).",
+      "verdict": true,
+      "evidence": "The result set shows columns 'product_name' and 'product_color' for products like 'iWatch' (Red) and 'iPhone6s' (Red), which are products that have been shipped according to the query's logic."
+    }
+  },
+  {
+    "question_id": 67,
+    "result": {
+      "expected_answer": "The response should be a list of product names and their corresponding shipment dates for products that have been part of a shipped order.",
+      "sql_description": "This query joins the Products, Order_Items, and Shipments tables. It retrieves the unique pairs of product names and the shipment dates for the orders in which those products were included.",
+      "reason": "The query correctly links products to shipments via the Order_Items table. By joining these three tables, it successfully filters for products that have been shipped and retrieves the requested information: product name and shipment date. The use of DISTINCT is appropriate to avoid duplicate entries for the same product-shipment date pair.",
+      "verdict": true,
+      "evidence": "The result returns the product names and shipment dates as requested. For example, the first row shows that 'iWatch' was shipped on '2018-03-11 23:48:37'."
+    }
+  },
+  {
+    "question_id": 69,
+    "result": {
+      "expected_answer": "A list of order item status codes and their corresponding shipment tracking numbers for all items belonging to orders that have been shipped.",
+      "sql_description": "The query joins the `Order_Items` and `Shipments` tables on the `order_id` column. It then selects the `order_item_status_code` from the `Order_Items` table and the `shipment_tracking_number` from the `Shipments` table for all the joined rows.",
+      "reason": "The query correctly interprets 'items have been ordered and shipped' by joining the `Order_Items` table (representing ordered items) with the `Shipments` table (representing shipped orders). This join correctly links items to their shipment information. The query then selects the two specific columns requested: the item status code and the shipment tracking number.",
+      "verdict": true,
+      "evidence": "The result set contains the two requested columns, `order_item_status_code` and `shipment_tracking_number`. For example, the first row shows a status of 'Delivered' with tracking number '6074'."
+    }
+  },
+  {
+    "question_id": 53,
+    "result": {
+      "expected_answer": "Product IDs, names, and prices for the product(s) with the highest order frequency. This requires counting how many times each product appears in the `order_items` table and selecting the product(s) with the maximum count.",
+      "sql_description": "The SQL selects the product ID, name, and price for all products that appear in the `order_items` table. The `ORDER BY` clause inside the `IN` subquery is ineffective, so it does not filter for only the most frequent products.",
+      "reason": "The query incorrectly implements the 'most frequently' constraint. The subquery `( SELECT product_id FROM order_items GROUP BY product_id ORDER BY count(*) DESC )` returns all product IDs that have been ordered, not just the one(s) with the highest count. The outer query then retrieves details for all products that have ever been ordered, which is not what the question asks.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 85,
+    "result": {
+      "expected_answer": "The usernames (`login_name`) and passwords (`login_password`) of all customers whose phone number starts with '+12'.",
+      "sql_description": "This query selects the first name (`customer_first_name`) and login password for customers whose phone number starts with '+12'.",
+      "reason": "The query incorrectly selects the customer's first name (`customer_first_name`) instead of their username (`login_name`) as requested by the question.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 207,
+    "result": {
+      "expected_answer": "A list of all unique student answer texts, along with a count of how many times each text appears, sorted in descending order based on the count.",
+      "sql_description": "This query groups the rows in the `Student_Answers` table by the `Student_Answer_Text`, counts the number of occurrences for each unique text, and then lists the texts and their counts in descending order of the count.",
+      "reason": "The query correctly groups by the student answer text, counts each occurrence, and sorts the results in descending order of the count as requested. This directly answers the question.",
+      "verdict": true,
+      "evidence": "The result set shows the `Student_Answer_Text` in the first column and its corresponding `COUNT(*)` in the second. The rows are sorted in descending order by the count, starting with 'ABC' which appears 6 times."
+    }
+  },
+  {
+    "question_id": 98,
+    "result": {
+      "expected_answer": "A list of pairs, where each pair consists of the first name of a customer and the name of a product they purchased.",
+      "sql_description": "The SQL query joins the `customers`, `orders`, and `products` tables. It attempts to link customers to products they bought by first joining `customers` with `orders` on `customer_id`, and then joining the result with `products` on `order_id` = `product_id`.",
+      "reason": "The verdict is false because the query uses an incorrect join condition. It joins `orders` and `products` on `order_id = product_id`. This is logically flawed as an order's ID is not the same as a product's ID. A linking table, such as `order_items`, which is not present in the provided schema, would be required to correctly associate products with orders. The query produces results based on coincidental ID matches, not actual purchase relationships.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 340,
+    "result": {
+      "expected_answer": "A list of building addresses, each paired with the name of the region it is located in. The query should return results for all buildings in the database.",
+      "sql_description": "The SQL query joins the 'building' and 'region' tables on their common 'Region_ID' column and selects the 'Address' from the 'building' table and the 'Name' from the 'region' table for each matched record.",
+      "reason": "The query correctly joins the 'building' and 'region' tables using the foreign key relationship to retrieve the address of each building and the name of its corresponding region, which directly answers the user's question.",
+      "verdict": true,
+      "evidence": "The result set correctly provides the building 'Address' and the region 'Name' for each row, such as '424 Spadina Crescent E' in the 'Abruzzo' region (row 0) and '311 6th Ave N' in the 'Aosta Valley' region (row 1)."
+    }
+  },
+  {
+    "question_id": 135,
+    "result": {
+      "expected_answer": "A list of the IDs and names for all channels that do not have any programs directed by 'Hank Baskett'.",
+      "sql_description": "The query selects all channels and then subtracts the channels that are associated with a program directed by 'Hank Baskett', which is found by joining the director, program, and channel tables.",
+      "reason": "The query correctly uses the EXCEPT operator to find the set difference between all channels and those directed by 'Hank Baskett'. This logically fulfills the user's request.",
+      "verdict": true,
+      "evidence": "The SQL result provides a list of channels with their IDs and Names, such as (1, 'BBC One'), (2, 'ITV'), and (3, 'BBC Two'), which are the channels not directed by Hank Baskett."
+    }
+  },
+  {
+    "question_id": 179,
+    "result": {
+      "expected_answer": "A list of vehicle IDs and models for any vehicle that has been driven by at least two drivers OR was manufactured by 'Ziyang'.",
+      "sql_description": "The query returns the vehicle ID and model for vehicles that were either built by 'Ziyang' and have at least one driver, or have been driven by two or more drivers. It does this by taking the union of two separate selections.",
+      "reason": "The query correctly implements the logic of the question by using a UNION to combine two conditions. The first part selects vehicles manufactured by 'Ziyang', and the second part selects vehicles driven by two or more drivers. The query assumes that vehicles made by 'Ziyang' must also have at least one assigned driver to be considered, which is a reasonable interpretation within the context of a database named 'vehicle_driver'.",
+      "verdict": true,
+      "evidence": "The query returns 4 rows with columns 'Vehicle_ID' and 'Model', which aligns with the question's request for a list of vehicle IDs and models. For example, row 0 shows Vehicle_ID 1 and Model AC4000."
+    }
+  },
+  {
+    "question_id": 342,
+    "result": {
+      "expected_answer": "A list of building names and their corresponding number of stories for all buildings located in the 'Abruzzo' region.",
+      "sql_description": "The SQL query retrieves the name and number of stories for all buildings where the `region_id` matches the ID of the region named 'Abruzzo', which is determined via a subquery.",
+      "reason": "The query correctly identifies the region 'Abruzzo' by name, finds its corresponding ID, and uses it to filter the buildings table. It then returns the requested columns (name and number of stories) for the matching buildings, fulfilling the question's requirements.",
+      "verdict": true,
+      "evidence": "The result shows the building 'La Renaissance Apartments' has 24 stories, which is a building in the 'Abruzzo' region."
+    }
+  },
+  {
+    "question_id": 74,
+    "result": {
+      "expected_answer": "A list of invoice status codes for orders that have not been shipped. This requires identifying orders without a shipment record and then finding their associated invoices.",
+      "sql_description": "The SQL query joins the `Invoices` and `Shipments` tables and then filters for rows where the `order_id` from the `Shipments` table is not in the set of all `order_id`s from the `Shipments` table. This is a logical contradiction.",
+      "reason": "The query is logically flawed. The condition `WHERE S.order_id NOT IN (SELECT order_id FROM Shipments)` will never be true, because the `S` alias refers to the `Shipments` table itself. Consequently, the query will always return an empty result and fails to correctly identify unshipped orders as requested by the question.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 365,
+    "result": {
+      "expected_answer": "The details of the customer with the highest count of service interactions.",
+      "sql_description": "This query joins the customers and customer interactions tables, groups the results by customer ID, counts the number of interactions for each customer, and returns the details of the customer with the highest count.",
+      "reason": "The query correctly interprets 'used services the most times' as counting the number of entries in the `customer_interactions` table for each customer. It then correctly uses GROUP BY, ORDER BY DESC, and LIMIT 1 to find and return the details of the customer with the maximum count.",
+      "verdict": true,
+      "evidence": "The result at row 0 under the `Customer_Details` column is 'Hardy Kutch'."
+    }
+  },
+  {
+    "question_id": 451,
+    "result": {
+      "expected_answer": "A distinct list of detention type descriptions for detentions that have occurred, as recorded in the `Detention` table.",
+      "sql_description": "The SQL joins the `Ref_Detention_Type` and `Detention` tables to find distinct detention type descriptions. However, it incorrectly attempts to join on the description field from one table and the code field from the other.",
+      "reason": "The query is logically flawed. It joins the `Ref_Detention_Type` table with the `Detention` table using `Ref_Detention_Type.detention_type_description = Detention.detention_type_code`. According to the schema, the correct join condition should be on the `detention_type_code` column present in both tables.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 497,
+    "result": {
+      "expected_answer": "The date or dates when transcripts were issued for the student who received the largest loan.",
+      "sql_description": "The query first identifies the student ID with the highest loan amount from the `Student_Loans` table. It then uses this student ID to retrieve all their corresponding transcript dates from the `Transcripts` table.",
+      "reason": "The query correctly implements the logic required by the question. It first finds the student with the maximum loan amount and then retrieves all associated transcript dates. The question asks 'When was the transcript issued...', which does not imply only a single transcript, so returning multiple dates for the student is a correct and complete answer.",
+      "verdict": true,
+      "evidence": {
+        "column_names": [
+          "date_of_transcript"
+        ],
+        "rows": [
+          {
+            "row_number": 1,
+            "date_of_transcript": "1973-08-09 00:00:00.000"
+          },
+          {
+            "row_number": 2,
+            "date_of_transcript": "2014-09-13 00:00:00.000"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "question_id": 452,
+    "result": {
+      "expected_answer": "A list of unique detention summaries from the `detention` table.",
+      "sql_description": "The SQL retrieves the distinct values from the `detention_summary` column in the `detention` table.",
+      "reason": "The query correctly translates the question's request for 'distinct descriptions' by selecting the `DISTINCT detention_summary` from the `detention` table. This aligns perfectly with the question's intent.",
+      "verdict": true,
+      "evidence": "The result is a single row under the `detention_summary` column with a value of `None`, which is the only distinct detention summary found in the database."
+    }
+  },
+  {
+    "question_id": 363,
+    "result": {
+      "expected_answer": "The details for any services that have been used on more than three occasions.",
+      "sql_description": "The SQL query joins the services table with the customer interactions table, groups the results by service ID, and filters for services that have more than three interactions, returning the details of those services.",
+      "reason": "The query correctly interprets 'used by more than 3 times' as counting the number of records for each service in the `Customer_Interactions` table. It joins the necessary tables, groups by service, applies the correct filter, and selects the requested service details. The logic perfectly matches the question.",
+      "verdict": true,
+      "evidence": "The result in row 0, column `Service_Details`, shows 'driving license' as a service used more than 3 times."
+    }
+  },
+  {
+    "question_id": 464,
+    "result": {
+      "expected_answer": "A list of the biographical data for all students whose behavior monitoring detail is the most frequent one found in the `Behaviour_Monitoring` table.",
+      "sql_description": "The SQL query first identifies the most common `behaviour_monitoring_details` by grouping them, counting their occurrences, and selecting the top one. It then joins the `Students` and `Behaviour_Monitoring` tables and filters for records matching this most common detail, returning the `bio_data` for the corresponding students.",
+      "reason": "The query correctly implements the logic to answer the question. It first finds the most common `behaviour_monitoring_details` in a subquery and then uses this value to filter for the students who have that detail, returning their requested `bio_data`. The interpretation of 'biographical information' as `bio_data` is reasonable.",
+      "verdict": true,
+      "evidence": {
+        "column_names": [
+          "bio_data"
+        ],
+        "first_row": "Vanessa",
+        "last_row": "Pansy"
+      }
+    }
+  },
+  {
+    "question_id": 448,
+    "result": {
+      "expected_answer": "A list of all loan amounts and their corresponding dates for students who have at least two achievements.",
+      "sql_description": "The SQL joins the student loans table with the achievements table, groups the results by student ID to find students with two or more achievements, and then selects the loan amount and date.",
+      "reason": "The query is logically flawed. By grouping by `student_id` while selecting non-aggregated columns `amount_of_loan` and `date_of_loan`, the query will return only one arbitrary loan for each qualifying student, not all of them as requested. A correct query would first identify the students who meet the criteria and then select all loans associated with those students.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 383,
+    "result": {
+      "expected_answer": "A list of details for customers who have been part of an interaction where the status is 'Stuck' AND the service and channel details are 'bad'.",
+      "sql_description": "The SQL query retrieves the `Customer_Details` from the `Customers` table by joining it with the `Customer_Interactions` table on `Customer_ID`. It then filters these interactions to only include those where the `Status_Code` is 'Stuck' and the `Services_and_Channels_Details` is 'bad'.",
+      "reason": "The predicted SQL correctly identifies the target information (`Customer_Details`). It properly joins the `Customers` and `Customer_Interactions` tables and applies all the required anchors from the question: `Status_Code = 'Stuck'` and `Services_and_Channels_Details = 'bad'`. The query logically and accurately answers the user's request.",
+      "verdict": true,
+      "evidence": "The `sql_result` contains a single column, `Customer_Details`, with three rows, which represents the details for the customers who meet the specified interaction criteria."
+    }
+  },
+  {
+    "question_id": 548,
+    "result": {
+      "expected_answer": "A list of all client names and the corresponding count of orders each has placed. Clients with no orders should be included with a count of 0.",
+      "sql_description": "The SQL query performs a LEFT JOIN from the Client table to the Orders table on the client ID, then groups by client name to count the number of orders for each client.",
+      "reason": "The query correctly answers the question. The use of `LEFT JOIN` ensures that *all* clients are included in the result, even those who have not placed any orders, fulfilling the 'all the clients' requirement. The `COUNT(Orders.IdOrder)` correctly calculates the number of orders for each client, resulting in 0 for clients without any orders. The grouping is also correct.",
+      "verdict": true,
+      "evidence": "The result displays a `Name` column with client names and a `COUNT(Orders.IdOrder)` column with their respective order counts. For instance, row 0 shows 'Betty Fraser' with 0 orders, and row 1 shows 'James Smith' with 2 orders, which aligns with the question's intent."
+    }
+  },
+  {
+    "question_id": 647,
+    "result": {
+      "expected_answer": "A list of names for all members whose nationality is not 'England'.",
+      "sql_description": "The SQL query selects the 'Name' column from the 'member' table and filters the results to include only those members whose 'Nationality' is not equal to 'England'.",
+      "reason": "The predicted SQL correctly translates the question's requirements into a query. It selects the requested column ('Name') and applies the specified negative filter on nationality.",
+      "verdict": true,
+      "evidence": "The result contains a 'Name' column with values such as 'Wally Lewis' (row 0), 'Brett Kenny' (row 1), and 'Garry Jack' (row 2), which are the names of members not from England."
+    }
+  },
+  {
+    "question_id": 454,
+    "result": {
+      "expected_answer": "A list of student personal details and their corresponding address type descriptions. The question is ambiguous as to what \"personal details\" entails; a reasonable interpretation is the `bio_data` column from the `Students` table.",
+      "sql_description": "This query retrieves the `bio_data` from the `Students` table and the `address_type_description` from the `Ref_Address_Types` table by joining them via the `Students_Addresses` linking table based on student ID and address type code.",
+      "reason": "The query correctly joins the necessary tables (`Students`, `Students_Addresses`, `Ref_Address_Types`) to link students to their address types. The question's reference to \"personal details\" is ambiguous; the query adopts a reasonable interpretation by selecting the `bio_data` column. The result provides the requested information for each student-address association.",
+      "verdict": true,
+      "evidence": "The result set includes the columns `bio_data` and `address_type_description`. For example, the first row shows that 'Keshawn' has a 'Home' address type, and the third row shows that 'Houston' has a 'College' address type, correctly answering the question."
+    }
+  },
+  {
+    "question_id": 597,
+    "result": {
+      "expected_answer": "A list of books, identified by their ID, along with the maximum and minimum number of chapters for each. Since each book has a single chapter count, the max and min will be the same value.",
+      "sql_description": "The SQL query groups the records in the 'book' table by 'book_id' and calculates the maximum and minimum values of the 'chapters' column for each group, returning these values along with the 'book_id'.",
+      "reason": "The query correctly groups the data by each book using `book_id` and finds the maximum and minimum chapter counts as requested. Given that each book is a single record, the max and min values for chapters will be identical, which is accurately reflected in the results.",
+      "verdict": true,
+      "evidence": "The result shows columns for 'max(chapters)', 'min(chapters)', and 'Book_ID'. For each book, such as 'Book_ID' 1, the maximum and minimum chapters are correctly reported as 73."
+    }
+  },
+  {
+    "question_id": 603,
+    "result": {
+      "expected_answer": "The title of the book that has the highest rank value in the 'review' table.",
+      "sql_description": "This query joins the 'book' and 'review' tables on their common Book_ID, sorts the combined results by the 'Rank' column in descending order, and returns the 'Title' from the first row.",
+      "reason": "The query correctly finds the book title associated with the highest rank. It does this by joining the 'book' and 'review' tables, ordering the results by rank in descending order, and selecting the top entry. This is a valid and common method for finding a value associated with a maximum.",
+      "verdict": true,
+      "evidence": "The `Title` column of the first row contains 'A Dance with Dragons'."
+    }
+  },
+  {
+    "question_id": 654,
+    "result": {
+      "expected_answer": "A list of names of members who are leaders of clubs that have an overall ranking greater than 100.",
+      "sql_description": "The query joins the `club`, `club_leader`, and `member` tables to find the names of leaders for clubs with an overall ranking greater than 100.",
+      "reason": "The SQL query correctly joins the `club`, `club_leader`, and `member` tables to establish the relationship between a club's ranking and its leader's name. It correctly filters for clubs with an `Overall_Ranking > 100` and selects the names of the corresponding leaders. The logic is sound and directly answers the question.",
+      "verdict": true,
+      "evidence": "The SQL result contains a single 'Name' column listing names such as 'Brett Kenny' (row 0), 'Andrew Johns' (row 1), and 'Wally Lewis' (row 2), which are the names of the requested club leaders."
+    }
+  },
+  {
+    "question_id": 678,
+    "result": {
+      "expected_answer": "A list of unique descriptions for documents that are parents to other documents. A document is considered a parent if its ID appears in the `Parent_Document_Object_ID` column for any other document.",
+      "sql_description": "The SQL query retrieves the unique descriptions of all documents that have a non-null `Parent_Document_Object_ID`, meaning it selects the descriptions of child documents.",
+      "reason": "The verdict is false because the query misinterprets the central concept of the question. It retrieves the descriptions of documents that *have* a parent (child documents), whereas the question explicitly asks for the descriptions of documents that *are* parents. These are two distinct sets of documents.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 713,
+    "result": {
+      "expected_answer": "The ID, name, and count of distinct documents for the document subset that has the largest number of distinct documents.",
+      "sql_description": "The query joins the document subsets table with the document subset members table. It then groups the results by document subset ID and name, counts the number of distinct document object IDs for each subset, orders the subsets by this count in descending order, and returns the top result.",
+      "reason": "The predicted SQL correctly identifies the document subset with the highest count of distinct documents by joining the relevant tables, grouping by subset, counting distinct document IDs, and ordering the result to find the maximum. The selected columns match the user's request.",
+      "verdict": true,
+      "evidence": "The result at row 0 shows the Document_Subset_ID is 183, the Document_Subset_Name is 'Best for 2001', and the count of distinct documents is 2."
+    }
+  },
+  {
+    "question_id": 578,
+    "result": {
+      "expected_answer": "The query should return the titles of all books for which 'Plato' is listed as an author, and whose sale price is lower than the average sale price of all books in the database.",
+      "sql_description": "The SQL query selects the titles of books. It joins the `Book`, `Author_Book`, and `Author` tables to filter for books where the author's name is 'Plato'. It then further filters these results to only include books where the 'SalePrice' is less than the average 'SalePrice' of all books.",
+      "reason": "The verdict is false because the query uses an incorrect join condition to link books to authors. It joins `Book` and `Author_Book` on the author ID (`Book.Author = Author_Book.Author`) instead of the book's primary key (`Book.ISBN = Author_Book.ISBN`). This fails to correctly model the many-to-many relationship between books and authors defined by the schema, and thus cannot reliably identify which books are authored by Plato.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 717,
+    "result": {
+      "expected_answer": "A list of document subset names and the corresponding document IDs that are members of those subsets.",
+      "sql_description": "The query joins the `Document_Subset_Members` table with the `Document_Subsets` table on their common `Document_Subset_ID` to retrieve the name of each document subset and the ID of each document associated with it.",
+      "reason": "The query correctly joins the table containing subset names (`Document_Subsets`) with the linking table (`Document_Subset_Members`) to find all document-subset relationships and returns the requested columns: the subset name (`Document_Subset_Name`) and the document ID (`Document_Object_ID`). This directly answers the user's question.",
+      "verdict": true,
+      "evidence": "The results display the requested columns, `Document_Subset_Name` and `Document_Object_ID`. For instance, the first row indicates that the document with ID 5 is part of the 'Best for 2005' subset. The fourth row shows that document ID 8 is part of the 'Best for 2001' subset."
+    }
+  },
+  {
+    "question_id": 704,
+    "result": {
+      "expected_answer": "The ID of the document object that is part of the minimum number of collections.",
+      "sql_description": "This query groups the records in the `documents_in_collections` table by `document_object_id`, counts the number of occurrences for each ID (which corresponds to the number of collections a document is in), orders these counts in ascending order, and returns the ID with the smallest count.",
+      "reason": "The question 'document object id with the least number of documents' is ambiguous. The query reasonably interprets this to mean 'the document which appears in the fewest number of collections'. The SQL correctly implements this logic by counting the occurrences of each document ID in the `documents_in_collections` table and finding the minimum.",
+      "verdict": true,
+      "evidence": "The query returns a single `Document_Object_ID`: 5."
+    }
+  },
+  {
+    "question_id": 536,
+    "result": {
+      "expected_answer": "A list of every ISBN from the 'Book' table, and for each ISBN, a count of the number of orders associated with it. Books that have never been ordered should be included with a count of zero.",
+      "sql_description": "The SQL query performs a LEFT JOIN from the 'Book' table to the 'Books_Order' table on the ISBN column. It then groups the results by ISBN and counts the number of orders ('IdOrder') for each book. This approach correctly includes all books, even those with no orders, which will have a count of 0.",
+      "reason": "The query correctly answers the question. The use of `LEFT JOIN` from the `Book` table to `Books_Order` ensures that all books are included, fulfilling the 'for each book' requirement. The `COUNT(T2.IdOrder)` correctly calculates the number of orders for each book, resulting in 0 for books that have not been ordered. The result aligns perfectly with the question's intent.",
+      "verdict": true,
+      "evidence": "The result displays two columns, 'ISBN' and 'COUNT(T2.IdOrder)'. For instance, the first row shows ISBN '0482174555366' has been ordered once, and the second row shows ISBN '0853477468299' has been ordered zero times, which is consistent with the query logic and the user's question."
+    }
+  },
+  {
+    "question_id": 718,
+    "result": {
+      "expected_answer": "A list of document subset names and the IDs of the documents belonging to them. The question is ambiguous as to which document ID to show from the `Document_Subset_Members` table, so showing either `Document_Object_ID` or `Related_Document_Object_ID` is acceptable.",
+      "sql_description": "This query joins the `document_subsets` and `document_subset_members` tables on their common ID. It then selects the name of the subset and the ID of the related document for each membership record.",
+      "reason": "The question is ambiguous about which document ID constitutes the 'actual document' in a subset relationship. The `Document_Subset_Members` table contains two document ID columns (`Document_Object_ID` and `Related_Document_Object_ID`). The query makes a reasonable choice by selecting `Related_Document_Object_ID` and correctly joins the tables to retrieve the subset name. This is a valid interpretation of the question.",
+      "verdict": true,
+      "evidence": "The result set correctly lists the `Document_Subset_Name` and a corresponding `Related_Document_Object_ID` for each membership found. For example, row 1 shows document ID 5 belongs to the 'Best for 2005' subset, and row 4 shows that document ID 5 also belongs to the 'Best for 2001' subset."
+    }
+  },
+  {
+    "question_id": 698,
+    "result": {
+      "expected_answer": "A list of `Related_Document_Object_ID`s for documents that are related to documents owned by 'Ransom'.",
+      "sql_description": "The query joins the `Document_Subset_Members` table with the `Document_Objects` table on `Document_Object_ID`. It then filters the results to include only those documents where the owner is 'Ransom' and selects the corresponding `Related_Document_Object_ID`.",
+      "reason": "The query correctly identifies documents owned by 'Ransom' by filtering the `Document_Objects` table. It then joins this with the `Document_Subset_Members` table to find the IDs of documents that are related to Ransom's documents. This is a direct and logical interpretation of the question.",
+      "verdict": true,
+      "evidence": "The query returns a single column, `Related_Document_Object_ID`, with three values: 5, 8, and 9, which represents the list of IDs requested."
+    }
+  },
+  {
+    "question_id": 462,
+    "result": {
+      "expected_answer": "A list of the biographical data and details for students who satisfy one of two conditions: either they have the maximum number of entries in the `behaviour_monitoring` table, or they have exactly 3 entries in that table.",
+      "sql_description": "The query selects the biographical data and student details from the `students` table. It finds the relevant students by checking if their student ID appears in a subquery. The subquery selects student IDs from the `behaviour_monitoring` table where the count of monitoring records for that student is either equal to the overall maximum count, or is equal to 3.",
+      "reason": "The question is highly ambiguous. The predicted SQL commits to a reasonable interpretation. It interprets \"most common result\" as the maximum count of behavior entries, which is a common understanding of such superlatives. It interprets the phrase \"a result that is obtained by 3 students\" as simply having a count of 3, which is a simplification but plausible for a poorly-worded question. Finally, it interprets the connector \"not only... but also\" as a union (OR), which is a valid way to request two distinct groups of results in one question. The SQL query correctly implements this interpretation.",
+      "verdict": true,
+      "evidence": "The query returns columns `bio_data` and `student_details` as requested. The first row contains 'Dino' and 'Suite 970', representing one of the students who met the specified criteria."
+    }
+  },
+  {
+    "question_id": 820,
+    "result": {
+      "expected_answer": "A list of unique city codes for cities that are involved in a direct distance record where the distance is greater than the average distance of all records.",
+      "sql_description": "The query calculates the average distance from all records in the `Direct_distance` table. It then selects all unique city codes, from both `city1_code` and `city2_code` columns, where the associated distance is greater than this calculated average.",
+      "reason": "The question is ambiguous about which cities to return when a distance record (connecting two cities) is greater than the average. The predicted SQL adopts a reasonable interpretation by returning all unique cities that participate in such a record, whether they are listed as city1 or city2. The use of `UNION` correctly combines and deduplicates the city codes from both columns, fulfilling the question's intent.",
+      "verdict": true,
+      "evidence": "The SQL result provides a single column `city1_code` containing the list of 19 distinct city codes that meet the criteria, such as 'BAL', 'BKK', 'BOS', and others."
+    }
+  },
+  {
+    "question_id": 655,
+    "result": {
+      "expected_answer": "A list of names for club leaders who joined their club in a year prior to 2018.",
+      "sql_description": "The SQL query joins the `club_leader` and `member` tables on their common `member_id`. It then filters these results to include only those leaders who joined before the year 2018 and selects their names.",
+      "reason": "The query correctly identifies club leaders by joining the `club_leader` and `member` tables. It also correctly applies the constraint that the joining year must be before 2018. The selected column is the name of the leader as requested.",
+      "verdict": true,
+      "evidence": "The `Name` column contains 'Wally Lewis', 'Brett Kenny', and 'No award given', which are the names of the leaders matching the criteria."
+    }
+  },
+  {
+    "question_id": 774,
+    "result": {
+      "expected_answer": "A single number representing the count of cities located in Canada.",
+      "sql_description": "The SQL query counts the number of rows in the 'City' table where the 'country' column has the value 'Canada'.",
+      "reason": "The query correctly translates the question by counting records from the 'City' table and applying a filter for the country 'Canada'. This directly addresses the user's request.",
+      "verdict": true,
+      "evidence": "The result is 0, which is the value in the `count(*)` column."
+    }
+  },
+  {
+    "question_id": 789,
+    "result": {
+      "expected_answer": "The total number of students who live in the country 'China'.",
+      "sql_description": "The SQL query joins the Student and City tables on their common 'city_code' and then counts the number of records where the country is 'China'.",
+      "reason": "The query correctly joins the Student and City tables to identify students based on their city's country. It then filters for 'China' and counts the number of students, which directly answers the question.",
+      "verdict": true,
+      "evidence": "The result is a single row with the column `count(*)` and the value 0, representing the number of students in China."
+    }
+  },
+  {
+    "question_id": 727,
+    "result": {
+      "expected_answer": "The name, ID, and document count for the collection that contains the highest number of documents.",
+      "sql_description": "The query joins the collections table with the linking table `Documents_in_Collections`, groups the results by collection, counts the number of documents in each collection, and then selects the name, ID, and document count of the collection with the highest count.",
+      "reason": "The query correctly implements the logic to find the collection with the 'most number of documents' by joining the relevant tables, grouping by collection to get a count, and using ORDER BY with LIMIT 1. It also correctly selects the three requested fields: collection name, ID, and the document count.",
+      "verdict": true,
+      "evidence": "The result returns a single row corresponding to the collection with the most documents, showing the `Collection_Name` ('Nice'), `Collection_ID` (7), and the `Document_Count` (3)."
+    }
+  },
+  {
+    "question_id": 719,
+    "result": {
+      "expected_answer": "The names of all collections that contain documents owned by 'Ransom '.",
+      "sql_description": "This query joins the collections, document_objects, and the linking table documents_in_collections. It then filters for documents where the owner is 'Ransom' and returns the corresponding collection names.",
+      "reason": "The query is incorrect because it fails to include the trailing space in the owner's name as specified in the question. The question explicitly asks for the owner 'Ransom ', but the SQL query's WHERE clause filters for `owner = 'Ransom'`, which is a different string and could lead to incorrect results.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 860,
+    "result": {
+      "expected_answer": "A list of unique names of sailors who have made at least two boat reservations.",
+      "sql_description": "The query joins the Sailors and Reserves tables on the sailor ID, groups the results by sailor ID, filters for sailors with a count of two or more reservations, and then selects their names.",
+      "reason": "The query correctly implements the logic to answer the question. It joins sailors to their reservations, groups by sailor to count the number of reservations for each, and uses a HAVING clause to filter for those with two or more reservations. The GROUP BY on the sailor ID ensures that each sailor's name is returned only once, satisfying the 'different names' requirement. The query adopts a reasonable interpretation of 'reserved two or more boats' as making at least two reservation records.",
+      "verdict": true,
+      "evidence": "The result correctly identifies 'Luis' as a sailor who meets the criteria, as shown in the 'name' column."
+    }
+  },
+  {
+    "question_id": 939,
+    "result": {
+      "expected_answer": "A list of earpad types that are never associated with a 'Plastic' construction across all headphone models.",
+      "sql_description": "The SQL selects the distinct earpad types for all headphones that have a construction material other than 'Plastic'.",
+      "reason": "The query is logically incorrect. It finds earpad types that appear with at least one non-plastic construction. However, an earpad type might be used in a non-plastic model and also in a plastic model. The question asks for earpads that *never* use plastic construction, which means those earpad types should be excluded if they are associated with plastic even once. The correct approach would be to find all earpads associated with plastic and exclude them from the total list of earpads.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 790,
+    "result": {
+      "expected_answer": "A single number representing the total count of students who live in a city located in 'China'.",
+      "sql_description": "The SQL query joins the 'student' and 'city' tables on 'city_code', filters the results to include only those where the country is 'China', and then counts the total number of matching rows.",
+      "reason": "The query correctly joins the student table with the city table to identify the country of each student's city. It then filters for 'China' and counts the number of students who meet this condition. This directly answers the question.",
+      "verdict": true,
+      "evidence": "The query returns a single column 'count(*)' with one row containing the value 0, which is the count of students living in China."
+    }
+  },
+  {
+    "question_id": 833,
+    "result": {
+      "expected_answer": "A list of all city names, and for each city, the average distance to all other cities found in the `Direct_distance` table. This requires considering pairs where the city appears as either `city1_code` or `city2_code`.",
+      "sql_description": "The SQL joins the `City` and `Direct_distance` tables, and for each city, calculates the average of distances where that city appears as the `city1_code`.",
+      "reason": "The query is incorrect because it only calculates the average distance based on records where a city is the `city1_code`. It fails to account for distances where the city is the `city2_code`. To find the average distance to 'all other cities', both directions in the `Direct_distance` table must be considered.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 554,
+    "result": {
+      "expected_answer": "The name of the client who ordered the largest quantity of books in total.",
+      "sql_description": "This SQL query joins the client, orders, and books_order tables. It groups the results by client name, calculates the sum of the 'amount' (quantity) of books for each client, orders the clients in descending order based on this sum, and returns the name of the top client.",
+      "reason": "The query correctly identifies the client with the greatest total number of books ordered. The phrase 'greatest total amount of books' is ambiguous and could refer to total quantity or total monetary value. The query reasonably interprets it as total quantity by summing the `amount` column from the `books_order` table. All joins and aggregations are correct for this interpretation.",
+      "verdict": true,
+      "evidence": {
+        "column_names": [
+          "Name"
+        ],
+        "first_row": [
+          "Peter Doe"
+        ]
+      }
+    }
+  },
+  {
+    "question_id": 952,
+    "result": {
+      "expected_answer": "A list of stores that have headphones in stock, along with the total quantity of headphones for each respective store.",
+      "sql_description": "The SQL query joins the `store` and `stock` tables on their common `Store_ID`. It then groups the results by store and calculates the total quantity of headphones for each store, returning the store's name and its total quantity.",
+      "reason": "The predicted SQL correctly interprets 'the headphones' as all headphones in general. It successfully retrieves the names of all stores that have stock and accurately calculates the total quantity of headphones for each store, fulfilling the user's request for store names and their total quantities.",
+      "verdict": true,
+      "evidence": "The result provides the store name in the `Name` column and the corresponding total quantity in the `Total_Quantity` column. For example, the first row indicates that the 'Laurel Canyon' store has a total quantity of 100."
+    }
+  },
+  {
+    "question_id": 832,
+    "result": {
+      "expected_answer": "A list of city codes, and for each city, the sum of distances of all routes connected to it.",
+      "sql_description": "The query first creates a combined list of all city appearances from both 'city1_code' and 'city2_code' columns along with their respective distances using UNION ALL. It then groups the results by city code and calculates the sum of the distances for each city.",
+      "reason": "The query correctly interprets that to find the sum of distances 'from' a city, one must consider all routes where that city appears, regardless of whether it is in the `city1_code` or `city2_code` column. The use of UNION ALL followed by a GROUP BY and SUM is a valid and accurate method to achieve this.",
+      "verdict": true,
+      "evidence": "The result provides two columns: `city_code` and `total_distance`. The first row shows city 'ATL' with a total distance of 2482. The second row shows city 'BAL' with a total distance of 149332, and so on for all cities."
+    }
+  },
+  {
+    "question_id": 1019,
+    "result": {
+      "expected_answer": "A list of unique venue and year pairs for papers associated with the affiliation 'Columbia University'.",
+      "sql_description": "The query joins the Affiliation, Author_list, and Paper tables. It filters for records where the affiliation name is 'Columbia University' and returns the distinct venues and years of the corresponding papers.",
+      "reason": "The query correctly joins the necessary tables (Paper, Author_list, Affiliation) to link papers to their authors' affiliations. It properly filters by the affiliation name 'Columbia University' and selects the requested columns, venue and year. The use of DISTINCT is appropriate to provide unique pairs as requested.",
+      "verdict": true,
+      "evidence": "The result is a table of unique (venue, year) pairs, with columns `venue` and `year`. The first row shows 'NAACL' and '2000', and the second row shows 'ANLP' and '1988'."
+    }
+  },
+  {
+    "question_id": 697,
+    "result": {
+      "expected_answer": "A list of document IDs that are related to documents owned by the user 'Ransom'.",
+      "sql_description": "The query joins the document relationship table (`Document_Subset_Members`) with the document details table (`Document_Objects`) on the document ID. It then filters for documents where the owner is 'Ransom' and returns the distinct IDs of the related documents.",
+      "reason": "The query correctly filters for documents owned by 'Ransom' using the `Document_Objects` table. It then successfully finds all associated related documents by joining with the `Document_Subset_Members` table and selecting the `Related_Document_Object_ID`. This fulfills all aspects of the user's request.",
+      "verdict": true,
+      "evidence": "The query returns a single column `Related_Document_Object_ID` containing the document IDs [5, 8, 9] which are related to documents owned by 'Ransom'."
+    }
+  },
+  {
+    "question_id": 962,
+    "result": {
+      "expected_answer": "A list of neighborhood names where at least one store has no headphones in stock.",
+      "sql_description": "The query identifies stores that do not have any entries in the `stock` table and returns the neighborhood for each of these stores.",
+      "reason": "The question \"Find the neighborhood where no headphones are in stock\" is ambiguous. It can be interpreted as \"Find neighborhoods that contain at least one store with no headphones in stock\". The predicted SQL correctly implements this reasonable interpretation by finding stores whose `Store_ID` is not in the `stock` table and returning their corresponding neighborhoods.",
+      "verdict": true,
+      "evidence": "The query returns neighborhoods from the `Neighborhood` column. The result includes 'Tarzana' (row 0) and 'Canoga Park' (rows 1, 2)."
+    }
+  },
+  {
+    "question_id": 997,
+    "result": {
+      "expected_answer": "The venue and year that collectively had the highest number of publications.",
+      "sql_description": "This SQL query groups the papers by venue and year, counts the number of papers in each group, and then returns the venue and year for the group with the highest count.",
+      "reason": "The query correctly groups by both `venue` and `year`, orders the groups by the count of papers in descending order, and selects the top one. This directly answers the question of finding the venue and year with the most publications.",
+      "verdict": true,
+      "evidence": "The result at [0] indicates that the venue 'LREC' in the year 2008 had the most publications, with a count of 620."
+    }
+  },
+  {
+    "question_id": 980,
+    "result": {
+      "expected_answer": "The response should list the titles and paper IDs for all papers authored by 'Mckeown'.",
+      "sql_description": "The SQL query joins the `Paper`, `Author_list`, and `Author` tables. It filters for records where the author's name is 'Mckeown' and returns the corresponding paper titles and paper IDs.",
+      "reason": "The query correctly joins the necessary tables (`Paper`, `Author`, and the linking table `Author_list`) to connect papers to their authors. It accurately filters by the author's name as specified in the question and selects the requested columns ('title', 'paper_id'). The logic is sound, and the empty result correctly indicates that no papers by this author were found in the database.",
+      "verdict": true,
+      "evidence": "The query correctly returns an empty result set with columns `title` and `paper_id`."
+    }
+  },
+  {
+    "question_id": 1095,
+    "result": {
+      "expected_answer": "A list of university names and their locations, for all universities that had no staff members participate in any conference held in the year 2004.",
+      "sql_description": "The SQL query retrieves the names and locations of all institutions whose ID is not found in the set of institutions that had staff members participate in a conference in the year 2004. This set is generated by joining the conference, conference_participation, and staff tables and filtering for the year 2004.",
+      "reason": "The query correctly identifies the required information (university name and location). It uses a `NOT IN` clause with a subquery to correctly implement the negative constraint, filtering out all institutions that had staff attend a conference in the specified year (2004). The joins and conditions are all logically sound and directly address the user's question.",
+      "verdict": true,
+      "evidence": "The SQL result provides a list of universities under the columns `Institution_Name` and `Location`. For example, row 0 shows 'Illinois State University' in 'Normal, Illinois'."
+    }
+  },
+  {
+    "question_id": 976,
+    "result": {
+      "expected_answer": "A list of distinct venue names, ordered chronologically by year. Since a single venue can appear in multiple years, this implies either showing venue-year pairs ordered by year, or ordering the unique venues by a specific year (e.g., their first appearance), neither of which this query accomplishes.",
+      "sql_description": "The SQL query selects distinct venue names from the `Paper` table and then attempts to order the results by the `year` column.",
+      "reason": "The query correctly retrieves distinct venues. However, the ordering request is not fulfilled in a meaningful way. When `SELECT DISTINCT venue` is combined with `ORDER BY year`, the database engine will use the year from an arbitrary, non-deterministic row for each venue to perform the sort. This does not provide a reliable or logical chronological ordering as requested by the user. A correct implementation would need to also select the `year` column to establish a deterministic order.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1015,
+    "result": {
+      "expected_answer": "The name of the author who has the most citations for their papers, and the total count of those citations.",
+      "sql_description": "The query finds the author who has the highest count of references made in their papers to other papers, and returns their name and this count.",
+      "reason": "The query incorrectly calculates the number of citations an author *makes* rather than the number of citations an author *receives*. The join condition `T2.paper_id = T3.paper_id` counts how many other papers a given paper `T2.paper_id` cites. The correct logic would be to join on `T2.paper_id = T3.cited_paper_id` to count how many times a paper is cited by others.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 987,
+    "result": {
+      "expected_answer": "A list of paper titles and paper IDs for papers authored by either 'Mckeown, Kathleen' or 'Rambow, Owen'.",
+      "sql_description": "This query joins the `Paper`, `Author_list`, and `Author` tables to find the titles and IDs of all papers where the author's name is either 'McKeown, Kathleen' or 'Rambow, Owen'.",
+      "reason": "The predicted SQL correctly joins the paper and author tables and filters for papers authored by either of the two specified authors. The selected columns match the user's request.",
+      "verdict": true,
+      "evidence": "The SQL result contains 20 rows with the requested columns 'title' and 'paper_id'. The first row shows the title 'A Framework For MT And Multilingual NLG System...' with paper ID 'A00-1009'."
+    }
+  },
+  {
+    "question_id": 1010,
+    "result": {
+      "expected_answer": "A list of the 10 paper titles with the highest number of citations, along with their respective citation counts, ordered from most to least cited.",
+      "sql_description": "The query joins the citation table with the paper table on the cited paper's ID. It then groups the results by paper title, counts the number of citations for each, orders the papers by their citation count in descending order, and returns the top 10.",
+      "reason": "The query correctly interprets a 'citation' as a record where a paper appears in the `cited_paper_id` column. It accurately counts these citations for each paper, ranks them to find the 'most cited', and limits the result to the top 10 as requested by the question. The selected columns, title and citation count, directly answer both parts of the question.",
+      "verdict": true,
+      "evidence": "The result table shows 10 rows with columns `title` and `citation_count`. The `citation_count` column is correctly ordered in descending fashion, from 1064 for the top paper \"Bleu: A Method For Automatic Evaluation Of Mac...\" down to 383 for the 10th paper."
+    }
+  },
+  {
+    "question_id": 1006,
+    "result": {
+      "expected_answer": "The paper ID of the most cited paper and the corresponding count of its citations. 'Most cited' means the paper ID appearing most frequently in the 'cited_paper_id' column.",
+      "sql_description": "The SQL query groups the Citation table by the 'cited_paper_id', counts the occurrences for each group, orders the results by this count in descending order, and returns the paper ID and count for the top result.",
+      "reason": "The query correctly interprets 'most cited paper' as the paper with the highest count of appearances in the 'cited_paper_id' column. It accurately calculates this count and returns both the required ID and the citation count for the top entry, fully answering the question.",
+      "verdict": true,
+      "evidence": "The result in row 0 shows the `cited_paper_id` ('P02-1040') and its `citation_count` (1064)."
+    }
+  },
+  {
+    "question_id": 1090,
+    "result": {
+      "expected_answer": "A list of all conferences, each showing its ID, name, year, and the total count of its participants.",
+      "sql_description": "This query joins the conference and conference participation tables, groups the results by conference, and then selects the conference ID, name, year, and the count of participations for each conference.",
+      "reason": "The query correctly joins the `conference` and `conference_participation` tables to link conferences with their participants. It then groups by conference ID and uses `COUNT(*)` to accurately calculate the number of participants for each conference, which directly answers the question.",
+      "verdict": true,
+      "evidence": "The result table provides the requested columns: 'Conference_ID', 'Conference_Name', 'Year', and 'number_of_participants'. For example, the first row shows that conference ID '1', named 'ACL' in '2003', had '4' participants."
+    }
+  },
+  {
+    "question_id": 1183,
+    "result": {
+      "expected_answer": "The sum of the population for the three districts with the largest areas.",
+      "sql_description": "The SQL query first identifies the `district_id`s of the top 3 districts by `area_km` in descending order. It then joins this result back to the `district` table on `district_id` and calculates the sum of the `population` for those three districts.",
+      "reason": "The query correctly identifies the top 3 districts based on their area and then accurately calculates the total population for those districts, which directly answers the question.",
+      "verdict": true,
+      "evidence": "The query returns a single value in the 'sum(d.population)' column, which is 19607.0."
+    }
+  },
+  {
+    "question_id": 827,
+    "result": {
+      "expected_answer": "The name of the city that is geographically closest to Chicago, which may be Chicago itself.",
+      "sql_description": "The SQL calculates the squared Euclidean distance between each city in the `City` table and the hardcoded coordinates of Chicago (41.8781, -87.6298). It then sorts the cities by this distance in ascending order and returns the name of the city with the smallest distance.",
+      "reason": "The query correctly implements a method to find the city closest to a given geographical point (Chicago). The question is ambiguous as to whether Chicago itself should be excluded from the results. The query takes the literal interpretation that the closest city could be Chicago itself, which is a reasonable approach. The calculation for ordering by distance is valid.",
+      "verdict": true,
+      "evidence": "The `sql_result` shows the `city_name` is 'Chicago', which is the logically correct answer based on the query's literal interpretation."
+    }
+  },
+  {
+    "question_id": 1025,
+    "result": {
+      "expected_answer": "A single number representing the count of unique papers associated with 'Columbia University' that were published in or before the year 2009.",
+      "sql_description": "The SQL query joins the paper, author_list, and affiliation tables. It filters for records where the affiliation name is 'Columbia University' and the paper's year is less than or equal to 2009. It then counts the total number of resulting rows.",
+      "reason": "The question asks for the number of papers, which implies counting distinct papers. The query counts the number of author-paper associations, not the number of unique papers. If a single paper has multiple authors from 'Columbia University', it will be counted multiple times. The query should have used `COUNT(DISTINCT T1.paper_id)` to be correct.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1138,
+    "result": {
+      "expected_answer": "A distinct list of all plane names, ordered alphabetically.",
+      "sql_description": "Selects all distinct values from the `plane_name` column in the `Hangar` table and sorts them in ascending alphabetical order.",
+      "reason": "The query correctly gets the distinct plane names and orders them alphabetically as requested by the question.",
+      "verdict": true,
+      "evidence": "The `sql_result` shows a single column `plane_name` with four distinct plane names listed in alphabetical order, starting with 'B-1 Bomber' and ending with 'Piper Cub'."
+    }
+  },
+  {
+    "question_id": 940,
+    "result": {
+      "expected_answer": "A list of earpad types for headphones where the construction material is not plastic.",
+      "sql_description": "Selects the 'Earpads' column from the 'headphone' table for all entries where the 'Construction' is not equal to 'Plastic'.",
+      "reason": "The predicted SQL correctly identifies the target column ('Earpads') and applies the explicit negative filter ('Construction != \"Plastic\"') from the question.",
+      "verdict": true,
+      "evidence": "The result returns the `Earpads` column, showing values like 'Bowls' and 'Circumaural Bowls' for headphones that meet the condition."
+    }
+  },
+  {
+    "question_id": 1047,
+    "result": {
+      "expected_answer": "A count of authors, where none of the papers they have written have been cited more than 50 times.",
+      "sql_description": "The query first identifies papers with more than 50 citations. It then finds all distinct authors of these highly cited papers. Next, it subtracts this set of authors from the complete list of all authors using an EXCEPT clause. Finally, it counts the number of authors remaining.",
+      "reason": "The query's logic correctly addresses the question. It identifies the set of authors who *did* publish a paper cited more than 50 times and then uses the EXCEPT operator to find all authors who are not in that set. The final count represents the number of authors who did not publish any paper with more than 50 citations.",
+      "verdict": true,
+      "evidence": "The result in row 0 of the `author_count` column is 21019."
+    }
+  },
+  {
+    "question_id": 1074,
+    "result": {
+      "expected_answer": "A list of institution IDs, the count of staff members for each, and the names of those staff members, but only for institutions founded after the year 1800.",
+      "sql_description": "The query joins the institution and staff tables on their common ID, filters for institutions founded after the year 1800, and then groups the results by institution ID to calculate the count of staff members and concatenate their names.",
+      "reason": "The query correctly joins the 'institution' and 'staff' tables, applies the required filter for institutions founded after 1800, and groups by institution ID to provide the requested count of staff and their names. All parts of the question are addressed.",
+      "verdict": true,
+      "evidence": "The result table returns the columns `Institution_ID`, `staff_count`, and `staff_names` for institutions meeting the criteria. For instance, the first row indicates that Institution_ID 1 has a staff count of 1, and the staff member's name is 'Bobby Jackson'."
+    }
+  },
+  {
+    "question_id": 1159,
+    "result": {
+      "expected_answer": "A list of plane types, and for each type, the names of the pilot(s) who are the oldest qualified to fly it.",
+      "sql_description": "The query first finds the maximum pilot age for each plane name. It then joins this result back to the PilotSkills table to select the names of the pilots who have that maximum age for each respective plane.",
+      "reason": "The SQL query correctly identifies the oldest pilot(s) for each plane type. It does this by first finding the maximum age for each plane and then retrieving all pilots who match that maximum age for that specific plane. This correctly handles potential ties where multiple pilots share the maximum age.",
+      "verdict": true,
+      "evidence": "The SQL result provides the plane name and the name of the oldest pilot for that plane, such as ('B-52 Bomber', 'Higgins') in row 0 and ('B-1 Bomber', 'Wilson') in row 3. Rows 0 and 4 show that multiple pilots can be the oldest for the same plane type, which is handled correctly by the query."
+    }
+  },
+  {
+    "question_id": 1256,
+    "result": {
+      "expected_answer": "A list of distinct painting IDs for all paintings whose 'year' is less than the 'year' of at least one painting located in 'Gallery 240'. This is equivalent to finding paintings with a 'year' less than the maximum 'year' of any painting in 'Gallery 240'.",
+      "sql_description": "The SQL query selects distinct painting IDs for paintings whose 'year' is less than the minimum 'year' of all paintings located in 'Gallery 240'.",
+      "reason": "The question asks for paintings older than 'some' painting in Gallery 240. This translates to being older than at least one painting, which means the condition should be `WHERE year < (SELECT MAX(year) FROM ... )`. The predicted query incorrectly uses `MIN(year)`, which finds paintings that are older than *all* paintings in Gallery 240. This is an incorrect interpretation of the quantifier 'some'.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1237,
+    "result": {
+      "expected_answer": "A list of the full names of artists who are associated with at least one painting and at least one sculpture.",
+      "sql_description": "The query joins the Artists, Paintings, and Sculptures tables on their respective artist ID columns. This ensures that only artists who have entries in both the Paintings and Sculptures tables are included. It then selects the distinct full names of these artists, concatenated from the first and last name columns.",
+      "reason": "The query correctly implements the logic to find artists who have created both paintings and sculptures by using two inner JOINs. It correctly constructs the full name as requested and uses DISTINCT to ensure each artist is listed only once. The query is logically sound and directly answers the question.",
+      "verdict": true,
+      "evidence": "The `full_name` column contains the names 'Pablo Picasso' and 'Edgar Degas' at rows 0 and 1, respectively."
+    }
+  },
+  {
+    "question_id": 1290,
+    "result": {
+      "expected_answer": "A list of painters' names, along with the average height and average width of their paintings, grouped by painter and ordered by their last and first names.",
+      "sql_description": "The SQL query calculates the average height and width from the `paintings` table, joins it with the `artists` table to get the painters' names (first and last), groups the results by painter, and orders them by the painter's last name then first name.",
+      "reason": "The predicted SQL correctly joins the `paintings` and `artists` tables, calculates the average height and width for each painter, and orders the results by the painter's name as requested. All components of the question are accurately addressed.",
+      "verdict": true,
+      "evidence": "The result set contains four columns: `avg(height_mm)`, `avg(width_mm)`, `lname`, and `fname`. Each row presents the average dimensions for a specific painter, such as row 0 showing '909.000000' and '651.000000' for 'Cassatt', 'Mary'. The rows are correctly ordered by the `lname` and `fname` columns."
+    }
+  },
+  {
+    "question_id": 1158,
+    "result": {
+      "expected_answer": "A list of all distinct plane names, each paired with the name of the oldest pilot who can fly that plane. The final list should be ordered by plane name in ascending order.",
+      "sql_description": "The query joins the hangar and pilot skills tables, groups by plane name, and selects the plane name and a pilot name. It orders the result first by the maximum age of pilots in descending order and then by the plane name in ascending order.",
+      "reason": "The query is logically incorrect. In a `GROUP BY` clause, selecting a non-aggregated column like `T2.pilot_name` results in an arbitrary value from the group being chosen. It does not guarantee that the selected pilot is the one with the maximum age. The an ordering is also incorrect; the question asks to order by plane name, but the query primarily orders by age.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 986,
+    "result": {
+      "expected_answer": "A list of paper titles and their corresponding paper IDs for all papers that have 'Mckeown' as an author and do not have 'Rambow' as an author.",
+      "sql_description": "The query selects the titles and paper IDs for papers authored by 'McKeown' and then uses the EXCEPT operator to remove any of those papers that were also authored by 'Rambow'.",
+      "reason": "The query correctly implements the logic requested by the user. It first finds all papers by 'Mckeown' and then subtracts the set of papers by 'Rambow'. This is a valid way to answer the question, and the selected columns match the request.",
+      "verdict": true,
+      "evidence": "The query returned an empty result with the correct columns 'title' and 'paper_id', indicating that no papers in the database meet the specified criteria."
+    }
+  },
+  {
+    "question_id": 1388,
+    "result": {
+      "expected_answer": "A list of official languages with the average overall score of the countries that speak them, sorted in descending order by that average score.",
+      "sql_description": "The query joins the languages, official_languages, and countries tables, groups the results by language name, calculates the average overall score for each language, and then orders the languages in descending order based on their calculated average score.",
+      "reason": "The query correctly joins the necessary tables to link official languages to countries. It accurately calculates the average overall score per language and sorts the results in descending order as requested by the question.",
+      "verdict": true,
+      "evidence": "The result displays columns `name` and `avg_overall_score`. The rows are sorted by `avg_overall_score` in descending order, with the first row being 'Icelandic' with a score of 100.0 and the second row being 'Swedish' with a score of 99.2."
+    }
+  },
+  {
+    "question_id": 1009,
+    "result": {
+      "expected_answer": "A list of the 10 paper titles with the highest number of citations, along with their citation counts, ordered from most to least cited.",
+      "sql_description": "The SQL query counts the number of times each paper is cited by joining the `Citation` and `Paper` tables on the cited paper's ID. It then groups the results by paper, orders them by the citation count in descending order, and returns the top 10 paper titles and their corresponding counts.",
+      "reason": "The query correctly calculates the citation count for each paper, retrieves the paper's title, and orders the results to find the top 10 most cited papers as requested.",
+      "verdict": true,
+      "evidence": "The result is a table with 10 rows and two columns, `title` and `citation_count`. The first row shows the most cited paper, 'Bleu: A Method For Automatic Evaluation Of Mac...', with a `citation_count` of 1064. The rows are sorted in descending order of `citation_count`."
+    }
+  },
+  {
+    "question_id": 1245,
+    "result": {
+      "expected_answer": "A list of mediums and the corresponding count of artworks for each medium. Since 'works' is a general term, it should include items from both the Paintings and Sculptures tables.",
+      "sql_description": "The query first combines the 'medium' column from the 'Paintings' and 'Sculptures' tables into a single list. It then groups this combined list by medium and counts the number of occurrences for each, effectively counting the number of works per medium.",
+      "reason": "The query correctly interprets 'works' as encompassing both paintings and sculptures. It appropriately combines data from both tables using UNION ALL and then performs the correct aggregation (GROUP BY medium and COUNT) to answer the question.",
+      "verdict": true,
+      "evidence": "The result table provides a `medium` column and a `work_count` column. For example, the first row indicates that there are 4 works with the medium 'bronze'."
+    }
+  },
+  {
+    "question_id": 1020,
+    "result": {
+      "expected_answer": "A list of unique venue and year pairs where papers from 'Columbia University' were published.",
+      "sql_description": "The SQL query retrieves the distinct venues and years of papers by joining the Paper, Author_list, and Affiliation tables, and filtering for affiliations with the name 'Columbia University'.",
+      "reason": "The query correctly links papers to author affiliations through the Author_list table and applies the specified filter for 'Columbia University'. Selecting DISTINCT venue and year pairs precisely answers the question.",
+      "verdict": true,
+      "evidence": "The result set is a list of distinct venue-year pairs, as seen in rows 0 ('NAACL', 2000), 1 ('ANLP', 1988), and 2 ('ANLP', 1994), which corresponds to the venues and years of papers published by authors from Columbia University."
+    }
+  },
+  {
+    "question_id": 1254,
+    "result": {
+      "expected_answer": "A list of distinct titles for paintings that have a height greater than the height of at least one painting on canvas. This is logically equivalent to finding paintings taller than the shortest painting on canvas.",
+      "sql_description": "The SQL query selects the distinct titles of paintings whose height in millimeters is greater than the height of a single, arbitrarily chosen painting on canvas.",
+      "reason": "The query incorrectly implements the condition \"longer than some painting on canvas\". The quantifier \"some\" implies the existence of at least one such painting, which means the condition should be satisfied if the painting's height is greater than the minimum height of all canvas paintings (`> MIN(height_mm)`). By using `LIMIT 1` without an `ORDER BY` clause, the query compares against the height of an arbitrary canvas painting. If that arbitrarily chosen painting is not the shortest, the query will fail to return all paintings that correctly satisfy the condition, leading to an incomplete result.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1443,
+    "result": {
+      "expected_answer": "A list of the first, middle, last, and login names for all users who are identified as sellers in the database.",
+      "sql_description": "The SQL query retrieves the first name, middle name, last name, and login name from the `users` table for all rows where the `is_seller` column has the value 'Yes'.",
+      "reason": "The query correctly selects the four requested name columns and filters for users who are sellers. The condition `is_seller = \"Yes\"` is a direct and reasonable interpretation of the filter criteria. The empty result set is a valid answer, indicating that no users in the database meet this condition.",
+      "verdict": true,
+      "evidence": "The result is an empty DataFrame with the correct columns (`first_name`, `middle_name`, `last_name`, `login_name`), indicating there are no sellers matching the criteria in the database."
+    }
+  },
+  {
+    "question_id": 1409,
+    "result": {
+      "expected_answer": "A count of properties that have either 1 parking lot or have a garage.",
+      "sql_description": "The SQL query counts the number of rows from the `properties` table where the value in the `parking_lots` column is 1 or the value in the `garage_yn` column is 'yes'.",
+      "reason": "The query correctly translates the user's request into a SQL `COUNT` operation with an `OR` condition. It interprets '1 parking lot' as `parking_lots = 1` and '1 garage' as `garage_yn = 'yes'`, which are both reasonable interpretations of the question's intent.",
+      "verdict": true,
+      "evidence": "The query returns a single cell with the column `count(*)` and value `9`, which is the correct format for the requested count."
+    }
+  },
+  {
+    "question_id": 1129,
+    "result": {
+      "expected_answer": "A count of the unique planes that are flown by pilots older than 40.",
+      "sql_description": "The SQL counts the number of distinct plane names from the `PilotSkills` table for rows where the pilot's age is greater than 40.",
+      "reason": "The query correctly interprets 'controlled by' as the relationship in the `PilotSkills` table. It appropriately filters for pilots with an age greater than 40 and correctly uses `COUNT(DISTINCT plane_name)` to count the unique planes meeting this criterion, which precisely answers the question.",
+      "verdict": true,
+      "evidence": "The `count(DISTINCT plane_name)` column shows a single value of `2`."
+    }
+  },
+  {
+    "question_id": 1281,
+    "result": {
+      "expected_answer": "A list of locations that contain at least one painting on 'panel' AND at least one painting on 'canvas'.",
+      "sql_description": "This query selects the locations of all paintings where the medium is either 'panel' or 'canvas'.",
+      "reason": "The question asks for locations that have paintings of *both* specified mediums ('on panels' and 'on canvas'). The predicted query uses `OR`, which finds locations that have paintings of *either* medium. This does not correctly implement the intersection logic implied by the 'and' in the question.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1387,
+    "result": {
+      "expected_answer": "The names of the three languages that are official in the most countries.",
+      "sql_description": "The query joins the `languages` table with the `official_languages` table, groups the results by language name, counts the number of countries for each language, orders this count in descending order, and returns the names of the top 3 languages.",
+      "reason": "The query correctly identifies the official languages spoken in the most countries by counting the entries for each language in the `official_languages` table and selecting the top 3 after ordering by the count.",
+      "verdict": true,
+      "evidence": "The query returns the three language names 'English', 'Swedish', and 'Romansh' in the 'name' column, which corresponds to the top three official languages by country count."
+    }
+  },
+  {
+    "question_id": 1283,
+    "result": {
+      "expected_answer": "A list of locations, where each location must contain at least one work from before the year 1885 AND at least one work from after the year 1930. The question specifies 'works painted', which implies the query should target the `Paintings` table for both conditions.",
+      "sql_description": "The SQL query returns a combined list of unique locations by first selecting locations of paintings made before 1885, and then selecting locations of sculptures made after 1930, and uniting the two lists.",
+      "reason": "The query incorrectly uses `UNION`, which implements an 'OR' logic, returning locations that satisfy either one of the conditions. The question's use of 'and' requires an `INTERSECT` to find locations that satisfy both conditions simultaneously. Furthermore, the query inconsistently uses the `Paintings` table for the first condition and the `Sculptures` table for the second, while the question asks for 'works painted'.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1059,
+    "result": {
+      "expected_answer": "The query should return a list of unique conference names, and for each name, a count representing a specific metric. A reasonable interpretation is the total number of participations for each conference name across all its instances.",
+      "sql_description": "The SQL joins the `conference_participation` and `conference` tables. It then counts the number of participations for each conference instance (identified by `conference_id`) and displays the associated conference name.",
+      "reason": "The question asks for a count for each conference name. The predicted SQL groups the results by `conference_id` instead of `conference_name`. This leads to multiple rows for the same conference name if that conference has multiple instances (e.g., held in different years), as shown by the duplicate 'ACL' and 'AICS' rows in the result. The aggregation level is incorrect.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1386,
+    "result": {
+      "expected_answer": "A list of the names of the three languages that are designated as official in the highest number of countries.",
+      "sql_description": "The SQL query joins the `languages` and `official_languages` tables, groups the results by language name, counts the number of countries for each official language, sorts the languages in descending order based on this count, and returns the top three language names.",
+      "reason": "The query correctly interprets 'most commonly spoken' official languages as those that are official in the largest number of countries. It correctly joins the tables to link language IDs to names, counts the occurrences for each language, orders them, and limits the result to the top three, accurately fulfilling the user's request.",
+      "verdict": true,
+      "evidence": "The result returns the names of the top three languages: 'English', 'Swedish', and 'Romansh' in the 'name' column."
+    }
+  },
+  {
+    "question_id": 1408,
+    "result": {
+      "expected_answer": "A count of properties that either have 1 parking lot or have a garage.",
+      "sql_description": "The SQL counts the number of records in the `properties` table where the `parking_lots` column is '1' or the `garage_yn` column is 'Yes'.",
+      "reason": "The query correctly translates the question into a SQL query. It counts properties (`COUNT(*) FROM properties`) that satisfy either of the two conditions ('1 parking lot' as `parking_lots = \"1\"` and '1 garage' as `garage_yn = \"Yes\"`) using the `OR` logical operator. This perfectly aligns with the user's request.",
+      "verdict": true,
+      "evidence": "The result in the `count(*)` column is 9."
+    }
+  },
+  {
+    "question_id": 1417,
+    "result": {
+      "expected_answer": "A list of city names where at least one property has the 'Swimming Pool' feature.",
+      "sql_description": "The query selects the city name from the `addresses` table. It filters for addresses linked to properties that have a feature named 'Swimming Pool' by using nested subqueries to join through `properties`, `property_features`, and `features` tables.",
+      "reason": "The query correctly joins the necessary tables (`features`, `property_features`, `properties`, `addresses`) to identify properties with the feature 'Swimming Pool' and then retrieves the corresponding city names. The logic is sound and directly answers the question.",
+      "verdict": true,
+      "evidence": "The query returns an empty result, which is a valid outcome indicating no cities in the database have properties with a swimming pool."
+    }
+  },
+  {
+    "question_id": 1803,
+    "result": {
+      "expected_answer": "The titles of movies that do not have a rating.",
+      "sql_description": "This query selects the titles of all movies from the 'movies' table where the 'rating' column is NULL.",
+      "reason": "The query correctly interprets 'don't have any rating' as the 'rating' column being NULL and retrieves the corresponding movie titles, which directly answers the user's question.",
+      "verdict": true,
+      "evidence": "The SQL result contains three movie titles in the 'Title' column: 'The Quiet Man' (row 0), 'North by Northwest' (row 1), and 'A Night at the Opera' (row 2)."
+    }
+  },
+  {
+    "question_id": 1851,
+    "result": {
+      "expected_answer": "A list of all columns for movies that do not have a rating.",
+      "sql_description": "Selects all columns from the `movies` table for rows where the `rating` is NULL.",
+      "reason": "The query correctly interprets 'unrated movies' as those where the 'rating' column is NULL. The use of `SELECT *` correctly retrieves 'all information' as requested.",
+      "verdict": true,
+      "evidence": "The result displays all columns (`Code`, `Title`, `Rating`) for three movies, all of which have `None` in the `Rating` column."
+    }
+  },
+  {
+    "question_id": 1257,
+    "result": {
+      "expected_answer": "The distinct IDs of paintings that are older than at least one painting in 'Gallery 240'. This means retrieving paintings with a 'year' value less than the maximum 'year' of any painting in 'Gallery 240'.",
+      "sql_description": "The SQL query selects the distinct IDs of paintings that have a 'year' value that is less than the minimum 'year' of any painting located in 'Gallery 240'.",
+      "reason": "The query incorrectly interprets the condition 'older than some painting in gallery 240'. It finds paintings that are older than *all* paintings in gallery 240 (by comparing against the minimum year), whereas the question asks for paintings that are older than just *some* painting in the gallery. This would require comparing against the maximum year, not the minimum.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1244,
+    "result": {
+      "expected_answer": "A list of medium types and the corresponding count of artworks for each type, combining works from both the Paintings and Sculptures tables.",
+      "sql_description": "The SQL query first creates a combined list of all media from both the 'Paintings' and 'Sculptures' tables using UNION ALL. It then groups this combined list by medium and counts the number of occurrences (works) for each medium type.",
+      "reason": "The query correctly identifies that 'works' are located in two separate tables, 'Paintings' and 'Sculptures'. It correctly combines the data from both tables and aggregates by the 'medium' column to provide a count for each type, which perfectly answers the question.",
+      "verdict": true,
+      "evidence": "The result provides the count for each medium type. For instance, the 'medium' column shows 'bronze' with a corresponding 'COUNT(*)' of 4, and 'oil' with a count of 12."
+    }
+  },
+  {
+    "question_id": 1854,
+    "result": {
+      "expected_answer": "The query should return the titles of movies that do not have their ID present in the 'Movie' column of the 'MovieTheaters' table.",
+      "sql_description": "The SQL query retrieves the titles of all movies from the 'movies' table whose 'code' does not appear in the 'movie' column of the 'movietheaters' table.",
+      "reason": "The query correctly identifies movies that are not being shown in any theater by selecting titles from the 'movies' table where the movie code is not found in the 'movietheaters' table. The empty result is a valid answer based on the database content, indicating that all movies are currently being shown.",
+      "verdict": true,
+      "evidence": "The SQL query returned an empty result set, which is a valid answer indicating that no movies meet the specified criteria."
+    }
+  },
+  {
+    "question_id": 1773,
+    "result": {
+      "expected_answer": "A list of home conferences where the average enrollment of their member universities is greater than 2000.",
+      "sql_description": "The SQL query groups universities by their home conference, calculates the average enrollment for each conference, and then filters to show only the conferences and their average enrollments where the average is greater than 2000.",
+      "reason": "The query correctly groups by the `home_conference` column, calculates the average enrollment for each group, and uses a `HAVING` clause to filter for conferences where this average is greater than 2000. This directly answers the question.",
+      "verdict": true,
+      "evidence": "The `Home_Conference` column lists 'CCIW', 'Northern', and 'SLIAC', and the corresponding `avg(enrollment)` column confirms their averages are all above 2000."
+    }
+  },
+  {
+    "question_id": 1798,
+    "result": {
+      "expected_answer": "The sum of the 'Enrollment' column for all universities that appear in the 'overall_ranking' table with a 'Rank' of 5 or less.",
+      "sql_description": "The SQL query first identifies the university IDs of universities with a rank of 5 or less from the 'overall_ranking' table. It then uses these IDs to filter the 'university' table and calculates the sum of the 'Enrollment' for those specific universities.",
+      "reason": "The query correctly interprets 'rank of 5 or below' as 'rank <= 5'. It correctly joins the ranking information with university details to sum the enrollment of the qualifying universities, thus providing the correct total number of students.",
+      "verdict": true,
+      "evidence": "The query returns a single value, 11989, under the column `sum(enrollment)`, which represents the total number of students requested."
+    }
+  },
+  {
+    "question_id": 1550,
+    "result": {
+      "expected_answer": "The IDs of all goods that are categorized as 'Cookies' or 'Cakes' and have a price between 3 and 7, inclusive.",
+      "sql_description": "The SQL query retrieves the 'Id' from the 'goods' table for all records where the 'Food' column contains either the substring 'Cookies' or 'Cake' and the 'Price' is between 3 and 7.",
+      "reason": "The query correctly translates the question's requirements. It selects the specified column ('Id'), filters by food type using a reasonable substring match for 'Cookies' or 'Cake', and correctly applies the price range filter 'BETWEEN 3 AND 7'.",
+      "verdict": true,
+      "evidence": "The SQL result is an empty set, which means no goods in the database met all the specified criteria. This is the correct answer based on the data."
+    }
+  },
+  {
+    "question_id": 1797,
+    "result": {
+      "expected_answer": "A single number representing the sum of the enrollments for all universities that have an overall rank of 5 or less.",
+      "sql_description": "The SQL query joins the `university` and `overall_ranking` tables on `University_ID`, filters for universities with a rank less than or equal to 5, and then calculates the sum of their enrollments.",
+      "reason": "The query correctly joins the university and ranking tables. It appropriately filters for universities with an 'overall rank 5 or below' using the `Rank <= 5` condition and then calculates the total enrollment for these universities using `SUM(Enrollment)`. The logic perfectly matches the question's intent.",
+      "verdict": true,
+      "evidence": "The SQL result is a single value under the column `SUM(T1.Enrollment)`."
+    }
+  },
+  {
+    "question_id": 1282,
+    "result": {
+      "expected_answer": "A list of locations that house paintings created both before the year 1885 and after the year 1930. A single location must satisfy both conditions.",
+      "sql_description": "The SQL query selects the locations of paintings that were created either before 1885 OR after 1930.",
+      "reason": "The question asks for locations that have paintings from two distinct time periods (before 1885 'and' after 1930). This implies that a single location must contain paintings satisfying both conditions. The predicted query uses 'OR', which finds locations that have paintings from either period, but not necessarily both. A single painting cannot be created in both time periods, so the AND condition must apply to the location itself, not the individual painting record.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1389,
+    "result": {
+      "expected_answer": "A list of official language names, sorted in descending order based on the average 'overall_score' of all countries where each language is official.",
+      "sql_description": "The SQL query joins the languages, official_languages, and countries tables. It then groups the results by language name, calculates the average 'overall_score' for the countries associated with each language, and orders the languages by this average score in descending order.",
+      "reason": "The query correctly joins the necessary tables to link languages to their corresponding countries. It properly groups by language name to calculate the average overall score for each language and sorts the final list in the required descending order.",
+      "verdict": true,
+      "evidence": "The `sql_result` shows a 'name' column with language names and an 'avg_overall_score' column. The rows are sorted in descending order by the 'avg_overall_score' column, with 'Icelandic' at the top with a score of 100.0."
+    }
+  },
+  {
+    "question_id": 1878,
+    "result": {
+      "expected_answer": "The package number and weight of the single heaviest package sent by a client whose name starts with 'John'.",
+      "sql_description": "This SQL query joins the `package` and `client` tables, filters for packages sent by clients whose name begins with 'john' (case-insensitively), sorts the results by weight in descending order, and returns the package number and weight of the top result.",
+      "reason": "The predicted SQL correctly resolves the question. It accurately identifies the 'heaviest package' using `ORDER BY weight DESC LIMIT 1` and reasonably interprets 'John or something similar' using `LOWER(client.name) LIKE 'john%'`. The join logic to link packages to sending clients is also correct.",
+      "verdict": true,
+      "evidence": "The SQL result correctly returns a single row with the PackageNumber (2) and Weight (2.0) for the heaviest package matching the criteria."
+    }
+  },
+  {
+    "question_id": 1844,
+    "result": {
+      "expected_answer": "The names of movie theaters that do not have an associated movie in the `MovieTheaters` table.",
+      "sql_description": "Selects the `Name` from the `MovieTheaters` table for all rows where the `Movie` column is NULL.",
+      "reason": "The question asks for cinemas not showing any movies. Based on the schema, a movie theater is represented in the `MovieTheaters` table, and the movie it's showing is in the `Movie` column. A standard and reasonable interpretation is that a cinema is 'not showing any movies' if its corresponding `Movie` field is NULL. The predicted SQL correctly implements this logic.",
+      "verdict": true,
+      "evidence": "The SQL result provides a 'Name' column containing 'Majestic' and 'Nickelodeon', which are the names of the cinemas that satisfy the condition."
+    }
+  },
+  {
+    "question_id": 1900,
+    "result": {
+      "expected_answer": "The query should return the IDs of all shipments that are managed by 'Turanga Leela' and are on the planet 'Mars'.",
+      "sql_description": "The SQL query joins the Shipment, Employee, and Planet tables. It then filters to select the ShipmentID for shipments where the manager's name is 'Turanga Leela' and the planet's name is 'Mars'.",
+      "reason": "The query correctly joins the `Shipment`, `Employee`, and `Planet` tables to filter by the specified manager name ('Turanga Leela') and planet name ('Mars'). It correctly retrieves the `ShipmentID` for records that satisfy both conditions, fulfilling all requirements of the question.",
+      "verdict": true,
+      "evidence": "The result in column `ShipmentID` is `3`, which is the ID of the a shipment satisfying the conditions."
+    }
+  },
+  {
+    "question_id": 1843,
+    "result": {
+      "expected_answer": "The names of all movie theaters that do not have a movie associated with them in the `Movie` column.",
+      "sql_description": "The SQL query selects the 'Name' from the 'movietheaters' table for all records where the 'Movie' column is NULL.",
+      "reason": "The query correctly interprets 'not currently showing a movie' as the `Movie` column being NULL. It retrieves the names of all theaters that satisfy this condition, which directly answers the question.",
+      "verdict": true,
+      "evidence": "The `Name` column in the result contains 'Majestic' at row 0 and 'Nickelodeon' at row 1."
+    }
+  },
+  {
+    "question_id": 1821,
+    "result": {
+      "expected_answer": "The names of cinemas showing movies with a rating of either 'G' or 'PG'.",
+      "sql_description": "This SQL query joins the `Movies` and `MovieTheaters` tables on their respective movie codes and selects the names of theaters that are playing movies with a rating of either 'G' or 'PG'.",
+      "reason": "The query correctly joins the `Movies` and `MovieTheaters` tables to link movies to cinemas. It accurately filters these results to only include movies with the specified ratings ('G' or 'PG') and returns the names of the corresponding cinemas as requested.",
+      "verdict": true,
+      "evidence": "The `Name` column in the result contains 'Imperial' and 'Paraiso', which are the names of the cinemas that satisfy the specified conditions."
+    }
+  },
+  {
+    "question_id": 1855,
+    "result": {
+      "expected_answer": "The ID of the recipient of the package with the maximum weight.",
+      "sql_description": "The query selects the recipient from the package table, orders the packages by weight in descending order, and returns the recipient of the top package.",
+      "reason": "The query correctly identifies the recipient of the heaviest package by ordering by weight in descending order and taking the top result. The question does not specify how to handle ties, so returning one of the recipients is a valid approach.",
+      "verdict": true,
+      "evidence": "The query returns a single row with the 'Recipient' value of '1'."
+    }
+  },
+  {
+    "question_id": 1978,
+    "result": {
+      "expected_answer": "The query should return a list of press names, each with its corresponding average and maximum `Year_Profits_billion`.",
+      "sql_description": "The SQL query selects the press `Name`, calculates the average and maximum `Year_Profits_billion`, and groups the results by `Name` to provide these aggregates for each distinct press.",
+      "reason": "The query correctly groups the data by press name and applies the requested aggregate functions (AVG and MAX) to the `Year_Profits_billion` column. It directly answers the question.",
+      "verdict": true,
+      "evidence": "The result contains the required columns: `Name`, `Average_Yearly_Profit`, and `Maximum_Yearly_Profit`. The first row shows 'Accor' with an average and maximum profit of 6.02. The second row shows 'Air Liquide' with an average and maximum profit of 29.49, fulfilling the question's requirements for each press."
+    }
+  },
+  {
+    "question_id": 1446,
+    "result": {
+      "expected_answer": "The query should return a single number, which is the count of distinct properties that have two or more associated features.",
+      "sql_description": "The query first identifies all `property_id`s that appear at least twice in the `property_features` table by grouping by `property_id` and using a HAVING clause on the count. It then counts the number of such properties found.",
+      "reason": "The query correctly implements the logic to answer the question. It uses a subquery to group by property and filter for those with at least two features, and then the outer query counts these properties. This directly addresses the user's request.",
+      "verdict": true,
+      "evidence": "The query returns a single row with the value `4` under the column `count(*)`, which correctly represents the number of properties with at least 2 features."
+    }
+  },
+  {
+    "question_id": 1877,
+    "result": {
+      "expected_answer": "The package number and weight of the single heaviest package sent by a client whose name contains the substring 'John'.",
+      "sql_description": "This query joins the 'Package' and 'Client' tables on the sender's account number. It then filters for clients with 'John' in their name, orders the corresponding packages by weight in descending order, and returns the package number and weight of the top one.",
+      "reason": "The query correctly joins the 'Package' and 'Client' tables to find the sender's name. It correctly filters for clients with 'John' in their name using 'LIKE'. It identifies the 'heaviest' package by ordering by weight and taking the top result, and it returns the requested columns 'PackageNumber' and 'Weight'. The logic perfectly aligns with the question.",
+      "verdict": true,
+      "evidence": "The query correctly returns one row with the 'PackageNumber' (2) and 'Weight' (2.0) for the heaviest package."
+    }
+  },
+  {
+    "question_id": 1993,
+    "result": {
+      "expected_answer": "A list of the titles and release dates of the 5 books with the highest sales amount.",
+      "sql_description": "The SQL query selects the title and release date from the 'book' table. It orders the results by the 'Sale_Amount' in descending order after casting it to a real number, and then returns the top 5 results.",
+      "reason": "The query correctly interprets 'best sale books' as ordering by 'Sale_Amount' in descending order. It retrieves the specified columns ('Title', 'Release_date') and correctly limits the result to the top 5. The casting of the TEXT column 'Sale_Amount' to REAL is appropriate for numerical sorting.",
+      "verdict": true,
+      "evidence": "The result returns the 'Title' and 'Release_date' for the 5 books with the highest sales, starting with 'Daffy Doodles' released on '2016-04-06' and ending with 'Baseball Bugs' released on '2016-02-02'."
+    }
+  },
+  {
+    "question_id": 1853,
+    "result": {
+      "expected_answer": "A list of movie titles that do not have a corresponding entry in the `MovieTheaters` table, indicating they are not currently being shown.",
+      "sql_description": "The SQL query retrieves the titles of movies whose code does not appear in the `Movie` column of the `MovieTheaters` table.",
+      "reason": "The query correctly identifies movies not being shown in any theater. It creates a subquery to get the codes of all movies that are being shown and then uses `NOT IN` to filter the `Movies` table for titles whose codes are not in that list. The empty result is a valid outcome if all movies in the database are currently being shown.",
+      "verdict": true,
+      "evidence": "The query returned an empty result, which correctly indicates that no movies matching the criteria were found in the database."
+    }
+  },
+  {
+    "question_id": 1869,
+    "result": {
+      "expected_answer": "A list of package numbers for all packages received by the client named 'Leo Wong'.",
+      "sql_description": "This query selects the package numbers by joining the Package and Client tables on the Recipient and AccountNumber columns, respectively, and then filters the results for clients whose name is 'Leo Wong'.",
+      "reason": "The query correctly identifies packages received by 'Leo Wong'. It properly joins the 'Package' table with the 'Client' table on the recipient's account number and filters by the client's name to retrieve the corresponding package numbers.",
+      "verdict": true,
+      "evidence": "The result showed one matching record in the 'PackageNumber' column at row 0."
+    }
+  },
+  {
+    "question_id": 1424,
+    "result": {
+      "expected_answer": "A list of user IDs and all their corresponding search strings, for users who have made at least two searches.",
+      "sql_description": "The SQL query attempts to select user IDs and their search strings for users who have searched at least twice. It groups the results by user ID and filters for groups having a count of 2 or more. However, by selecting the non-aggregated column 'search_string' while grouping only by 'user_id', the query will return an arbitrary, single search string for each user, not all of them.",
+      "reason": "The verdict is false. The question asks 'what did they search?' (plural), implying all searches for the qualifying users should be returned. The query correctly identifies the users who have searched at least twice, but due to an invalid `GROUP BY` clause (selecting a non-aggregated column `search_string` not present in the `GROUP BY`), it only returns a single, arbitrary search string for each user, not the complete list of their searches. This is an incomplete and logically flawed answer.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1537,
+    "result": {
+      "expected_answer": "The identifier of the good(s) and their price, for all goods where the 'Id' field contains the substring '70'.",
+      "sql_description": "This query selects the price of goods where the 'Id' field contains the substring '70'.",
+      "reason": "The question asks for two pieces of information: 'Which good' and 'what is its price?'. The predicted SQL only selects the price, failing to identify which good it corresponds to. Therefore, it provides an incomplete answer.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 2078,
+    "result": {
+      "expected_answer": "A list of client ideas and client details for clients who have a 'sic_code' of 'Bad'. The term 'client ideas' is ambiguous; a reasonable interpretation is the content of the `invoice_details` column.",
+      "sql_description": "This query joins the Clients and Invoices tables, filters for clients with a 'sic_code' of 'Bad', and returns the corresponding invoice details and client details.",
+      "reason": "The query correctly filters for clients with `sic_code = 'Bad'` and returns the `client_details` as requested. The term 'client ideas' is ambiguous, and the query reasonably interprets this as `Invoices.invoice_details` from the joined table. This interpretation is plausible as invoice details might contain information about the work or ideas for a client. As the query commits to a reasonable interpretation of the ambiguity, it is considered correct.",
+      "verdict": true,
+      "evidence": "The result set correctly provides the requested `invoice_details` and `client_details`. For example, the first row shows an `invoice_details` of 'excellent' and `client_details` of 'Lucie'."
+    }
+  },
+  {
+    "question_id": 1968,
+    "result": {
+      "expected_answer": "A list of unique game titles that have been played by at least one player who attended either 'Oklahoma' or 'Auburn' college.",
+      "sql_description": "The SQL query joins the 'game', 'game_player', and 'player' tables to link games to players. It then filters for players whose college is either 'Oklahoma' or 'Auburn' and returns the distinct titles of the associated games.",
+      "reason": "The query correctly joins the necessary tables to link games to players and their colleges. It then filters for the two specified colleges ('Oklahoma', 'Auburn') and selects the distinct game titles, which perfectly aligns with the user's question.",
+      "verdict": true,
+      "evidence": "The result in the `Title` column, containing values like 'Pokémon Red / Green / Blue Version' and 'Super Mario World', represents the titles of games played by players from the specified colleges."
+    }
+  },
+  {
+    "question_id": 1465,
+    "result": {
+      "expected_answer": "A list of the full names of users whose registered address is the same as the address of a property they own.",
+      "sql_description": "The SQL query joins the `Users` table with the `Properties` table on the user ID to link users to the properties they own. It then filters these results to find cases where the user's address ID matches the property's address ID, and returns the full name of those users.",
+      "reason": "The query correctly implements the logic to answer the question. It joins users to their owned properties using `u.user_id = p.owner_user_id` and then correctly filters for users who live at that property by comparing their address ID with the property's address ID (`u.user_address_id = p.property_address_id`). The full name is also correctly constructed. The query is a direct and accurate translation of the user's request.",
+      "verdict": true,
+      "evidence": "The SQL result correctly returns one `full_name` in the first row: 'Reggie Eulah Ernser'."
+    }
+  },
+  {
+    "question_id": 2134,
+    "result": {
+      "expected_answer": "The staff ID of the staff member who attended the minimum number of meetings, provided they attended at least one meeting.",
+      "sql_description": "The SQL query groups the `staff_in_meetings` table by `staff_id`, filters to include only staff who have attended more than zero meetings, sorts the results by the meeting count in ascending order, and returns the `staff_id` from the top row.",
+      "reason": "The query correctly implements the logic for finding the minimum non-zero count. The `GROUP BY staff_id` with `count(*)` calculates the number of meetings per staff. The `HAVING count(*) > 0` clause correctly enforces the 'attended some meeting' condition. Finally, `ORDER BY count(*) ASC LIMIT 1` correctly identifies the staff member with the least meetings.",
+      "verdict": true,
+      "evidence": "The result in row 0 shows the `staff_id` is 1."
+    }
+  },
+  {
+    "question_id": 1804,
+    "result": {
+      "expected_answer": "The names of movies for which the 'Rating' value is missing or NULL.",
+      "sql_description": "The SQL query selects the 'Title' from the 'Movies' table for all records where the 'Rating' column is NULL.",
+      "reason": "The query correctly translates the condition 'do not have any ratings' into `WHERE Rating IS NULL` and selects the movie titles as requested.",
+      "verdict": true,
+      "evidence": "The `sql_result` provides a 'Title' column with three movie names corresponding to movies without a rating."
+    }
+  },
+  {
+    "question_id": 1885,
+    "result": {
+      "expected_answer": "The names of all clients who have sent more than one package. This involves counting the packages sent per client and returning the names of those whose count exceeds one.",
+      "sql_description": "The SQL query joins the `Client` and `Package` tables on the client's account number and the package's sender ID. It then groups the results by client account number and filters to keep only those clients who have sent more than one package, finally returning their names.",
+      "reason": "The query correctly joins the `Client` and `Package` tables to link clients to the packages they sent. It then groups by the client's account number and uses a `HAVING` clause with `COUNT(*) > 1` to correctly filter for clients who have sent more than one package. The final `SELECT Client.Name` provides the information requested in the question.",
+      "verdict": true,
+      "evidence": {
+        "column_names": [
+          "Name"
+        ],
+        "first_row": "Zapp Brannigan",
+        "last_row": "Leo Wong"
+      }
+    }
+  },
+  {
+    "question_id": 2028,
+    "result": {
+      "expected_answer": "A list of all author names from the `Authors` table and, for each author, the total count of their documents from the `Documents` table. Authors with no documents should be included with a count of 0.",
+      "sql_description": "The SQL query retrieves all author names from the `Authors` table. It uses a LEFT JOIN to include documents associated with each author and then groups the results by author name to count the number of documents for each. This correctly ensures that authors with zero documents are included in the result with a count of 0.",
+      "reason": "The query correctly answers the question. The use of `LEFT JOIN` starting from the `Authors` table ensures that all authors are included in the result, even those with no documents, which fulfills the 'Show all author names' requirement. The `COUNT(Documents.document_id)` correctly computes the number of documents for each author, resulting in 0 for authors without any.",
+      "verdict": true,
+      "evidence": "The result displays two columns: `author_name` and `COUNT(Documents.document_id)`. The list includes all authors, with rows like row 5 ('Dr. Dario Hermiston', 0) and row 3 ('Beverly Bergnaum MD', 2) demonstrating that authors with and without documents are correctly counted and displayed."
+    }
+  },
+  {
+    "question_id": 2066,
+    "result": {
+      "expected_answer": "A list of all agencies and the count of clients associated with each one. Agencies with no clients should be included with a count of zero.",
+      "sql_description": "The SQL query performs a left join from the 'Agencies' table to the 'Clients' table on 'agency_id', groups the results by agency, and then counts the number of clients for each agency. The left join ensures that all agencies are included, even those with no clients.",
+      "reason": "The query correctly answers the question by providing a count of clients for every agency. The use of 'LEFT JOIN' is appropriate to ensure that agencies with zero clients are included in the result, which aligns with the question's intent to know the client count for 'each' agency.",
+      "verdict": true,
+      "evidence": {
+        "column_names": [
+          "agency_id",
+          "COUNT(Clients.client_id)"
+        ],
+        "rows": "The results show 15 rows, one for each agency ID from 1 to 15, with a corresponding count of clients, including several agencies with a count of 0."
+      }
+    }
+  },
+  {
+    "question_id": 1580,
+    "result": {
+      "expected_answer": "A list of food items that have the flavor 'Chocolate' and have been purchased 10 times or fewer.",
+      "sql_description": "The SQL query joins the 'goods' table with the 'items' table on the item ID. It filters for goods with the flavor 'Chocolate', groups the results by item, and then filters these groups to include only those items that have a purchase count of 10 or less. It returns the flavor, ID, food name, and the purchase count for each qualifying item.",
+      "reason": "The query correctly interprets the question. It filters for 'Chocolate' flavor, counts the number of purchases for each item by counting rows in the 'items' table, and correctly applies the 'at most 10' constraint using `HAVING COUNT(*) <= 10`. The result provides the requested information.",
+      "verdict": true,
+      "evidence": "The result at `[0]` correctly identifies 'Croissant' as a chocolate-flavored item with a `purchase_count` of '6', which is less than or equal to 10."
+    }
+  },
+  {
+    "question_id": 1852,
+    "result": {
+      "expected_answer": "A list of all attributes for movies that do not have a rating.",
+      "sql_description": "The query selects all columns from the `movies` table for records where the `Rating` column is NULL.",
+      "reason": "The query correctly interprets 'unrated movies' as movies where the rating is NULL and retrieves 'all the information' by selecting all columns (*), thus perfectly matching the user's request.",
+      "verdict": true,
+      "evidence": "The result returns all columns for three movies: 'The Quiet Man', 'North by Northwest', and 'A Night at the Opera', all of which have a `None` (NULL) value in the `Rating` column."
+    }
+  },
+  {
+    "question_id": 1840,
+    "result": {
+      "expected_answer": "A single number representing the count of movies for which a rating exists (is not NULL).",
+      "sql_description": "The SQL query counts the total number of rows in the 'movies' table where the 'rating' column is not NULL.",
+      "reason": "The query correctly translates the question. It counts rows from the 'movies' table and applies a filter to only include those where the 'rating' is not null, directly matching the question's requirements.",
+      "verdict": true,
+      "evidence": "The result is a single value, 5, in the 'count(*)' column."
+    }
+  },
+  {
+    "question_id": 2141,
+    "result": {
+      "expected_answer": "A list of staff IDs and their details for staff members who (1) have attended one or more meetings and (2) have the letter 's' in their details.",
+      "sql_description": "This query joins the `Staff` and `Staff_in_Meetings` tables on `staff_id` to select staff who have attended meetings. It then filters this group to find those whose `staff_details` contain the letter 's', and returns their `staff_id` and `staff_details`.",
+      "reason": "The query correctly implements the two required conditions. The `JOIN` with `Staff_in_Meetings` ensures that only staff who have attended at least one meeting are considered. The `WHERE` clause correctly filters for staff details containing the letter 's'.",
+      "verdict": true,
+      "evidence": "The `sql_result` shows two staff members who meet the criteria. The first row shows `staff_id` 11 with `staff_details` \"Clarissa\", and the second row shows `staff_id` 2 with `staff_details` \"Sheridan\"."
+    }
+  },
+  {
+    "question_id": 1881,
+    "result": {
+      "expected_answer": "The name of the client who has sent the maximum number of packages, along with the count of those packages.",
+      "sql_description": "This SQL query joins the 'Client' and 'Package' tables on the sender's account number, counts the number of packages for each client, orders the results by the count in descending order, and returns the top result, which represents the client who sent the most packages and their package count.",
+      "reason": "The query correctly joins the 'Client' and 'Package' tables to associate packages with their senders. It then groups by the client's name to count the packages for each one. By ordering the results in descending order of the package count and limiting the output to 1, it successfully identifies and returns the client who sent the most packages and the corresponding count, as requested by the question.",
+      "verdict": true,
+      "evidence": "The result in row 0, columns `Name` and `PackageCount`, shows the name 'Zapp Brannigan' and the count '2', which corresponds to the client who sent the most packages."
+    }
+  },
+  {
+    "question_id": 2119,
+    "result": {
+      "expected_answer": "A list of all agency IDs, each with the corresponding count of staff members. Agencies with no staff should be included with a count of 0.",
+      "sql_description": "The SQL query joins the 'Agencies' table with the 'Staff' table using a LEFT JOIN to include all agencies. It then groups the result by agency ID and counts the number of staff for each agency.",
+      "reason": "The query correctly answers the question. The use of a LEFT JOIN ensures that all agencies are listed, even those with zero staff. The COUNT function correctly calculates the number of staff for each agency, returning 0 for agencies with no staff as intended.",
+      "verdict": true,
+      "evidence": "The result provides the columns `agency_id` and `COUNT(Staff.staff_id)`. For example, the first row correctly shows `agency_id` 1 with a staff count of 0, and the second row shows `agency_id` 2 with a staff count of 2, demonstrating the query's accuracy."
+    }
+  },
+  {
+    "question_id": 1717,
+    "result": {
+      "expected_answer": "A list of locations for warehouses that store both 'Rocks' and 'Scissors'. This requires each identified warehouse to contain at least one box of 'Rocks' and at least one box of 'Scissors'.",
+      "sql_description": "The SQL query selects the locations of warehouses that contain boxes with contents that are either 'Rocks' or 'Scissors'.",
+      "reason": "The query incorrectly interprets the 'and' in 'Rocks and Scissors' as a logical OR. It uses `IN ('Rocks', 'Scissors')`, which returns locations of warehouses that store *either* 'Rocks' *or* 'Scissors', not necessarily both. The question requires finding warehouses that store both items simultaneously.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1671,
+    "result": {
+      "expected_answer": "A list of years in which the number of institutions founded was greater than one.",
+      "sql_description": "The SQL query groups the institutions by their founding year and then filters these groups to select only the years where the count of institutions is greater than one.",
+      "reason": "The query correctly interprets the question. It groups institutions by the founding year and uses a HAVING clause with `count(*) > 1` to find years where more than one institution was established. This logic precisely matches the user's request.",
+      "verdict": true,
+      "evidence": "The result shows the year `1908.0` in the `Founded` column, which is a year where more than one institution was founded."
+    }
+  },
+  {
+    "question_id": 1602,
+    "result": {
+      "expected_answer": "The query should return a list of car makes that are associated with more than one team.",
+      "sql_description": "The SQL query groups the 'team' table by the 'make' column and then filters these groups to include only those where the count of teams is greater than one. It then selects the 'make' for these filtered groups.",
+      "reason": "The query correctly interprets the question. It groups teams by their make and uses a HAVING clause to filter for makes associated with more than one team, which directly answers the question.",
+      "verdict": true,
+      "evidence": "The result is a table with a single column 'Make' containing the names of the makes that have more than one team, such as 'Buick Regal' and 'Chevrolet Monte Carlo'."
+    }
+  },
+  {
+    "question_id": 1868,
+    "result": {
+      "expected_answer": "A single number representing the count of packages sent by the client named 'Leo Wong'.",
+      "sql_description": "The SQL query joins the `Client` and `Package` tables on the sender's account number. It then filters for the client named 'Leo Wong' and counts the number of resulting rows, which correspond to the packages sent by him.",
+      "reason": "The query correctly identifies the client 'Leo Wong' in the `Client` table and joins with the `Package` table using the `Sender` foreign key to count all packages sent by this client. The logic is sound and directly answers the question.",
+      "verdict": true,
+      "evidence": "The `COUNT(*)` column in the first row shows the result is 2."
+    }
+  },
+  {
+    "question_id": 1583,
+    "result": {
+      "expected_answer": "A list of the three goods that have been sold the most times, identifying them by name or ID. 'Popularity' is reasonably interpreted as the count of sales.",
+      "sql_description": "This query joins the sales items with the goods information, groups by each item, counts the number of times each item has been sold, and returns the top 3 items with the highest sales counts.",
+      "reason": "The query correctly interprets 'most popular' as the highest quantity sold. It counts the occurrences of each item in the sales records, sorts them in descending order, and correctly limits the result to the top 3. This fully answers the question.",
+      "verdict": true,
+      "evidence": "The result displays three rows, with the `Item` column showing the IDs of the top three goods ('90-APP-11', '90-APR-PF', '90-BLK-PF') and the `Popularity` column showing their respective sales counts (25, 22, 20)."
+    }
+  },
+  {
+    "question_id": 1574,
+    "result": {
+      "expected_answer": "A list of IDs for goods whose price is more than double the average price of all goods.",
+      "sql_description": "The query calculates the average price of all goods in a subquery, multiplies it by two, and then selects the IDs of all goods with a price greater than this calculated value.",
+      "reason": "The query correctly implements the logic requested. It identifies goods that are 'more than' (`>`) 'twice' (`2 *`) the 'average good price' (`SELECT avg(Price) FROM goods`) and returns their IDs.",
+      "verdict": true,
+      "evidence": "The `sql_result` contains the column 'Id' with values ['20-BC-C-10', '20-BC-L-10', '20-CA-7.5', '24-8x10', '25-STR-9', '26-8x10', '46-11'] which are the IDs of the goods satisfying the condition."
+    }
+  },
+  {
+    "question_id": 1732,
+    "result": {
+      "expected_answer": "The sum of the 'Value' of all boxes located in the warehouse that has the highest 'Capacity'.",
+      "sql_description": "The SQL query calculates the sum of the 'Value' from the 'Boxes' table for all boxes that are stored in the warehouse with the maximum 'Capacity'. It finds the maximum capacity using a subquery and filters the warehouses accordingly before joining with the boxes table.",
+      "reason": "The query correctly identifies the warehouse with the greatest capacity using a subquery `WHERE W.Capacity = (SELECT MAX(Capacity) FROM Warehouses)`. It then joins this warehouse with the boxes table and correctly sums the values of the contained boxes. The logic is sound and directly addresses the question.",
+      "verdict": true,
+      "evidence": "The SQL result is a single row with the column 'TotalValue' containing the value 90.0, which is the total value of boxes in the warehouse with the greatest capacity."
+    }
+  },
+  {
+    "question_id": 2113,
+    "result": {
+      "expected_answer": "A list of all invoice IDs, each paired with the count of its associated payments. Invoices with zero payments should be included and show a count of 0.",
+      "sql_description": "The SQL query performs a LEFT JOIN from the 'Invoices' table to the 'Payments' table on the 'invoice_id'. It then groups the results by invoice ID and counts the number of associated payments for each invoice.",
+      "reason": "The query correctly uses a LEFT JOIN to ensure all invoices are included, which satisfies the \"Show all invoice ids\" requirement. The use of COUNT on a column from the right table ('Payments') correctly calculates the number of associated payments, resulting in 0 for invoices with no payments. This logic accurately fulfills the question's intent.",
+      "verdict": true,
+      "evidence": "The result includes two columns, `invoice_id` and `COUNT(Payments.invoice_id)`. For example, row 0 shows `invoice_id` 1 with a count of 0, while row 1 shows `invoice_id` 2 with a count of 2. This confirms all invoices are listed with their corresponding payment counts."
+    }
+  },
+  {
+    "question_id": 1709,
+    "result": {
+      "expected_answer": "A list of the contents of all boxes stored in warehouses located in either Chicago or New York.",
+      "sql_description": "The SQL query joins the 'Boxes' and 'Warehouses' tables, then selects the 'Contents' from boxes where the warehouse's location is either 'Chicago' or 'New York'.",
+      "reason": "The query correctly identifies the tables and columns needed to answer the question. It joins 'Boxes' and 'Warehouses' and properly filters by the two specified locations, 'Chicago' and 'New York', using an OR condition. It correctly selects the 'Contents' as requested.",
+      "verdict": true,
+      "evidence": "The 'Contents' column in the sql_result lists values including 'Rocks', 'Papers', and 'Scissors', which are the contents of boxes in warehouses located in Chicago or New York."
+    }
+  },
+  {
+    "question_id": 1718,
+    "result": {
+      "expected_answer": "The locations of warehouses that contain at least one box of 'Rocks' and at least one box of 'Scissors'.",
+      "sql_description": "This SQL retrieves the locations of warehouses containing boxes whose contents are either 'Rocks' or 'Scissors'.",
+      "reason": "The question requires finding warehouses that hold boxes with both 'Rocks' AND 'Scissors'. The predicted SQL uses `WHERE contents IN ('Rocks', 'Scissors')`, which incorrectly finds warehouses that hold boxes with 'Rocks' OR 'Scissors'. This fails to satisfy the intersection logic implied by 'and'.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1563,
+    "result": {
+      "expected_answer": "The full name of the customer with the highest number of receipts, and that count.",
+      "sql_description": "This SQL query joins the customers and receipts tables, groups the results by customer, counts the number of receipts for each customer, and then returns the first and last name of the customer with the highest receipt count, along with that count.",
+      "reason": "The query correctly joins the customer and receipt tables, counts the number of receipts per customer, and orders the results to find the customer who shopped most often. It returns the customer's name and the corresponding count, fully answering the question.",
+      "verdict": true,
+      "evidence": "The SQL result shows one row with LastName='HELING', FirstName='RUPERT', and shop_count=18, identifying the customer who shopped most often and the number of times."
+    }
+  },
+  {
+    "question_id": 1553,
+    "result": {
+      "expected_answer": "A single number representing the average price of all goods where the flavor is either 'blackberry' or 'blueberry'.",
+      "sql_description": "The SQL calculates the average price from the 'goods' table for all rows where the 'Flavor' column is either 'blackberry' or 'blueberry'.",
+      "reason": "The query correctly translates the question into SQL. It calculates the average price of goods and filters them based on the two specified flavors, 'blackberry' and 'blueberry', using the OR operator. The resulting 'None' is the correct outcome when no matching records are found.",
+      "verdict": true,
+      "evidence": "The result at row 0, column 'avg(Price)' is None, which represents the average when no rows match the filter criteria."
+    }
+  },
+  {
+    "question_id": 1704,
+    "result": {
+      "expected_answer": "A list of unique locations where warehouses are situated.",
+      "sql_description": "This query selects the distinct values from the 'location' column of the 'warehouses' table.",
+      "reason": "The query correctly interprets 'different locations' to mean unique locations and uses `SELECT DISTINCT` on the `location` column of the `warehouses` table to retrieve this information, which directly answers the question.",
+      "verdict": true,
+      "evidence": "The result is a single column named 'Location' containing the distinct warehouse locations: 'Chicago', 'New York', 'Los Angeles', and 'San Francisco'."
+    }
+  },
+  {
+    "question_id": 729,
+    "result": {
+      "expected_answer": "A list of Document IDs for documents that are concurrently in the 'Best for 2000' document subset and the 'Best' collection.",
+      "sql_description": "This query joins tables for document subsets, their members, collections, and the documents within them. It filters for documents that are in the subset named 'Best for 2000' and also in the collection named 'Best', and then returns the IDs of these documents.",
+      "reason": "The query correctly translates the two conditions from the question into SQL. It joins the necessary tables to link documents to both their subsets and collections and applies both filters ('Document_Subset_Name' = \"Best for 2000\" AND 'Collection_Name' = \"Best\") to find the documents that satisfy both criteria.",
+      "verdict": true,
+      "evidence": "The query returns the `Document_Object_ID` column with the value 9 at row 0."
+    }
+  },
+  {
+    "question_id": 1727,
+    "result": {
+      "expected_answer": "A list of codes for all boxes whose value is strictly greater than the maximum value among all boxes containing 'Rocks'.",
+      "sql_description": "This SQL query selects the 'Code' from the 'Boxes' table for all rows where the 'Value' is greater than the maximum 'Value' of any box with 'Contents' equal to 'Rocks'.",
+      "reason": "The query correctly translates the condition 'higher than the value of any boxes with Rocks as content'. It finds the maximum value of boxes containing 'Rocks' using a subquery and then selects the codes of boxes whose value exceeds this maximum. This logic perfectly aligns with the question's intent.",
+      "verdict": true,
+      "evidence": "The SQL execution returned no results under the 'Code' column, which is a valid response indicating no boxes met the criteria."
+    }
+  },
+  {
+    "question_id": 760,
+    "result": {
+      "expected_answer": "A list of unique original artists who have sung at least one song with a 'rhythm tempo' greater than 5. The list of artists should be ordered in descending order based on the 'voice sound quality' of their performances. Given an artist can have multiple songs, a reasonable interpretation is to order them based on their highest 'voice sound quality' score from a qualifying song.",
+      "sql_description": "The SQL query joins the 'songs' and 'performance_score' tables, filters for performances with a rhythm tempo greater than 5, orders the results by voice sound quality in descending order, and then returns the unique original artists from that ordered list.",
+      "reason": "The query correctly identifies the requested artists and applies the 'rhythm tempo > 5' constraint. The question's ordering requirement for artists is ambiguous, as an artist may have multiple performances with different scores. The query adopts a reasonable interpretation by ordering all qualifying performances by 'voice_sound_quality' and then selecting the distinct artists. This effectively ranks the artists by their best-scoring performance that meets the filtering criteria, which is a valid way to fulfill the request.",
+      "verdict": true,
+      "evidence": "The `sql_result` contains one column, 'original_artist', and lists artist names such as 'Nelly Ciobanu' and 'Elena'. This matches the expected answer format. The list is ordered based on the an artist's best voice sound quality score."
+    }
+  }
+]

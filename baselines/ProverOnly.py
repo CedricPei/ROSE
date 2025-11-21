@@ -40,7 +40,7 @@ def main():
     parser.add_argument("--threads", type=int, default=1, help="Number of threads")
     parser.add_argument("--input", type=str, default="sample.json", help="Input file path")
     args = parser.parse_args()
-    reasoning_model = "gemini-2.5-pro-thinking"
+    reasoning_model = "google/gemini-2.5-pro"
 
     input_stem = re.sub(r"(-result)$", "", os.path.splitext(os.path.basename(args.input))[0])
     output_dir = f"output/{input_stem}/{reasoning_model}-ProverOnly-{input_stem}-eval"

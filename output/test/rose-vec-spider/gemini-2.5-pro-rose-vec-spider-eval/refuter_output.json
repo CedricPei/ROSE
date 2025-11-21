@@ -1,0 +1,2135 @@
+[
+  {
+    "question_id": 47,
+    "result": {
+      "judgement": "The prediction uses a `NOT IN` subquery to filter for customers without orders, which is logically equivalent to the gold standard's use of `EXCEPT` and correctly answers the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 43,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard; both correctly join the `Orders` and `Order_Items` tables, group by `order_id`, and select the required columns to answer the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 65,
+    "result": {
+      "judgement": "The predicted SQL correctly uses a LEFT JOIN to retrieve information for all invoices, including those without a shipment, which aligns with the question's explicit requirement \"for all invoices\". The gold standard incorrectly uses an INNER JOIN, which omits invoices that do not have a shipment.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 70,
+    "result": {
+      "judgement": "The predicted SQL incorrectly assumes that if an order has a shipment, all items in that order are considered shipped. It should have joined through the `Shipment_Items` table to correctly identify which specific items have been shipped.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 71,
+    "result": {
+      "judgement": "The predicted SQL incorrectly assumes that any product in an order is considered shipped if the order has any shipment record, whereas the correct approach is to join through the `Shipment_Items` table to verify which specific items were shipped.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 69,
+    "result": {
+      "judgement": "The prediction incorrectly joins `Order_Items` and `Shipments` directly on `order_id`, which fails to correctly link specific items to their shipments. The correct approach, as demonstrated by the gold standard, is to use the `Shipment_Items` linking table to join `Order_Items` and `Shipments`, which ensures that only items that have actually been shipped are considered.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 902,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard; the order of columns in the SELECT clause is different, but this does not affect the correctness of the result as the question does not specify an order.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 67,
+    "result": {
+      "judgement": "The predicted SQL incorrectly joins `Order_Items` to `Shipments` on `order_id`, which wrongly assumes all items from an order are included in every shipment associated with that order. The correct approach requires using the `Shipment_Items` table to accurately link specific order items to their respective shipments, as demonstrated by the gold standard.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 156,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold standard, only differing in the order of the projected columns, which is a benign representational choice.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 340,
+    "result": {
+      "judgement": "The predicted query correctly returns the address of the building and the name of the region as requested, while the gold query incorrectly returns the region's capital instead of its name.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 207,
+    "result": {
+      "judgement": "The predicted query correctly lists the student answer texts ordered by their count; including the count in the output is a reasonable and informative choice that is consistent with the question's request for ordering.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 342,
+    "result": {
+      "judgement": "The predicted SQL is correct; it returns the number of stories for each building in the specified region and reasonably includes the building name for identification, which aligns well with the request's phrasing 'for each building'.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 314,
+    "result": {
+      "judgement": "The predicted SQL's use of SUM(order_quantity) is a reasonable interpretation of the ambiguous phrase 'a quantity greater than 6', which could mean either the total quantity per order (as in the prediction) or the quantity of a single item (as in the gold standard).",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 135,
+    "result": {
+      "judgement": "The prediction is incorrect because it uses the `program` table to determine which channels a director 'directs', while the `director_admin` table is specifically designed to represent this relationship. This constitutes a misuse of the schema.",
+      "verdict": true,
+      "ambiguity": "ambiguous schema",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 438,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, correctly grouping by powertrain type to calculate the average fuel economy rates as requested. The differences in column order and aliasing are benign cosmetic variations.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 365,
+    "result": {
+      "judgement": "The prediction is correct under the reasonable interpretation that \"used services the most times\" refers to the number of interactions a customer has had, which is tracked in the `customer_interactions` table.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 313,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold standard; the only difference is the order of the projected columns, which is not specified in the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 449,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold query; the only difference is the order of the projected columns, which is a benign representational change.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 179,
+    "result": {
+      "judgement": "The prediction is correct under the reasonable interpretation that \"driven by two drivers\" means driven by two or more drivers (>= 2), whereas the gold standard interprets this as exactly two drivers (= 2). Both are valid readings of the ambiguous question.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 456,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, as both correctly join the same tables to retrieve the requested address and biographical information, with only benign differences in column order and table aliases.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 363,
+    "result": {
+      "judgement": "The predicted SQL is correct under the reasonable interpretation that \"used by more than 3 times\" refers to the number of interactions with a service, as counted from the `Customer_Interactions` table. The gold SQL's use of `Customers_and_Services` represents a different but also valid interpretation where \"used\" means the number of customers who have the service.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 497,
+    "result": {
+      "judgement": "The predicted query correctly identifies the student with the maximum loan value and returns all transcript dates for that student, which is a reasonable interpretation of the ambiguous question.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 452,
+    "result": {
+      "judgement": "The prediction incorrectly selects `detention_summary` from the `detention` table, whereas the question asks for the 'descriptions' of detentions, which are correctly identified as `detention_type_description` in the `Ref_Detention_Type` table, accessible via a join.",
+      "verdict": true,
+      "ambiguity": "ambiguous schema",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 483,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, as both queries correctly group by teacher, count the number of courses, and identify the teacher with the maximum count. The differences in column order and aliasing are purely stylistic and do not affect the correctness of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 486,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard; both correctly identify the student with the most courses by grouping by student ID and ordering by the count, and the use of 'COUNT(class_id)' versus 'COUNT(*)' is functionally identical since class_id is a primary key.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 383,
+    "result": {
+      "judgement": "The predicted SQL is correct as it follows the question's requirement to filter for the status 'Stuck'. The gold SQL is incorrect because it uses the lowercase 'stuck', which results in an empty, incorrect output.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 548,
+    "result": {
+      "judgement": "The predicted SQL is correct as it uses a LEFT JOIN to ensure all clients are listed, even those with zero orders, which aligns with the question's requirement to list \"all the clients\". The gold SQL is incorrect because its INNER JOIN omits clients who have never ordered.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 464,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies students with the most common behavior detail, which is a direct interpretation of the question. The gold SQL is unnecessarily complex and incorrectly filters for students who *only* have the most common detail, a constraint not specified in the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 502,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold query, as both correctly calculate the total loan amount for each student. The different order of columns in the SELECT clause is a benign presentational difference not specified by the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 597,
+    "result": {
+      "judgement": "The predicted SQL correctly interprets the question's requirement 'for each book' by using GROUP BY book_id, while the gold SQL incorrectly calculates the global maximum and minimum across all books, ignoring this granularity.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 647,
+    "result": {
+      "judgement": "The predicted SQL correctly filters for members whose nationality is not 'England', which directly translates the question's literal. The gold SQL's use of lowercase 'england' is a less faithful interpretation and causes it to produce different, and likely incorrect, results in a case-sensitive environment, indicating the gold standard is flawed.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 603,
+    "result": {
+      "judgement": "The prediction is incorrect because it interprets \"highest rank\" as the largest numerical value (worst rank) by using `ORDER BY ... DESC`, while the correct interpretation is the best rank, which is numerically the lowest value (rank 1).",
+      "verdict": true,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 454,
+    "result": {
+      "judgement": "The prediction's choice to use the `bio_data` column for \"personal details\" is a reasonable interpretation of the ambiguous question, as this column contains student names, which are a form of personal detail. The gold query's choice of `student_details` is an alternative but less intuitive interpretation, as its content appears to be address fragments.",
+      "verdict": false,
+      "ambiguity": "ambiguous question, ambiguous schema",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 654,
+    "result": {
+      "judgement": "The predicted SQL correctly interprets the question's requirement for a ranking 'higher than 100' by using `> 100`, while the gold standard incorrectly uses `< 100`, making the prediction correct and the gold standard faulty.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 721,
+    "result": {
+      "judgement": "The predicted query correctly calculates the number of collections for each document by joining the documents table with the linking table, an approach that is logically equivalent to the gold query which joins the collections table with the linking table.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 536,
+    "result": {
+      "judgement": "The predicted SQL correctly uses a `LEFT JOIN` from the `Book` table to fulfill the question's requirement to list results 'for each book', including those with zero orders. The gold SQL is incorrect because it only queries the `Books_Order` table, thus omitting books that have never been ordered.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 704,
+    "result": {
+      "judgement": "The predicted query incorrectly finds the document in the fewest collections by querying `documents_in_collections`, while the question asks for the document associated with the least number of other documents, which requires querying the `document_subset_members` table.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 713,
+    "result": {
+      "judgement": "The predicted SQL is correct as it orders the results by the count of distinct documents, which directly answers the question. The gold standard is incorrect because it orders by the total number of rows per subset (`COUNT(*)`), not by the count of distinct documents as requested.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 717,
+    "result": {
+      "judgement": "The predicted SQL provides a reasonable interpretation of the ambiguous question by directly listing the subsets each document belongs to. The gold standard opts for a more complex interpretation involving related documents, but the prediction's simpler approach is also valid given the unclear phrasing.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 698,
+    "result": {
+      "judgement": "The predicted SQL correctly interprets the question by selecting the `Related_Document_Object_ID`, which corresponds to the 'ids of the related' documents. The gold SQL is incorrect because it selects the ID of the document owned by Ransom, not the one it is related to, as requested by the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 780,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold query, correctly grouping by country and counting the number of cities. The difference in the order of the selected columns is superficial and does not affect the correctness of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 655,
+    "result": {
+      "judgement": "The predicted query correctly answers the question by showing the names of club leaders who joined before 2018. The gold query includes the club name, which is extra information not explicitly requested by the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 820,
+    "result": {
+      "judgement": "The prediction correctly provides a single list of all unique city codes involved in connections longer than the average distance, which is a more direct and reasonable interpretation of the question 'What are the city codes of cities...' than returning pairs of cities.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 774,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because it uses the wrong case ('Canada') for the country name in the WHERE clause, leading to an incorrect count of 0, whereas the data is stored in uppercase ('CANADA').",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 462,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because it misinterprets the conjunctive phrase \"not only... but also\" as a disjunction (OR), and it misunderstands what \"result\" refers to, treating it as a count of entries per student rather than the behavior detail itself.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 718,
+    "result": {
+      "judgement": "The prediction provides a reasonable answer by interpreting the ambiguous phrase 'id of the actual document' as 'Related_Document_Object_ID', while the gold standard's complex self-join logic seems to answer a different and unasked question, making it likely incorrect.",
+      "verdict": false,
+      "ambiguity": "ambiguous question, ambiguous schema",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 789,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because it uses the case-sensitive string 'China' which does not match the 'CHINA' value in the database, leading to a factually wrong count of 0 instead of 4.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 727,
+    "result": {
+      "judgement": "The predicted SQL correctly answers the question by finding the collection with the most documents across all collections, while the gold SQL incorrectly adds a filter for a specific collection name not mentioned in the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 816,
+    "result": {
+      "judgement": "The predicted query correctly calculates the average, minimum, and maximum distances, and the variance in the projected column order compared to the gold standard is a benign representational difference, not a semantic error.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 871,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold standard, with the only difference being the order of the selected columns, which does not alter the correctness of the result as the question does not specify an order.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 790,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because its filter condition `t2.country = 'China'` is case-sensitive and fails to match the actual data value, which appears to be 'CHINA' in all caps, leading to a factually incorrect result of 0.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 981,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard, as both correctly identify papers with authors from both specified universities using different but valid SQL constructs (`GROUP BY/HAVING` vs. `INTERSECT`).",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 554,
+    "result": {
+      "judgement": "The prediction is incorrect because it groups by the client's name instead of the client's unique ID. This can lead to incorrect aggregation if multiple clients share the same name, as seems to be the case given the different results.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 860,
+    "result": {
+      "judgement": "The predicted query correctly identifies sailors with at least two reservations and returns their names as requested. The gold query includes the sailor ID, which is extra information not explicitly asked for by the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 901,
+    "result": {
+      "judgement": "The prediction is semantically equivalent to the gold standard. For an INNER JOIN, placing a filter condition in the `ON` clause is identical to using a `WHERE` clause. The difference in the projected column order is also benign and does not alter the meaning of the results.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 952,
+    "result": {
+      "judgement": "The predicted SQL correctly lists all stores that have headphones and their total quantities, which is a valid interpretation of the question. The gold SQL assumes 'which store' means the single store with the most stock, which is another possible but not explicitly required interpretation. Therefore, the prediction is a reasonable answer.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 872,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard, correctly identifying sailors without reservations. The only difference is the order of the columns in the SELECT clause, which is a benign representational change as the question does not specify a required order.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1019,
+    "result": {
+      "judgement": "The predicted SQL correctly filters for 'Columbia University' with the proper capitalization, whereas the gold SQL fails by using a lowercase string, resulting in no matches in a case-sensitive database.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 832,
+    "result": {
+      "judgement": "The predicted query incorrectly double-counts each distance by using UNION ALL on both city columns, failing to account for the symmetric storage of distances in the table (e.g., A-to-B and B-to-A are both stored). The gold query correctly calculates the sum by just grouping by one city column, which avoids double-counting.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 997,
+    "result": {
+      "judgement": "The predicted query correctly identifies the venue and year with the most publications, and its inclusion of the publication count is a benign and helpful addition that does not render the result incorrect.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 980,
+    "result": {
+      "judgement": "The prediction fails to answer the question because it uses a strict equality match (`= 'Mckeown'`) for the author's name, which yields no results. The gold query correctly uses a substring match (`LIKE '%Mckeown%'`), which is the standard and expected way to search for a name and successfully retrieves the relevant papers.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 697,
+    "result": {
+      "judgement": "The predicted query correctly interprets 'document which is related to' by selecting the 'Related_Document_Object_ID' from the 'Document_Subset_Members' table after finding the documents owned by 'Ransom'. The gold query is incorrect as it selects the original document's ID rather than the related one's, and also fails by using an incorrect case for the owner's name, leading to an empty result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 949,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold standard, as both correctly group stores by neighborhood and count them; the difference in column order in the SELECT clause is benign.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1041,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, correctly grouping by conference and year to count papers, with only inconsequential differences in column order and aliasing.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 962,
+    "result": {
+      "judgement": "The predicted query incorrectly identifies neighborhoods that contain at least one store with no stock, while the question asks for neighborhoods where no stores have any stock at all. The gold standard's logic correctly applies this condition to the entire neighborhood.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 722,
+    "result": {
+      "judgement": "The predicted SQL is correct and more efficient than the gold standard, as it correctly counts collections per document directly from the linking table without the unnecessary join found in the gold query.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1095,
+    "result": {
+      "judgement": "The predicted query correctly identifies institutions where no staff participated in a 2004 conference by finding all institutions that did have participants and excluding them. The gold query is incorrect because it returns institutions that have at least one staff member who did not participate, which would wrongly include an institution if other staff from that same institution did participate.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1153,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold standard; both correctly calculate the average age of pilots grouped by plane name. The difference in column order in the SELECT clause is a benign formatting variation.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 987,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies papers by the specified authors using exact name matching, which is appropriate and yields the correct results. The gold SQL fails because it uses incorrect string literals with extra spaces in its `LIKE` clause, resulting in no matches.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1161,
+    "result": {
+      "judgement": "The predicted SQL is correct as it correctly groups by pilot name and finds the maximum age for each group, which is logically equivalent to the gold SQL despite minor differences in column order and aliasing.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1006,
+    "result": {
+      "judgement": "The prediction correctly identifies the ID of the most cited paper and its citation count. The gold standard is incorrect because it groups by the cited paper's ID but selects the citing paper's ID, returning an arbitrary ID from the group rather than the ID of the most cited paper.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1010,
+    "result": {
+      "judgement": "The predicted query correctly identifies the top 10 most cited papers and their citation counts, providing their titles as requested by 'What are the ... papers'. The gold standard query is flawed because it groups by the cited paper ID but selects the citing paper ID, which is indeterminate and incorrect.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 827,
+    "result": {
+      "judgement": "The prediction is incorrect because it calculates the distance using latitude and longitude instead of using the provided 'Direct_distance' table, which is designed for this purpose and contains the explicit distances between cities.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1090,
+    "result": {
+      "judgement": "The predicted SQL correctly provides the conference ID, name, year, and participant count as requested by the question, while the gold standard omits the explicitly requested conference ID from the final result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1220,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the artist(s) with the maximum lifespan using a subquery, which is a valid alternative to the gold standard's `ORDER BY ... LIMIT 1` approach, especially for handling ties.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1183,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the top 3 districts by area using a subquery and then sums their populations, which is a logically sound method to answer the question. The gold SQL's syntax is incorrect for this purpose, as an aggregate function like SUM() is typically evaluated before ORDER BY and LIMIT, meaning it would sum the population of all districts, not just the top 3 by area.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1074,
+    "result": {
+      "judgement": "The predicted SQL correctly provides the institution ID, staff count, and staff names as requested by the question. The gold SQL incorrectly returns the institution name instead of the ID and omits the staff names entirely, making the prediction more accurate than the gold standard.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 940,
+    "result": {
+      "judgement": "The prediction is incorrect because it lists earpads from any non-plastic headphone, failing to check if those same earpad types are also used on plastic headphones. The question asks for earpad types that are *never* associated with plastic construction, which the gold query correctly identifies using `EXCEPT`.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1047,
+    "result": {
+      "judgement": "The predicted SQL is correct as it properly identifies authors who have published papers cited more than 50 times and then counts the remaining authors. The gold SQL is flawed because its subquery groups by paper ID but selects author ID, which would only return one author for a multi-authored paper, leading to an incorrect set of authors to exclude and thus an inflated final count.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1159,
+    "result": {
+      "judgement": "The predicted query correctly finds the oldest pilot(s) for each plane type, properly handling cases where multiple pilots share the maximum age. The gold query is syntactically flawed in standard SQL as it selects a non-aggregated column (`pilot_name`) while grouping by another (`plane_name`), leading to arbitrary and incomplete results.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1138,
+    "result": {
+      "judgement": "The prediction is incorrect because it queries the `Hangar` table, which results in an incomplete list of plane names, missing 'F-17 Fighter' that exists in the `PilotSkills` table.",
+      "verdict": true,
+      "ambiguity": "ambiguous schema",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1237,
+    "result": {
+      "judgement": "The predicted query correctly uses JOINs to find artists who created both paintings and sculptures, which is logically equivalent to the gold query's INTERSECT operator, and its output format aligns well with the request for 'full names'.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1290,
+    "result": {
+      "judgement": "The predicted SQL correctly joins tables to group by painter and order by name as requested, while the gold standard fails to order by the painter's name, instead incorrectly ordering by the painting's title.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1154,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold standard, as the order of columns in the SELECT clause does not alter the correctness of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1217,
+    "result": {
+      "judgement": "The predicted SQL is correct as it is logically equivalent to the gold standard; the different order of projected columns is a benign representational change.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1216,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, differing only in the order of the selected columns and the use of aliases, which does not affect the correctness of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1261,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold query; the difference in the order of the selected `fname` and `lname` columns is a benign representational choice as the question does not specify an order for 'full name'.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1166,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard; while it includes a redundant join to the `Hangar` table, this join does not alter the result due to the foreign key constraint ensuring that every plane in `PilotSkills` exists in `Hangar`.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 986,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because it uses an exact match (`=`) for author names instead of a substring match (`LIKE`), causing it to fail to find any papers by 'Mckeown' and returning an empty result.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1184,
+    "result": {
+      "judgement": "The predicted query correctly retrieves the requested columns and sorts them by population, fully answering the question. The difference in column order in the SELECT clause compared to the gold standard is a benign representational change that does not alter the correctness of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1307,
+    "result": {
+      "judgement": "The predicted query correctly selects the required columns for oil paintings and orders them by year, fulfilling the question's requirements. The difference in the projected column order compared to the gold standard is a benign variation that does not affect the correctness of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1236,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard, as both correctly use an INTERSECT operation to find artists with both paintings and sculptures; the difference in projection order and the order of the subqueries is immaterial.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1388,
+    "result": {
+      "judgement": "The predicted SQL is correct; while the gold standard only returns the language names, the prediction also returns the average scores which is a reasonable and helpful interpretation of the request to show languages 'sorted by' their scores.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1239,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard; both correctly use an INTERSECT operation to find artists who used two specified mediums. The difference in the order of the projected first and last names is benign.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1245,
+    "result": {
+      "judgement": "The prediction correctly interprets \"works\" to include both paintings and sculptures from their respective tables, while the gold standard only considers paintings, providing an incomplete answer.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1020,
+    "result": {
+      "judgement": "The predicted SQL is correct as it accurately uses the affiliation name 'Columbia University' from the question. The gold SQL is incorrect because its use of lowercase for the affiliation name results in no matches in a case-sensitive database environment, leading to an empty and incorrect result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1009,
+    "result": {
+      "judgement": "The predicted SQL is correct because it retrieves the titles of the top 10 most cited papers and their citation counts, which is a more complete and user-friendly answer than the gold SQL's output of paper IDs. The gold SQL is flawed as it attempts to select the citing paper's ID (`paper_id`) while grouping by the cited paper's ID (`cited_paper_id`), which is a logical error.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1289,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold SQL, correctly grouping by year and finding the maximum height and width. The differences in column order, aliasing, and the absence of an ORDER BY clause are non-substantive and do not affect the correctness of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1260,
+    "result": {
+      "judgement": "The predicted SQL is correct; its only difference from the gold standard is the order of the selected columns (first name, last name vs. last name, first name), which is a benign representational change that does not affect the meaning of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1443,
+    "result": {
+      "judgement": "The prediction fails because it incorrectly assumes the value in the `is_seller` column is the string \"Yes\", when the column has a `VARCHAR(1)` type and the actual data uses `1` to represent a seller, as shown by the gold query's successful execution.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1304,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, correctly identifying the top 3 artists based on their count of oil paintings; the different order of first name and last name in the SELECT clause is a benign representational variance.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1309,
+    "result": {
+      "judgement": "The predicted query correctly selects the requested columns, filters by height, and orders by title, fully satisfying the question. The difference in column order in the SELECT clause compared to the gold standard is a benign representational variation.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1129,
+    "result": {
+      "judgement": "The prediction correctly counts the number of distinct planes, which aligns with the most natural interpretation of 'how many planes'. The gold query counts the number of pilot-plane pairings, which is a less direct answer to the question.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1409,
+    "result": {
+      "judgement": "The predicted query incorrectly assumes the value for `garage_yn` is 'yes', which is impossible for a `VARCHAR(1)` column, leading to a wrong count.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1521,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, as both correctly calculate the average price for each food type. The differences in column order and the use of an alias are purely stylistic and do not change the meaning of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1387,
+    "result": {
+      "judgement": "The predicted query incorrectly groups by the non-unique `languages.name` column, which can lead to incorrect aggregation if multiple languages share the same name. The gold query correctly groups by the primary key `languages.id`, ensuring each distinct language is counted accurately, which is the more robust and semantically correct approach.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1162,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard, as both correctly group by pilot name and find the maximum age; the difference in column order and the use of an alias in the prediction are benign stylistic variations.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1449,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, correctly grouping by property ID and counting the photos; the difference in the order of the selected columns is benign and does not affect the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1155,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold standard, as both correctly group by plane type and count the records. The difference in the order of the selected columns is stylistic and does not change the correctness of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1221,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the artist who lived the longest and returns their full name; the order of the first and last name columns in the SELECT statement is a benign representational difference that does not alter the correctness of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1386,
+    "result": {
+      "judgement": "The predicted query incorrectly groups by the non-unique language name (`l.name`) instead of the primary key (`l.id`), which leads to incorrect counts and a different result set compared to grouping by the unique language identifier.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1803,
+    "result": {
+      "judgement": "The prediction correctly interprets \"don’t have any rating\" as a NULL value in the `rating` column, which is the standard and appropriate approach, whereas the gold standard incorrectly checks for the literal string 'null'.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1408,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because it attempts to filter the `garage_yn` column, defined as `VARCHAR(1)`, with the value \"Yes\", which cannot be stored in a single-character field and thus will never match.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1213,
+    "result": {
+      "judgement": "The predicted query is correct; the difference in the order of columns in the SELECT clause is a benign representational choice that does not affect the meaning or correctness of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1417,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because it uses the case-sensitive filter value 'Swimming Pool' for the feature name, which results in no matches and an empty result set. The correct value in the database is 'swimming pool' (all lowercase), as used in the gold standard query.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1742,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard; both correctly join the tables, group by location, and find the maximum value for each location, with differences only in column order and aliasing.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1432,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold standard; both correctly identify users with a single search by grouping on user_id and filtering the count to 1, and both select the requested user ID and category.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1429,
+    "result": {
+      "judgement": "The predicted query correctly retrieves the requested search strings and timestamps and sorts them as specified; the difference in column order compared to the gold standard is a benign presentational choice not specified by the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1837,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard; the difference in the order of projected columns is a benign representational change that does not alter the answer's correctness.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1448,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold standard, as both correctly count photos per property; the difference in column order is a benign cosmetic change.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1461,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold query, as both correctly group rooms by size and count them; the differences in column order and aliasing are benign.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1519,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, as both queries correctly group by food type and count the number of associated goods. The difference in the order of the selected columns is purely presentational and does not affect the correctness of the answer.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1510,
+    "result": {
+      "judgement": "The predicted SQL is correct as the order of projected columns does not affect the semantic correctness of the query, and both queries correctly compute the average, minimum, and maximum prices for each food.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1244,
+    "result": {
+      "judgement": "The prediction correctly interprets 'works' to include both Paintings and Sculptures as per the schema, while the gold standard incorrectly only queries the Paintings table, omitting sculptures. The prediction is more accurate and complete.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1851,
+    "result": {
+      "judgement": "The prediction correctly interprets 'unrated' as requiring a check for NULL values, which is the standard representation for missing data. The gold standard incorrectly checks for the string literal 'null', which is not semantically equivalent and yields an incorrect empty result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1299,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard, as both correctly identify the widest painting in the specified gallery and return its height and ID. The difference in the order of the selected columns is a benign representational change that does not affect correctness.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1798,
+    "result": {
+      "judgement": "The prediction correctly interprets 'a rank of 5 or below' as `rank <= 5`, which is the standard meaning for rankings where a lower number signifies a higher rank. The gold SQL incorrectly uses `rank >= 5`, which contradicts the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1773,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies all home conferences with an average enrollment over 2000, and additionally returning the average enrollment is an acceptable representation that does not alter the correctness of the answer.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1854,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because it fails to handle NULL values in the subquery, causing the `NOT IN` clause to return an empty set incorrectly. The gold standard correctly filters out these NULLs to produce the right list of movies.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1797,
+    "result": {
+      "judgement": "The predicted SQL correctly interprets 'rank 5 or below' as `Rank <= 5`, which is the most common and logical understanding in the context of rankings where lower numbers are better. The gold standard's use of `Rank >= 5` represents a less plausible interpretation of 'below' as 'worse in quality'.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1550,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because its `LIKE` condition using the plural 'Cookies' fails to match any data, leading to an empty result, while the gold result shows that matching items exist. The logical structure `(A OR B) AND C` is correct, but the specific value used for matching is wrong.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1838,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold SQL, as the different order of columns in the SELECT clause is a benign representational change.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1878,
+    "result": {
+      "judgement": "The predicted SQL correctly answers the question by using 'LOWER(client.name) LIKE 'john%'' to interpret 'John or something similar' and 'ORDER BY ... LIMIT 1' to find the heaviest package. The gold SQL is incorrect as it uses a too-strict filter ('LIKE \"John\"') that finds no results and employs a flawed SQL pattern by selecting a non-aggregated column with an aggregate function.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1389,
+    "result": {
+      "judgement": "The predicted SQL correctly provides the requested language names sorted by the average score; including the score itself in the output is a reasonable and informative representation that does not contradict the question's intent.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1844,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies cinemas without a movie by checking for `NULL` in the `Movie` column. The gold standard is incorrect as it wrongly compares an integer column to the string literal 'null' instead of using the `IS NULL` operator.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1900,
+    "result": {
+      "judgement": "The predicted query correctly uses 'AND' to find shipments that are both on Mars and managed by Turanga Leela, which matches the question's semantics. The gold standard incorrectly uses 'OR', which would find shipments on Mars regardless of the manager, or shipments managed by Leela regardless of the destination.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1821,
+    "result": {
+      "judgement": "The predicted SQL correctly returns the names of the cinemas as requested, whereas the gold standard incorrectly returns the titles of the movies.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1843,
+    "result": {
+      "judgement": "The predicted SQL correctly uses `IS NULL` to find theaters without a movie, which is the standard and correct way to check for null values. The gold SQL incorrectly compares the integer `Movie` column to the string literal `'null'`, which is semantically and syntactically wrong.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1310,
+    "result": {
+      "judgement": "The predicted query correctly uses a `NOT IN` subquery on the artist's ID to filter out artists who are sculptors, which is a valid and logically equivalent approach to the gold query's `EXCEPT` operator. The prediction is arguably more robust as it operates on unique artist IDs, whereas the gold standard performs a set difference on non-unique artist names.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1855,
+    "result": {
+      "judgement": "The prediction is incorrect because it returns the recipient's ID, whereas the question \"Who\" implies returning the recipient's name, which requires a join with the Client table.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1446,
+    "result": {
+      "judgement": "The predicted SQL correctly counts properties with at least two features by using the `property_features` linking table. The gold SQL is incorrect because it groups the `Properties` table by its primary key, which always results in a count of 1 per group, thus failing to identify properties with multiple features.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1978,
+    "result": {
+      "judgement": "The predicted SQL correctly provides the average and maximum profit for each press as requested by the question, while the gold standard incorrectly provides the overall aggregates across all presses, ignoring the 'for each press' clause.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1993,
+    "result": {
+      "judgement": "The predicted SQL correctly casts the 'Sale_Amount' column from TEXT to REAL for numerical sorting, which aligns with the question's intent to find the 'best sale books'. The gold standard performs a simple string sort on the TEXT column, which is semantically incorrect for comparing sale amounts.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1877,
+    "result": {
+      "judgement": "The predicted SQL is correct. It properly interprets \"'John' is part of their name\" using `LIKE '%John%'` and correctly finds the heaviest package. The gold SQL is incorrect as it filters for an exact match `LIKE \"John\"` and uses an invalid aggregation structure by selecting a non-aggregated column alongside an aggregate function without a GROUP BY, leading to an incorrect empty result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1853,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because it fails to handle potential NULL values in the subquery. When a subquery used with `NOT IN` returns a NULL, the entire `WHERE` clause evaluates to false or unknown, leading to an empty result set, which is not the correct answer.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1906,
+    "result": {
+      "judgement": "The prediction incorrectly groups by manager name, which may not be unique, leading to incorrect aggregation. The gold standard correctly groups by the unique manager ID, ensuring accuracy for each individual manager.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1869,
+    "result": {
+      "judgement": "The predicted SQL correctly joins the Package and Client tables on the recipient's account number and filters by the name 'Leo Wong' to find the package numbers. The gold SQL is semantically equivalent but uses a lowercase name 'leo wong', which results in an empty set, suggesting a case-sensitive database where the predicted query is correct and the gold is not.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1465,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies users who live in the properties they own and formats the output as a single 'full_name' column, which is a direct and reasonable interpretation of the question. The gold standard uses identical logic but returns the name components in separate columns, which is a benign representational difference.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 2134,
+    "result": {
+      "judgement": "The predicted SQL is correct as it accurately identifies the staff with the minimum meeting count greater than zero. The `HAVING count(*) > 0` clause, while logically redundant since the `Staff_in_meetings` table only contains attendees, explicitly and correctly models the 'attended some meeting' constraint from the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1968,
+    "result": {
+      "judgement": "The prediction correctly interprets \"or\" to find games played by players from either college, which is a direct reading of the question. The gold standard's use of INTERSECT finds games played by players from *both* colleges, which is a different but plausible interpretation of an ambiguous question.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1940,
+    "result": {
+      "judgement": "The predicted query is correct as it selects the platform names and IDs for platforms with a download rank of 1. The difference in column order compared to the gold standard is a benign variation, as the question does not specify a strict order for the output columns.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 2078,
+    "result": {
+      "judgement": "The prediction incorrectly equates the ambiguous term 'client ideas' with the 'invoice_details' column, which is a misuse of the schema as invoice details typically pertain to billing, not creative concepts. This also results in an incorrect output granularity with duplicate client information.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1804,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies movies without ratings by checking for NULL values, which is the standard method. The gold standard incorrectly checks for the string literal 'null', which fails to retrieve the correct movies as confirmed by the execution results.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1885,
+    "result": {
+      "judgement": "The predicted SQL correctly lists the names of clients who sent more than one package, as requested by the question. The gold standard SQL returns the same names but also includes a count of packages, which was not explicitly asked for.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 2005,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard. Both queries correctly join the tables and aggregate sales per press. The difference in the GROUP BY clause (using the press name vs. the press ID) is a valid alternative implementation that yields the same result, as press names are unique for each press.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1779,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold query, as both correctly join the necessary tables to find majors and ranks for the specified university; differences in column order and aliasing are stylistic.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1559,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold standard, as the different ordering of columns in the SELECT clause is a benign presentational change that does not affect the correctness of the data returned.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1988,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold standard; the difference in the order of the selected columns is a benign formatting variation that does not alter the correctness of the answer.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1852,
+    "result": {
+      "judgement": "The predicted SQL correctly interprets 'unrated' as rows where the rating is NULL, which is the standard and correct way to identify missing values. The gold SQL incorrectly checks for the string literal 'null', which is not semantically equivalent and produces an incorrect empty result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 2066,
+    "result": {
+      "judgement": "The predicted SQL is more correct than the gold standard because it lists all agencies, including those with zero clients, which aligns better with the question's phrasing 'each agency'. The gold SQL omits agencies with no clients, providing an incomplete answer.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 2028,
+    "result": {
+      "judgement": "The predicted query correctly shows all author names from the `Authors` table and their corresponding document counts, including authors with zero documents, which aligns perfectly with the question's requirement to 'Show all author names'. The gold query is incorrect because it only lists authors who have written at least one document.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1688,
+    "result": {
+      "judgement": "The predicted SQL is correct as the different column order in the SELECT clause is semantically equivalent to the gold standard and correctly answers the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1580,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the items with chocolate flavor purchased at most 10 times, and the additional columns in the output provide helpful context without changing the correctness of the answer.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1558,
+    "result": {
+      "judgement": "The predicted query is correct as it calculates the maximum, minimum, and average price for each flavor and orders the results as requested; the difference in column order from the gold standard is a benign representational change.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1557,
+    "result": {
+      "judgement": "The predicted query is functionally identical to the gold standard, as the order of columns in the SELECT clause does not affect the semantic correctness of the result. Both queries correctly group and order by flavor while calculating the required price aggregations.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1840,
+    "result": {
+      "judgement": "The predicted SQL correctly provides the total count of movies with a non-null rating, which directly answers the question. The gold SQL provides an unrequested breakdown of counts per rating, which does not directly answer the \"How many\" question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1741,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, as both queries correctly group by warehouse location and find the maximum box value for each location. The differences in column order, aliasing, and column naming are purely stylistic and do not affect the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 2141,
+    "result": {
+      "judgement": "The predicted SQL correctly joins the `Staff` and `Staff_in_Meetings` tables to filter for staff who have attended at least one meeting, which matches the question's requirement. The gold SQL is incorrect because it fails to incorporate this condition, instead only filtering on the staff details.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 2119,
+    "result": {
+      "judgement": "The predicted SQL is more complete than the gold standard as it lists all agencies and their staff counts, including those with zero staff, which is a very reasonable interpretation of 'in each agent'. The gold SQL only lists agencies that have staff, failing to account for every agency.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1881,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because it groups by client name, which may not be unique. This can lead to incorrect aggregation if multiple clients share the same name. The gold standard correctly groups by the client's account number, which is a unique identifier, ensuring that packages from distinct clients are not mistakenly combined.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 907,
+    "result": {
+      "judgement": "The predicted SQL is semantically identical to the gold standard, as the difference in table name capitalization ('boats' vs. 'Boats') is inconsequential in most SQL dialects and does not alter the query's logic.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1671,
+    "result": {
+      "judgement": "The predicted SQL correctly answers the question by identifying the years where more than one institution was founded. The gold standard SQL returns the same years but includes an additional, unrequested count, which is a benign representation difference.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1602,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies makes associated with more than one team by grouping by the 'make' column and counting the number of teams, which directly answers the question. The gold SQL incorrectly groups by the 'team' column, which would check for duplicate team names rather than makes with multiple teams.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 2009,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard; it correctly joins the tables, orders by sales, and selects the author's name to answer the question. The use of full table names instead of aliases is a benign syntactic difference.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1868,
+    "result": {
+      "judgement": "The predicted SQL correctly counts the number of packages as requested by the question 'What is the number of...'. The gold SQL incorrectly lists the package numbers instead of providing the count.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 133,
+    "result": {
+      "judgement": "The predicted SQL is identical to the gold standard and correctly answers the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1986,
+    "result": {
+      "judgement": "The predicted SQL is correct as it returns the average age for each gender, and the differing column order compared to the gold SQL is a benign representation change.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1735,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard; differences in column order and the use of aliases are benign stylistic choices that do not alter the query's correct result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1574,
+    "result": {
+      "judgement": "The predicted SQL correctly filters for goods that are `more than twice` the average price, accurately reflecting the question, whereas the gold standard incorrectly only filters for goods more expensive than the average.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1583,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the three most popular goods by counting their occurrences; the unnecessary join and the inclusion of the popularity count are acceptable variations that do not change the correctness of the answer.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1939,
+    "result": {
+      "judgement": "The predicted query is correct as it returns the required columns based on the specified filter; the order of columns in the SELECT clause is a trivial and acceptable difference from the gold standard.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1872,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard, as both correctly join the `Client` and `Package` tables on both the sender and recipient columns to find packages associated with 'Leo Wong'; the difference in table aliasing is purely syntactic.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 359,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold standard, with the only difference being the capitalization of identifiers, which does not affect execution in most SQL dialects.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1484,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies cyclists who have not purchased a bike using a `NOT IN` subquery, which is a logically equivalent alternative to the `EXCEPT` clause used in the gold standard.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 2113,
+    "result": {
+      "judgement": "The prediction correctly uses a LEFT JOIN to include all invoices as requested by the question, while the gold standard incorrectly only includes invoices that have payments.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 1396,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard; both correctly use an INTERSECT operation to find the names of languages that are official in both countries with an overall score greater than 95 and countries with an overall score less than 90.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 763,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold standard and correctly answers the question. The only difference is capitalization, which does not affect the query's execution or meaning.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1732,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the warehouse(s) with the maximum capacity and sums the value of the boxes within them, which is a correct interpretation of the question. The gold SQL is semantically incorrect; its use of `ORDER BY ... LIMIT 1` with a `SUM` aggregation without a `GROUP BY` clause fails to correctly filter for the intended warehouse and produces a wrong result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 2008,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard, as both correctly join the `press` and `book` tables, filter by sales amount, and group by press to count the qualifying books. The difference in grouping key (`Press_ID` vs `Name`) is a minor implementation detail and does not alter the result, as a press's name is functionally dependent on its primary key.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1709,
+    "result": {
+      "judgement": "The predicted SQL uses an `OR` condition, which finds all contents present in either Chicago or New York warehouses. The gold SQL uses `INTERSECT`, finding only contents present in both locations. The phrase \"contents present in... Chicago and... New York\" is ambiguous and can be reasonably interpreted in either way, making the prediction a valid alternative.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1264,
+    "result": {
+      "judgement": "The prediction incorrectly interprets the ordering criteria 'by length' as the string length of the painting's title, while the question in the context of physical paintings with dimensions in the schema refers to a physical measurement like height or width.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 805,
+    "result": {
+      "judgement": "The predicted SQL, which selects students whose city is not in the 'USA', and the gold SQL, which takes all students and removes those in the 'USA', are logically equivalent ways to answer the question. They handle students with unknown cities differently, but this is a reasonable interpretative difference not specified by the question.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 90,
+    "result": {
+      "judgement": "The predicted SQL is identical to the gold standard and correctly counts the number of products that do not appear in any order.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 366,
+    "result": {
+      "judgement": "The predicted query correctly groups by the customer's primary key (`Customer_ID`) to count their services, which is a more robust and semantically correct approach than the gold query's grouping by a non-unique details column.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 18,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold standard, with the only difference being the case of column names, which is a benign syntactic variation.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1563,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the customer who shopped most often by name and provides their shopping count, fully answering both parts of the question. The gold SQL only provides the customer ID, which is a less direct answer to 'Which customer'.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 171,
+    "result": {
+      "judgement": "The predicted SQL is semantically identical to the gold standard, differing only in minor stylistic aspects like capitalization, and correctly answers the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 471,
+    "result": {
+      "judgement": "The predicted SQL is semantically identical to the gold standard, as the differences are only in capitalization and spacing, which do not affect the query's logic or execution.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1553,
+    "result": {
+      "judgement": "The predicted SQL is incorrect because it uses lowercase values ('blackberry', 'blueberry') for the 'Flavor' column, which is case-sensitive and results in no matching records and a NULL average. The gold standard correctly uses capitalized values ('Blackberry', 'Blueberry') which exist in the database.",
+      "verdict": true,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 241,
+    "result": {
+      "judgement": "The predicted SQL is semantically identical to the gold standard; the only difference is the use of single quotes versus double quotes for the string literal, which is a trivial syntactic variation.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 2037,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold standard, as the difference in table name capitalization is a trivial syntactic variation that most SQL engines ignore.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 132,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold query; both correctly identify the channel with the most directors by counting joined rows from `director_admin`, grouping by channel, and selecting the top result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1595,
+    "result": {
+      "judgement": "The prediction is logically equivalent to the gold standard, as the different ordering of columns in the SELECT clause is a benign representational change that does not alter the meaning of the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1495,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard; the only difference is the use of table aliases in the gold SQL, which is a stylistic variation without semantic impact.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 624,
+    "result": {
+      "judgement": "The predicted SQL is identical to the gold standard and correctly answers the question by ordering customers by their membership level in descending order and selecting the card credit of the top one.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 903,
+    "result": {
+      "judgement": "The predicted SQL is semantically identical to the gold standard, correctly retrieving the specified columns and applying the required ordering.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 748,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold query, as they both correctly join the `songs` and `performance_score` tables and filter for English-language songs to retrieve distinct stage presence scores. The differences are purely syntactic, involving table aliases and join order, which do not alter the semantics.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1704,
+    "result": {
+      "judgement": "The predicted SQL correctly lists the distinct locations as requested by the 'What are...' question, while the gold SQL incorrectly provides a count of the locations which would answer a 'How many...' question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": false
+    }
+  },
+  {
+    "question_id": 429,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard; both correctly join tables, group by vehicle, and order by count to find the vehicle with the most rentals.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 667,
+    "result": {
+      "judgement": "The predicted query is semantically identical to the gold standard, with minor syntactic differences in casing and quote characters that do not affect the query's correctness.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 729,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the document that meets both conditions specified in the question. The only difference from the gold standard is the absence of `DISTINCT`, which is an acceptable variation for a \"List\" question as it does not change the set of documents identified.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 373,
+    "result": {
+      "judgement": "The predicted SQL is syntactically different (capitalization) but semantically identical to the gold standard, both correctly answering the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 283,
+    "result": {
+      "judgement": "The predicted SQL is identical to the gold standard and correctly answers the question by selecting the distinct payment methods from the customers table.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1727,
+    "result": {
+      "judgement": "The prediction is correct under the reasonable interpretation that \"higher than the value of any boxes\" means the value must be greater than all values of boxes containing 'Rocks', which translates to being greater than the maximum value. The gold standard interprets \"any\" differently, as being greater than at least one value, which is also a valid interpretation.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1749,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, with minor stylistic differences in table aliasing and casing which do not affect the result.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 927,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, differing only in inconsequential casing of column names, and correctly answers the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 711,
+    "result": {
+      "judgement": "The predicted query is logically equivalent to the gold standard, as both correctly join the `Document_Subsets` and `Document_Subset_Members` tables, group by the subset ID, and count the distinct documents for each subset. The differences in table aliases and column references are purely syntactic and do not alter the semantics of the query.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 305,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard; both correctly join the tables and sum the order quantity for the specified product.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 756,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard; both correctly join the `performance_score` and `songs` tables to calculate the average rhythm score per language.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 2075,
+    "result": {
+      "judgement": "The predicted SQL is logically identical to the gold standard, differing only in the case of the table name, which is a benign cosmetic variation. Both queries correctly fulfill the user's request.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1053,
+    "result": {
+      "judgement": "The predicted SQL is identical to the gold SQL and correctly counts all rows in the `conference` table to answer the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 319,
+    "result": {
+      "judgement": "The predicted SQL is identical to the gold SQL and correctly answers the question by selecting the addresses and ordering them by completion year in descending order.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 163,
+    "result": {
+      "judgement": "The predicted query is semantically equivalent to the gold query, as the only difference is the capitalization of column names, which is benign.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 760,
+    "result": {
+      "judgement": "The prediction is correct as it provides a unique list of artists, which is a more natural interpretation of 'Find the original artists' than the gold query's approach of returning duplicates.",
+      "verdict": false,
+      "ambiguity": "ambiguous question",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 2112,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold SQL, as both correctly join the Invoices and Payments tables to retrieve the distinct invoice IDs and statuses for invoices that have associated payments.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 165,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold standard; both correctly join the necessary tables, filter by build year, and count the distinct number of drivers.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1774,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold standard, as the only difference is the case of the table name, which does not affect the query's logic or execution in most SQL dialects.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1435,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard; explicitly specifying 'ASC' for ordering is redundant as it is the default behavior.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1629,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard, with the only difference being the case sensitivity of the column names, which is a benign variation.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1607,
+    "result": {
+      "judgement": "The predicted and gold SQL queries are logically identical and correctly answer the question, with the only difference being the case of the column name, which is inconsequential in most SQL dialects.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1340,
+    "result": {
+      "judgement": "The predicted SQL is a logically equivalent alternative to the gold standard, as the differences in identifier casing and string literal quoting are syntactically different but semantically identical.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 611,
+    "result": {
+      "judgement": "The predicted SQL is logically and syntactically equivalent to the gold standard, with only minor case differences in column names and keywords, which does not affect execution.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 1795,
+    "result": {
+      "judgement": "The predicted SQL is logically equivalent to the gold standard; both correctly join the necessary tables and filter for the 'Accounting' major with a rank of 3 or better.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 650,
+    "result": {
+      "judgement": "The predicted SQL is semantically identical to the gold standard, correctly grouping by nationality and counting the members in each group, which directly answers the question.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 622,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold standard, only differing by the case of column names, which is a benign syntactic variation that does not affect execution or correctness.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 213,
+    "result": {
+      "judgement": "The predicted SQL is semantically equivalent to the gold standard, as both queries correctly group by assessment and order by the count to find the least frequent one; the difference in capitalization of table and column names is cosmetic and does not alter the query's logic.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  },
+  {
+    "question_id": 88,
+    "result": {
+      "judgement": "The predicted SQL is logically identical to the gold standard, correctly selecting the product price and size for products with a price above the average. The minor differences in capitalization and spacing are syntactically trivial.",
+      "verdict": false,
+      "ambiguity": "na",
+      "gold_correct": true
+    }
+  }
+]

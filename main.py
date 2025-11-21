@@ -59,7 +59,7 @@ if __name__ == "__main__":
     parser.add_argument("--threads", type=int, default=1)
     parser.add_argument("--input", type=str, default="sample.json")
     args = parser.parse_args()
-    reasoning_model = "deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
+    reasoning_model = "google/gemini-2.5-pro"
     instruct_model = "deepseek-chat"
     partial = False
 

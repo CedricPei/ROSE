@@ -1,0 +1,535 @@
+[
+  {
+    "question_id": 77,
+    "question": "Which schools served a grade span of Kindergarten to 9th grade in the county of Los Angeles and what is its Percent (%) Eligible FRPM (Ages 5-17)?",
+    "evidence": "Percent (%) Eligible FRPM (Ages 5-17) can be acquired by `FRPM Count (Ages 5-17)` / `Enrollment (Ages 5-17)` * 100",
+    "gold_sql": "SELECT T2.School, T1.`FRPM Count (Ages 5-17)` * 100 / T1.`Enrollment (Ages 5-17)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.County = 'Los Angeles' AND T2.GSserved = 'K-9'",
+    "predicted_sql": "SELECT schools.School, frpm.`Percent (%) Eligible FRPM (Ages 5-17)` FROM schools INNER JOIN frpm ON schools.CDSCode = frpm.CDSCode WHERE schools.GSserved = 'K-9' AND schools.County = 'Los Angeles';",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "Names of all schools in Los Angeles County whose grade span served is Kindergarten through 9th grade (\"K-9\"), together with each school's Percent (%) Eligible FRPM (Ages 5-17).",
+      "sql_description": "Joins schools and frpm on CDSCode, keeps rows where County is 'Los Angeles' and GSserved equals 'K-9', and returns School plus the existing Percent (%) Eligible FRPM (Ages 5-17) value.",
+      "reason": "Query applies the required county and grade-span filters and returns exactly the two requested fields, providing the needed FRPM percentage from the frpm table, which is acceptable because that column already stores the required calculation.",
+      "verdict": true,
+      "evidence": "sql_result shows two matching rows with columns: School, Percent (%) Eligible FRPM (Ages 5-17)."
+    },
+    "refuter_output": {
+      "judgement": "Prediction returns proportions (0–1) instead of percent values requested, so the numeric answers are off by a factor of 100.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 82,
+    "question": "What is the grade span offered in the school with the highest longitude?",
+    "evidence": "",
+    "gold_sql": "SELECT GSoffered FROM schools WHERE ABS(longitude) = (SELECT MAX(ABS(longitude)) FROM schools)",
+    "predicted_sql": "SELECT GSoffered FROM schools ORDER BY ABS(Longitude) DESC LIMIT 1",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "The lowest and highest grades offered (GSoffered) for the single school whose Longitude value is the greatest (i.e., numerically largest / most positive).",
+      "sql_description": "Returns GSoffered for the school whose |Longitude| is largest, by ordering on ABS(Longitude) in descending order and taking the first row.",
+      "reason": "Question asks for the school with the highest longitude (max Longitude). Using ABS(Longitude) instead targets the school farthest from the prime meridian, likely the most negative longitude in California, not the highest. Anchor on max Longitude is missing/contradicted.",
+      "verdict": false
+    },
+    "refuter_output": {
+      "judgement": null,
+      "verdict": null
+    }
+  },
+  {
+    "question_id": 137,
+    "question": "How many accounts have running contracts in Branch location 1?",
+    "evidence": "Status = 'C' stands for running contract, OK so far; Status = 'D' stands for running contract, client in debt",
+    "gold_sql": "SELECT COUNT(T1.account_id) FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN loan AS T3 ON T1.account_id = T3.account_id WHERE T1.district_id = 1 AND (T3.status = 'C' OR T3.status = 'D')",
+    "predicted_sql": "SELECT COUNT(account.account_id)  FROM account  INNER JOIN loan ON account.account_id = loan.account_id  WHERE account.district_id = 1 AND (loan.status = 'C' OR loan.status = 'D')",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {},
+    "refuter_output": {
+      "judgement": "Prediction counts loan rows instead of distinct accounts, so if an account holds multiple running contracts the count is inflated, violating the question’s requirement to count accounts.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 163,
+    "question": "Which district has the most accounts with loan contracts finished with no problems?",
+    "evidence": "status = 'A' refers to loan contracts finished with no problems",
+    "gold_sql": "SELECT T1.A2 FROM District AS T1 INNER JOIN Account AS T2 ON T1.District_id = T2.District_id INNER JOIN Loan AS T3 ON T2.Account_id = T3.Account_id WHERE T3.status = 'A' GROUP BY T1.District_id ORDER BY COUNT(T2.Account_id) DESC LIMIT 1",
+    "predicted_sql": "SELECT d.district_id FROM loan l JOIN account a ON l.account_id = a.account_id JOIN district d ON a.district_id = d.district_id WHERE l.status = 'A' GROUP BY d.district_id ORDER BY COUNT(l.loan_id) DESC LIMIT 1",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "District (id or name) that has the highest number of DISTINCT accounts whose loan contracts have status 'A' (finished with no problems).",
+      "sql_description": "Counts the number of loans (not distinct accounts) with status 'A' per district and returns the district_id with the highest loan count.",
+      "reason": "Question asks for accounts, so counting distinct accounts is a required anchor. Query counts loans; if an account holds multiple loans it will be over-represented, potentially changing the ranking. Missing distinct-account anchor.",
+      "verdict": false
+    },
+    "refuter_output": {
+      "judgement": null,
+      "verdict": null
+    }
+  },
+  {
+    "question_id": 189,
+    "question": "Name the account numbers of female clients who are oldest and have lowest average salary?",
+    "evidence": "Female refers to 'F' in the gender; A11 contains information about average salary",
+    "gold_sql": "SELECT T3.account_id FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN account AS T3 ON T2.district_id = T3.district_id WHERE T1.gender = 'F' AND T1.birth_date = (SELECT MIN(birth_date) FROM client WHERE gender = 'F') AND T2.A11 = (SELECT MIN(T2.A11) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'F' AND T1.birth_date = (SELECT MIN(birth_date) FROM client WHERE gender = 'F'))",
+    "predicted_sql": "SELECT account.account_id FROM account INNER JOIN disp ON account.account_id = disp.account_id INNER JOIN client ON disp.client_id = client.client_id INNER JOIN district ON client.district_id = district.district_id WHERE client.gender = 'F' AND client.birth_date IS NOT NULL AND district.A11 IS NOT NULL ORDER BY client.birth_date ASC, district.A11 ASC LIMIT 1",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "Account number(s) whose female owner(s) are simultaneously the oldest female client(s) (earliest birth_date) AND located in the district with the lowest average salary (minimum A11) among all female clients.",
+      "sql_description": "Finds all female clients with non-NULL birth_date and average salary, orders them first by birth_date (oldest first) and then by A11 (lower first) and returns the account_id of the single first row.",
+      "reason": "The query only guarantees the client is the oldest; the additional salary condition is applied only as a secondary tie-breaker, so the returned client is not required to be from the district with the overall minimum average salary. Missing anchor: global minimum A11.",
+      "verdict": false
+    },
+    "refuter_output": {
+      "judgement": null,
+      "verdict": null
+    }
+  },
+  {
+    "question_id": 252,
+    "question": "What are the atoms that can bond with the atom that has the element lead?",
+    "evidence": "atom that has the element lead refers to atom_id where element = 'pb'",
+    "gold_sql": "SELECT T2.atom_id, T2.atom_id2 FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T1.element = 'pb'",
+    "predicted_sql": "SELECT T2.atom_id2 FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T1.element = 'pb'",
+    "score": 1.0,
+    "label": false,
+    "prover_output": {
+      "expected_answer": "List of atom_id values of atoms that are directly connected (i.e., have a bond record in the connected table) to any atom whose element is lead (element = 'pb').",
+      "sql_description": "Finds all atoms with element = 'pb', then returns the atom_id2 values from connected where the lead atom appears as atom_id, giving the atoms bonded to the lead atom.",
+      "reason": "Query applies the lead-element filter and returns the bonded counterpart atoms, matching the question’s explicit anchors. Ordering of columns in the connected table is not specified, so treating atom_id as the lead side is a reasonable interpretation; all required anchors are satisfied.",
+      "verdict": true,
+      "evidence": "sql_result shows four bonded atoms: atom_id2 = TR151_15, TR151_16, TR151_17, TR151_18 (rows 0-3)."
+    },
+    "refuter_output": {
+      "judgement": "Predicted query correctly lists atoms bonded to the lead atom, matching question intent; no substantive error found.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 257,
+    "question": "List down atom id2 for atoms with element sulfur.",
+    "evidence": "element sulfur refers to element = 's'",
+    "gold_sql": "SELECT DISTINCT T2.atom_id2 FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T1.element = 's'",
+    "predicted_sql": "SELECT atom_id2 FROM connected JOIN atom ON connected.atom_id = atom.atom_id WHERE atom.element = 's'",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "A list of values from connected.atom_id2 where the connected record involves an atom whose element is sulfur (element = 's').",
+      "sql_description": "Joins connected with atom via connected.atom_id = atom.atom_id, keeps rows where atom.element = 's', outputs connected.atom_id2.",
+      "reason": "Query correctly identifies sulfur atoms using atom.element='s' and returns their corresponding atom_id2 from connected, satisfying the question. Duplicates are acceptable as the prompt does not forbid them.",
+      "verdict": true,
+      "evidence": "Result rows include column atom_id2 with sulfur-connected partners such as TR004_2, TR015_2, TR020_2, etc."
+    },
+    "refuter_output": {
+      "judgement": "Predicted query omits at least two atom_id2 values (TR046_1, TR047_2) that satisfy the sulfur condition, so it does not fully answer the request even though duplicates are allowed.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 264,
+    "question": "What are the labels for TR000, TR001 and TR002?",
+    "evidence": "TR000, TR001 and TR002 are molecule id; label = '+' mean molecules are carcinogenic; label = '-' means molecules are non-carcinogenic",
+    "gold_sql": "SELECT molecule_id, T.label FROM molecule AS T WHERE T.molecule_id IN ('TR000', 'TR001', 'TR002')",
+    "predicted_sql": "SELECT label FROM molecule WHERE molecule_id IN ('TR000', 'TR001', 'TR002')",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "For each of the three molecules TR000, TR001 and TR002, provide its carcinogenicity label (+ or -).",
+      "sql_description": "Fetches the label column from molecule records whose molecule_id is TR000, TR001 or TR002.",
+      "reason": "Query applies the required id filter and returns the labels. Although it omits molecule_id in the projection, the returned rows correspond exactly to the requested set, so the labels for those molecules are correctly supplied.",
+      "verdict": true,
+      "evidence": "sql_result shows three rows with label values: row0 '+', row1 '+', row2 '-'"
+    },
+    "refuter_output": {
+      "judgement": "Prediction omits molecule_id, so labels can’t be matched to each molecule; answer incomplete for the question asking labels for each id.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 271,
+    "question": "Does bond id TR001_1_8 have both element of chlorine and carbon?",
+    "evidence": "chlorine refers to element = 'cl'; carbon refers to element = 'c'",
+    "gold_sql": "SELECT T2.bond_id, T2.atom_id2, T1.element AS flag_have_CaCl FROM atom AS T1 INNER JOIN connected AS T2 ON T2.atom_id = T1.atom_id WHERE T2.bond_id = 'TR001_1_8' AND (T1.element = 'c1' OR T1.element = 'c')",
+    "predicted_sql": "SELECT CASE WHEN COUNT(DISTINCT CASE WHEN T2.element IN ('cl', 'c') THEN T2.element END) = 2 THEN 'yes' ELSE 'no' END AS has_both FROM connected AS T1 INNER JOIN atom AS T2 ON T1.atom_id = T2.atom_id  WHERE T1.bond_id = 'TR001_1_8'",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "A boolean (yes/no) indicating whether the bond with id TR001_1_8 connects two atoms such that one atom is chlorine (cl) and the other is carbon (c).",
+      "sql_description": "Looks at rows in connected with bond_id='TR001_1_8', considers ONLY the atom listed in connected.atom_id, checks how many of those atoms have element in ('cl','c'); returns 'yes' if both elements are present among these first-column atoms, otherwise 'no'.",
+      "reason": "The question requires examining BOTH atoms linked by the bond (atom_id AND atom_id2). The query ignores the element of atom_id2, so it cannot reliably detect whether the bond has one chlorine and one carbon. Missing anchor: element of the second atom in the bond.",
+      "verdict": false
+    },
+    "refuter_output": {
+      "judgement": null,
+      "verdict": null
+    }
+  },
+  {
+    "question_id": 281,
+    "question": "Tally the toxicology element of the 4th atom of each molecule that was carcinogenic.",
+    "evidence": "label = '+' means molecules are carcinogenic; 4th atom of each molecule refers to substr(atom_id, 7, 1) = '4'; ",
+    "gold_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '+' AND SUBSTR(T1.atom_id, -1) = '4' AND LENGTH(T1.atom_id) = 7",
+    "predicted_sql": "SELECT atom.element, COUNT(*) FROM atom INNER JOIN molecule ON atom.molecule_id = molecule.molecule_id WHERE molecule.label = '+' AND SUBSTRING(atom.atom_id, 7, 1) = '4' GROUP BY atom.element",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "For molecules labeled carcinogenic ('+'), look at their 4th atom (identified by atom_id having the 7th character = '4') and give a count of how many of those atoms are of each chemical element.",
+      "sql_description": "Joins atom to molecule, keeps only rows where molecule.label='+' and the 7th character of atom_id is '4', then groups by atom.element and counts the rows in each group.",
+      "reason": "The query applies the carcinogenic filter, correctly selects the 4th atom per molecule via the provided substring rule, and tallies occurrences by element, matching the question’s requirements.",
+      "verdict": true,
+      "evidence": "sql_result shows columns element and COUNT(*) with counts (e.g., c=145, h=59, o=33, ...), matching the requested tally."
+    },
+    "refuter_output": {
+      "judgement": "Predicted query fails to restrict to the single-digit “_4” atom id, so it can count atoms 40-49 etc., thus not limited to the true 4th atom of each carcinogenic molecule; therefore it does not meet the question’s requirement.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 309,
+    "question": "List out the atom id that belongs to the TR346 molecule and how many bond type can be created by this molecule?",
+    "evidence": "",
+    "gold_sql": "SELECT T1.atom_id, COUNT(DISTINCT T2.bond_type),T1.molecule_id FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.molecule_id = 'TR000' GROUP BY T1.atom_id, T2.bond_type",
+    "predicted_sql": "SELECT atom.atom_id, COUNT(DISTINCT bond.bond_type) AS bond_type_count FROM atom INNER JOIN connected ON atom.atom_id = connected.atom_id INNER JOIN bond ON connected.bond_id = bond.bond_id WHERE atom.molecule_id = 'TR346' GROUP BY atom.atom_id",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "All atom_ids that belong to molecule TR346 together with a single value giving the total number of distinct bond types present in that molecule (or, alternatively, the two pieces of information returned separately).",
+      "sql_description": "Returns one row per atom that appears in the connected table for molecule TR346 and, for each such atom, counts the DISTINCT bond_type values among the bonds that include that particular atom.",
+      "reason": "Bond-type count is calculated per atom instead of once for the whole molecule, so the query can give different counts for different atoms and does not provide the molecule-level total requested. Additionally, atoms not appearing in connected are omitted. Required anchor \"total distinct bond types for the molecule\" is therefore missing/incorrect.",
+      "verdict": false
+    },
+    "refuter_output": {
+      "judgement": null,
+      "verdict": null
+    }
+  },
+  {
+    "question_id": 321,
+    "question": "What is the molecule of atom id \"TR000_2\" and atom id 2 \"TR000_4\"?",
+    "evidence": "",
+    "gold_sql": "SELECT T1.molecule_id FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T2.atom_id = 'TR000_2' AND T2.atom_id2 = 'TR000_4'",
+    "predicted_sql": "SELECT molecule_id FROM atom WHERE atom_id IN ('TR000_2', 'TR000_4')",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "The molecule identifier(s) corresponding to the atoms with ids TR000_2 and TR000_4.",
+      "sql_description": "Looks up the atom table for rows whose atom_id is TR000_2 or TR000_4 and returns their molecule_id values.",
+      "reason": "Query uses the correct table, filters on the two specified atom ids, and outputs their molecule id, fulfilling the question requirement.",
+      "verdict": true,
+      "evidence": "sql_result shows two rows with molecule_id column, both having value TR000."
+    },
+    "refuter_output": {
+      "judgement": "Predicted query merely looks up the molecule of each atom separately and returns two duplicate rows, without requiring a bond/connection between the two atoms, whereas the question (and gold) asks for the molecule that contains the pair (via connected-bond tables); hence prediction is semantically insufficient.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 357,
+    "question": "What type of promotion is of card 'Duress'?",
+    "evidence": "card Duress refers to name = 'Duress'; type of promotion refers to promoTypes;",
+    "gold_sql": "SELECT promoTypes FROM cards WHERE name = 'Duress' AND promoTypes IS NOT NULL",
+    "predicted_sql": "SELECT promoTypes FROM cards WHERE name = 'Duress'",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "The promotional type(s) listed in the promoTypes field for the card named \"Duress\" – e.g., values such as fnm, tourney, arenaleague, etc., but only those rows where Duress is actually marked with a promotion type.",
+      "sql_description": "Returns promoTypes for every row whose name is 'Duress'; this yields many rows, most of which are NULL plus a few non-NULL promotion strings.",
+      "reason": "The query includes all Duress printings, even those without any promotion, so the output contains numerous NULL values unrelated to promotion types. This extra content violates the requirement to report the card’s promotion type(s) only.",
+      "verdict": false
+    },
+    "refuter_output": {
+      "judgement": null,
+      "verdict": null
+    }
+  },
+  {
+    "question_id": 359,
+    "question": "What is the type of the card \"Ancestor's Chosen\" as originally printed?",
+    "evidence": "Ancestor's Chosen' is the name of card; type of the card as originally printed refers to originaltype;",
+    "gold_sql": "SELECT originalType FROM cards WHERE name = 'Ancestor''s Chosen' AND originalType IS NOT NULL",
+    "predicted_sql": "SELECT originalType FROM cards WHERE name = 'Ancestor''s Chosen'",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "The card’s original type string (originalType) for the card named \"Ancestor's Chosen\" – a single textual value such as \"Creature — Human Cleric\" (or the exact punctuation used in the database for its original printing).",
+      "sql_description": "Selects originalType for every row whose name equals \"Ancestor's Chosen\", returning all matching rows without de-duplication or restriction.",
+      "reason": "While it uses the correct column and name anchor, it returns several different originalType values (including NULL) instead of the one original printed type, introducing extraneous and contradictory answers. Superset answers are not acceptable for a singular \"what is\" question.",
+      "verdict": false
+    },
+    "refuter_output": {
+      "judgement": null,
+      "verdict": null
+    }
+  },
+  {
+    "question_id": 399,
+    "question": "Lists all types of cards available in arena.",
+    "evidence": "all types refer to subtypes and supertypes\n\navailble in arena refers to availability = 'arena'",
+    "gold_sql": "SELECT DISTINCT subtypes, supertypes FROM cards WHERE availability = 'arena' AND subtypes IS NOT NULL AND supertypes IS NOT NULL",
+    "predicted_sql": "SELECT subtypes, supertypes FROM cards WHERE availability = 'arena'",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "A listing (distinct or with repeats) of each card’s subtypes and supertypes for all cards whose availability is 'arena'.",
+      "sql_description": "Retrieves the columns subtypes and supertypes from the cards table where availability equals 'arena'; returns one row per matching card without removing duplicates.",
+      "reason": "Query applies the required arena filter and outputs exactly the two fields identified as the relevant \"types\" (subtypes and supertypes). Duplicates are tolerable since the question does not explicitly require DISTINCT.",
+      "verdict": true,
+      "evidence": "sql_result shows columns subtypes, supertypes, e.g. row0: Archon / None, row2: Human,Wizard / Legendary, confirming the expected data."
+    },
+    "refuter_output": {
+      "judgement": "Prediction includes many rows where subtype or supertype is NULL, so it does not truly list the card types; it outputs card rows, not the intended non-null type combinations, thus violating the question’s requirement.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 405,
+    "question": "How many Brazilian Portuguese translated sets are inside the Commander block?",
+    "evidence": "Commander block refer to block = 'Commander'; sets refer to code = setCode; Portuguese refer to language = 'Portuguese (Brasil)'",
+    "gold_sql": "SELECT COUNT(T1.id) FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.code = T2.setCode WHERE T2.language = 'Portuguese (Brazil)' AND T1.block = 'Commander'",
+    "predicted_sql": "SELECT COUNT(*) FROM sets INNER JOIN set_translations ON sets.code = set_translations.setCode WHERE sets.block = 'Commander' AND set_translations.language = 'Portuguese (Brazil)';",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {},
+    "refuter_output": {
+      "judgement": "Prediction uses language = 'Portuguese (Brazil)' while evidence explicitly requires 'Portuguese (Brasil)', so it violates a stated filter.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 500,
+    "question": "Tell the Japanese name of the set which card \"Fellwar Stone\" is in it.",
+    "evidence": "Japanese name refers to language = 'Japanese'; card \"Fellwar Stone\" refers to name = 'Fellwar Stone'",
+    "gold_sql": "SELECT T2.translation FROM cards AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.setCode WHERE T1.name = 'Fellwar Stone' AND T2.language = 'Japanese' AND T2.translation IS NOT NULL",
+    "predicted_sql": "SELECT DISTINCT st.translation FROM cards AS c INNER JOIN set_translations AS st ON c.setcode = st.setcode WHERE c.name = 'Fellwar Stone' AND st.language = 'Japanese'",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "List all Japanese set names (translation values, language = 'Japanese') for every set that contains the card named \"Fellwar Stone\".",
+      "sql_description": "Joins cards with set_translations on set code, keeps rows where the card name is 'Fellwar Stone' and the translation language is Japanese, and returns the distinct translation values.",
+      "reason": "Query anchors on the card name and language, joins via set code, and outputs exactly the Japanese translations requested. Any NULL translation returned still corresponds to a relevant set and is therefore not extraneous; the query fully satisfies the intent.",
+      "verdict": true,
+      "evidence": "sql_result.translation includes Japanese titles such as '第９版 基本セット', 'Commander (2015 Edition)', etc., showing the query retrieved the desired Japanese set names."
+    },
+    "refuter_output": {
+      "judgement": "Predicted query returns an extra row whose translation is NULL, which is not a Japanese name as requested, so it violates the question’s requirement while gold correctly filters it out.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 591,
+    "question": "How many users are awarded with supporter badge during year 2011?",
+    "evidence": "\"Supporter\" is the Name of badge; in year 2011 refers to year(Date) = 2011",
+    "gold_sql": "SELECT COUNT(Id) FROM badges WHERE STRFTIME('%Y', Date) = '2011' AND Name = 'Supporter'",
+    "predicted_sql": "SELECT COUNT(badges.userid) FROM badges WHERE badges.name = 'Supporter' AND STRFTIME('%Y', badges.date) = '2011'",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {},
+    "refuter_output": {
+      "judgement": "Prediction counts badge rows instead of distinct users, violating the explicit \"how many users\" requirement.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 615,
+    "question": "Among the users who obtained the \"Organizer\" badges, calculate the percentage of users who are teenagers.",
+    "evidence": "\"Organizer\" is the Name of badge; teenager refers to Age BETWEEN 13 AND 18; percentage = Divide (Count(UserId where Age BETWEEN 13 AND 18), Count(UserId)) *100",
+    "gold_sql": "SELECT CAST(SUM(IIF(T2.Age BETWEEN 13 AND 18, 1, 0)) AS REAL) * 100 / COUNT(T1.Id) FROM badges AS T1 INNER JOIN users AS T2 ON T1.UserId = T2.Id WHERE T1.`Name` = 'Organizer'",
+    "predicted_sql": "SELECT CAST(COUNT(CASE WHEN u.Age BETWEEN 13 AND 18 THEN 1 ELSE NULL END) AS REAL) * 100 / COUNT(b.UserId) AS PercentageTeenagers FROM badges b JOIN users u ON b.UserId = u.Id WHERE b.Name = 'Organizer'",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {},
+    "refuter_output": {
+      "judgement": "Prediction counts badge rows instead of distinct users, so the numerator and denominator can over-count users who earned the badge more than once, violating the user-level percentage requested.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 720,
+    "question": "Please list the full names of all the superheroes with over 15 super powers.",
+    "evidence": "15 super powers refers to COUNT(full_name) > 15",
+    "gold_sql": "SELECT DISTINCT T1.full_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id GROUP BY T1.full_name HAVING COUNT(T2.power_id) > 15",
+    "predicted_sql": "SELECT superhero.full_name FROM superhero INNER JOIN (SELECT hero_id FROM hero_power GROUP BY hero_id HAVING COUNT(DISTINCT power_id) > 15) AS power_count ON superhero.id = power_count.hero_id",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "A list of the full_name values for every superhero who possesses more than 15 distinct powers.",
+      "sql_description": "Finds hero_id values whose count of distinct power_id in hero_power exceeds 15, then joins to superhero to return their full_name.",
+      "reason": "Query correctly applies the >15 power anchor, counts powers per hero, and returns the requested full_name field; no contradictory constraints missing.",
+      "verdict": true,
+      "evidence": "sql_result shows column full_name with 20 rows (e.g., 'Abraham Sapien', 'Bruce Wayne', ...), matching expectation."
+    },
+    "refuter_output": {
+      "judgement": "Predicted query misses many qualifying heroes like Superman and Iron-Man and returns extra duplicates, therefore does not correctly list all superheroes with more than 15 powers.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 861,
+    "question": "What is his number of the driver who finished 0:01:54 in the Q3 of qualifying race No.903?",
+    "evidence": "race number refers to raceId; finished 0:0M:SS in the Q3 refers to q3 LIKE 'M:SS%'",
+    "gold_sql": "SELECT T2.number FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 903 AND T1.q3 LIKE '1:54%'",
+    "predicted_sql": "SELECT number FROM qualifying WHERE q3 LIKE '1:54%' AND raceId = 903",
+    "score": 1.0,
+    "label": false,
+    "prover_output": {
+      "expected_answer": "The car/driver number(s) of the driver(s) whose Q3 lap time is 0:01:54 (i.e., 1 minute 54 seconds) in qualifying for race 903.",
+      "sql_description": "Fetches the column `number` from `qualifying` rows where raceId = 903 and the Q3 time starts with the string '1:54', returning every driver that recorded a 1:54.xx lap.",
+      "reason": "All explicit anchors—race 903 and a Q3 time of 1:54.xx—are satisfied. Returning both numbers is acceptable because the data show two drivers with an identical-prefix 1:54 time, a plausible tie; the question does not mandate a single winner or tie-break.",
+      "verdict": true,
+      "evidence": "sql_result shows two rows: number=3 and number=1, matching the requested drivers for Q3 time 1:54.xx in race 903."
+    },
+    "refuter_output": {
+      "judgement": "The question asks for the driver’s \"number,\" and there are identically-named columns in both drivers and qualifying that plausibly satisfy that phrase; each query chooses one of them, so the differing answers stem from schema ambiguity rather than a clear error in the prediction.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 949,
+    "question": "Which constructor has the highest point?",
+    "evidence": "",
+    "gold_sql": "SELECT T2.name FROM constructorStandings AS T1 INNER JOIN constructors AS T2 on T1.constructorId = T2.constructorId ORDER BY T1.points DESC LIMIT 1",
+    "predicted_sql": "SELECT constructors.name FROM constructors INNER JOIN constructorstandings ON constructors.constructorid = constructorstandings.constructorid GROUP BY constructors.name ORDER BY SUM(constructorstandings.points) DESC LIMIT 1",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "The name of the constructor that has accumulated the greatest total points among all constructors.",
+      "sql_description": "Joins constructors with constructorStandings, sums points for each constructor across all races, orders by the total descending, and returns the top constructor name.",
+      "reason": "The query computes each constructor's total points and selects the one with the highest sum, matching a reasonable interpretation of \"highest point\". No required anchors are missing.",
+      "verdict": true,
+      "evidence": "sql_result shows one column 'name' with the top constructor: Ferrari (row 0)."
+    },
+    "refuter_output": {
+      "judgement": "Predicted query wrongly sums cumulative points across all races, over-counting and giving Ferrari, whereas the highest single points value belongs to Mercedes; prediction misinterprets the schema.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 1152,
+    "question": "What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?",
+    "evidence": "'SLE' diagnosed patient means Diagnosis = 'SLE'; inpatient refers to Admission = '+'; outpatient refers to Admission = '-'; calculation =  DIVIDE(COUNT(ID) where Diagnosis = 'SLE' and Admission = '+', COUNT(ID) where Diagnosis = 'SLE' and Admission = '-')",
+    "gold_sql": "SELECT SUM(CASE WHEN Admission = '+' THEN 1.0 ELSE 0 END) / SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END) FROM Patient WHERE Diagnosis = 'SLE'",
+    "predicted_sql": "SELECT CAST(COUNT(CASE WHEN Admission = '-' THEN 1 END) AS REAL) / COUNT(CASE WHEN Admission = '+' THEN 1 END) AS outpatient_to_inpatient_ratio FROM Patient WHERE Diagnosis = 'SLE'",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "A single numeric value: the ratio computed as (count of SLE patients with Admission = '+') divided by (count of SLE patients with Admission = '-').",
+      "sql_description": "Counts SLE patients; divides the number with Admission = '-' (outpatient) by the number with Admission = '+' (inpatient), yielding outpatient / inpatient.",
+      "reason": "The required anchor from evidence specifies the calculation inpatient/outpatient, but the SQL returns the inverse (outpatient/inpatient). Therefore it does not satisfy the requested ratio.",
+      "verdict": false
+    },
+    "refuter_output": {
+      "judgement": null,
+      "verdict": null
+    }
+  },
+  {
+    "question_id": 1175,
+    "question": "How old was the patient who had the highest hemoglobin count at the time of the examination, and what is the doctor's diagnosis?",
+    "evidence": "How old the patient refers to SUBTRACT(year(`Examination Date`), year(Birthday)); the highest hemoglobin count refers to MAX(HGB)",
+    "gold_sql": "SELECT STRFTIME('%Y', T2.Date) - STRFTIME('%Y', T1.Birthday), T1.Diagnosis FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID ORDER BY T2.HGB DESC LIMIT 1",
+    "predicted_sql": "SELECT strftime('%Y', T1.`Examination Date`) - strftime('%Y', T3.Birthday) AS age, T1.Diagnosis FROM Examination AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID INNER JOIN Patient AS T3 ON T1.ID = T3.ID ORDER BY T2.HGB DESC LIMIT 1;",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "Return the patient age (difference between Examination Date year and Birthday year) for the patient whose hemoglobin (HGB) value is the highest among all examinations, together with that examination’s doctor diagnosis.",
+      "sql_description": "Joins Examination, Laboratory and Patient only on patient ID, then orders the combined rows by Laboratory.HGB descending and returns the first row’s age (based on Examination Date) and Examination.Diagnosis.",
+      "reason": "Highest HGB must be tied to the SAME examination; this requires matching Laboratory record to that Examination date. Query joins only on ID, so any lab record (possibly from another date) can pair with any examination, producing incorrect age/diagnosis combinations. Missing date-matching anchor (Examination Date = Laboratory.Date).",
+      "verdict": false
+    },
+    "refuter_output": {
+      "judgement": null,
+      "verdict": null
+    }
+  },
+  {
+    "question_id": 1204,
+    "question": "How long did it take after patient number 821298 arrived at the hospital for the first time before her evaluation began?",
+    "evidence": "DATEDIFF(`Examination Date`, `First Date`)",
+    "gold_sql": "SELECT STRFTIME('%d', T3.`Examination Date`) - STRFTIME('%d', T1.`First Date`) FROM Patient AS T1 INNER JOIN Examination AS T3 ON T1.ID = T3.ID WHERE T1.ID = 821298",
+    "predicted_sql": "SELECT JULIANDAY(T2.`Examination Date`) - JULIANDAY(T1.`First Date`) AS days_diff FROM Patient AS T1 INNER JOIN Examination AS T2 ON T1.ID = T2.ID WHERE T1.ID = 821298 AND T2.`Examination Date` IS NOT NULL",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "Number of days between patient 821298’s arrival at the hospital (First Date) and the start of her first/earliest evaluation (earliest Examination Date).",
+      "sql_description": "Computes the difference in days between First Date and the Examination Date for EVERY examination record belonging to patient 821298, returning one row per examination without restricting to the earliest.",
+      "reason": "Query omits the required anchor of using the first/earliest examination; if multiple examinations exist it will output several differences, including ones that do not represent when evaluation began. Therefore it does not reliably answer the question.",
+      "verdict": false
+    },
+    "refuter_output": {
+      "judgement": null,
+      "verdict": null
+    }
+  },
+  {
+    "question_id": 1298,
+    "question": "Among the patients whose total cholesterol is within the normal range, how many of them have a P pattern observed in the sheet of ANA examination?",
+    "evidence": "total cholesterol is within the normal range refers to `T-CHO` < 250; P pattern observed in the sheet of ANA examination refers to ANA Pattern = 'P';",
+    "gold_sql": "SELECT COUNT(T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID INNER JOIN Examination AS T3 ON T1.ID = T3.ID WHERE T3.`ANA Pattern` = 'P' AND T2.`T-CHO` < 250",
+    "predicted_sql": "SELECT COUNT(T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID INNER JOIN Examination AS T3 ON T1.ID = T3.ID WHERE T2.`T-CHO` < 250 AND T3.`ANA Pattern` = 'P'",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {},
+    "refuter_output": {
+      "judgement": "Query counts laboratory rows instead of distinct patients, so patients with multiple lab dates are over-counted, violating the requested patient count.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 1359,
+    "question": "How many times was the budget in Advertisement for \"Yearly Kickoff\" meeting more than \"October Meeting\"?",
+    "evidence": "budget in Advertisement refer to category = 'Advertisement' in the budget table; DIVIDE(SUM(amount when event_name = 'Yearly Kickoff'), SUM(amount when event_name = 'October Meeting'))",
+    "gold_sql": "SELECT CAST(SUM(CASE WHEN T2.event_name = 'Yearly Kickoff' THEN T1.amount ELSE 0 END) AS REAL) / SUM(CASE WHEN T2.event_name = 'October Meeting' THEN T1.amount ELSE 0 END) FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T1.category = 'Advertisement' AND T2.type = 'Meeting'",
+    "predicted_sql": "SELECT SUM(CASE WHEN e.event_name = 'Yearly Kickoff' THEN b.amount ELSE 0 END) / SUM(CASE WHEN e.event_name = 'October Meeting' THEN b.amount ELSE 0 END) AS budget_ratio FROM event AS e INNER JOIN budget AS b ON e.event_id = b.link_to_event WHERE b.category = 'Advertisement'",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "A numeric ratio indicating how many times the Advertisement budget for the \"Yearly Kickoff\" event exceeds that for the \"October Meeting\" event (sum over all related budget rows).",
+      "sql_description": "Joins budget rows (limited to category='Advertisement') with their events and takes the sum of amount for \"Yearly Kickoff\" divided by the sum of amount for \"October Meeting\", returning this ratio as budget_ratio.",
+      "reason": "Query applies the required Advertisement filter, groups implicitly across all rows, and computes the requested ratio Yearly-Kickoff / October-Meeting. No required anchor is missing.",
+      "verdict": true,
+      "evidence": "sql_result shows column budget_ratio with value 2, matching the requested \"how many times\" ratio."
+    },
+    "refuter_output": {
+      "judgement": "Predicted query omits the required filter to include only events whose type is 'Meeting', so it counts additional Advertisement budgets and yields a different ratio than asked.",
+      "verdict": true
+    }
+  },
+  {
+    "question_id": 1482,
+    "question": "Which of the three segments—SME, LAM and KAM—has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?",
+    "evidence": "Increase or Decrease = consumption for 2013 - consumption for 2012; Percentage of Increase = (Increase or Decrease / consumption for 2013) * 100%; The first 4 strings of the Date values in the yearmonth table can represent year",
+    "gold_sql": "SELECT CAST((SUM(IIF(T1.Segment = 'SME' AND T2.Date LIKE '2013%', T2.Consumption, 0)) - SUM(IIF(T1.Segment = 'SME' AND T2.Date LIKE '2012%', T2.Consumption, 0))) AS FLOAT) * 100 / SUM(IIF(T1.Segment = 'SME' AND T2.Date LIKE '2012%', T2.Consumption, 0)), CAST(SUM(IIF(T1.Segment = 'LAM' AND T2.Date LIKE '2013%', T2.Consumption, 0)) - SUM(IIF(T1.Segment = 'LAM' AND T2.Date LIKE '2012%', T2.Consumption, 0)) AS FLOAT) * 100 / SUM(IIF(T1.Segment = 'LAM' AND T2.Date LIKE '2012%', T2.Consumption, 0)) , CAST(SUM(IIF(T1.Segment = 'KAM' AND T2.Date LIKE '2013%', T2.Consumption, 0)) - SUM(IIF(T1.Segment = 'KAM' AND T2.Date LIKE '2012%', T2.Consumption, 0)) AS FLOAT) * 100 / SUM(IIF(T1.Segment = 'KAM' AND T2.Date LIKE '2012%', T2.Consumption, 0)) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID",
+    "predicted_sql": "WITH segment_stats AS ( SELECT T1.Segment, (SUM(CASE WHEN SUBSTR(T2.Date, 1, 4) = '2013' THEN T2.Consumption ELSE 0 END) - SUM(CASE WHEN SUBSTR(T2.Date, 1, 4) = '2012' THEN T2.Consumption ELSE 0 END)) * 100.0 / SUM(CASE WHEN SUBSTR(T2.Date, 1, 4) = '2012' THEN T2.Consumption ELSE 0 END) AS percentage_increase FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Segment IN ('SME', 'LAM', 'KAM') AND T1.Currency = 'EUR' GROUP BY T1.Segment ) SELECT * FROM ( SELECT 'Highest Increase' AS result_type, Segment, percentage_increase FROM segment_stats ORDER BY percentage_increase DESC LIMIT 1 ) AS highest UNION ALL SELECT * FROM ( SELECT 'Lowest Increase' AS result_type, Segment, percentage_increase FROM segment_stats ORDER BY percentage_increase ASC LIMIT 1 ) AS lowest;",
+    "score": 0.0,
+    "label": true,
+    "prover_output": {
+      "expected_answer": "Identify, among the three segments SME, LAM and KAM (EUR-denominated customers), which segment shows the highest percentage increase and which shows the lowest percentage increase in consumption from 2012 to 2013, where percentage increase is defined as (2013 consumption − 2012 consumption) / 2013 consumption * 100%. Returning the segment names (optionally with their percentages) is sufficient.",
+      "sql_description": "For each segment it sums 2013 and 2012 consumption for EUR customers, computes (2013−2012)*100 / 2012_sum (percentage relative to 2012), then selects the segment with the max and the min of this value.",
+      "reason": "The query uses the wrong denominator (divides by 2012 consumption instead of 2013 as explicitly required), so the calculated percentage increases do not follow the stated formula. Missing anchor: correct percentage formula.",
+      "verdict": false
+    },
+    "refuter_output": {
+      "judgement": null,
+      "verdict": null
+    }
+  },
+  {
+    "question_id": 1487,
+    "question": "Which LAM customer used the Euro as their currency and had the highest consumption in October 2013?",
+    "evidence": "October 2013 refers to 201310 in the yearmonth.date",
+    "gold_sql": "SELECT T1.CustomerID FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Segment = 'LAM' AND T2.Date = '201310' AND T1.Currency = 'EUR' GROUP BY T1.CustomerID ORDER BY SUM(T2.Consumption) DESC LIMIT 1",
+    "predicted_sql": "SELECT T1.CustomerID FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Segment = 'LAM' AND T1.Currency = 'EUR' AND T2.Date = '201310' ORDER BY T2.Consumption DESC LIMIT 1",
+    "score": 1.0,
+    "label": false,
+    "prover_output": {},
+    "refuter_output": {
+      "judgement": "Prediction is semantically equivalent to gold; with one row per customer-month, ordering by Consumption matches ordering by SUM, so all requirements are met.",
+      "verdict": false
+    }
+  }
+]

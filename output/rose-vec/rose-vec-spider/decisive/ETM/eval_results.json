@@ -666,15 +666,6 @@
     "score": 0.0
   },
   {
-    "question_id": 975,
-    "question": "List all venues and years for papers ordered by year.",
-    "evidence": null,
-    "gold_sql": "SELECT DISTINCT venue ,  YEAR FROM paper ORDER BY YEAR",
-    "predicted_sql": "SELECT venue, year FROM paper ORDER BY year",
-    "label": true,
-    "score": 0.0
-  },
-  {
     "question_id": 976,
     "question": "What are the distinct venues for papers, ordered by year?",
     "evidence": null,

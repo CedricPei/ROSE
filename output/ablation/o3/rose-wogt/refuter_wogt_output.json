@@ -1,0 +1,1706 @@
+[
+  {
+    "question_id": 20,
+    "result": {
+      "judgement": "SQL correctly counts rows where County Name is 'Amador' and grades span 9-12, matching the question’s criteria.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 0,
+    "result": {
+      "judgement": "Filter uses County='Alameda County', but County values are county names like 'Alameda', causing join to return no rows; query outputs empty result, so it fails to provide the highest rate asked for.",
+      "verdict": true,
+      "issues_found": "Incorrect filter value leads to empty result set"
+    }
+  },
+  {
+    "question_id": 67,
+    "result": {
+      "judgement": "Query correctly counts records closed in 1989 with DOCType 'Community College District' and city 'San Francisco', matching the requested total number of such closures.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 233,
+    "result": {
+      "judgement": "Query correctly filters bonds for molecule TR006, orders alphabetically by bond_id, and returns the first two, matching the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 31,
+    "result": {
+      "judgement": "The query correctly ranks schools by K-12 enrollment, selects the 10th and 11th rows, and returns the required eligible-free rate computed as Free Meal Count divided by Enrollment, satisfying all stated conditions.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 43,
+    "result": {
+      "judgement": "Query orders rows with NULL component scores first, returning a school whose math score is NULL instead of the numeric lowest-scoring school, so the answer is incorrect.",
+      "verdict": true,
+      "issues_found": "returns NULL math score; NULLs sorted first so wrong school selected; does not satisfy question"
+    }
+  },
+  {
+    "question_id": 141,
+    "result": {
+      "judgement": "Query correctly filters 1997 transactions over 10,000 USD, joins to accounts and districts, and returns distinct district names as asked.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 80,
+    "result": {
+      "judgement": "SQL correctly selects the school record with the maximum latitude and returns its name, latitude, and SOCType as the school type, satisfying all stated requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 112,
+    "result": {
+      "judgement": "The query fails to restrict the disposition to OWNER, so it can return districts of accounts the client merely accesses rather than those she actually opened, violating the question’s intent.",
+      "verdict": true,
+      "issues_found": "Missing filter disp.type = 'OWNER' means the answer may include districts for accounts the client did not open, so the query does not precisely satisfy the requirement."
+    }
+  },
+  {
+    "question_id": 236,
+    "result": {
+      "judgement": "Query correctly returns the bond_type and both atoms for bond ID TR001_6_9; duplicate reverse‐order row does not violate any explicit requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 77,
+    "result": {
+      "judgement": "Prediction satisfies the question: it selects schools in Los Angeles whose GSserved exactly matches Kindergarten-9 and returns each school with its pre-computed Percent Eligible FRPM (Ages 5-17); schema usage and join are sound, and no explicit year filter is required.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 275,
+    "result": {
+      "judgement": "Query correctly filters bonds with bond_type '=' and returns their molecule_id, satisfying the request.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 309,
+    "result": {
+      "judgement": "SQL lists only atoms that appear as the first endpoint in connected, omitting TR346 atoms that occur only as atom_id2 or have no bonds, and counts bond types per atom instead of once for the whole molecule, so it does not correctly answer the question.",
+      "verdict": true,
+      "issues_found": "per-atom bond-type count instead of global; incomplete atom list due to asymmetric join"
+    }
+  },
+  {
+    "question_id": 124,
+    "result": {
+      "judgement": "Query satisfies the question: it filters loans of 60-month duration, returns each loan’s id, the associated district (here as district_id), and that district’s average salary; all joins/columns are valid.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 218,
+    "result": {
+      "judgement": "Query correctly computes 100 minus the share of distinct carcinogenic molecules having at least one fluorine atom, matching the asked percentage of carcinogenic molecules that lack fluorine.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 174,
+    "result": {
+      "judgement": "SQL correctly filters by owner id 130 and extracts the birth year, fulfilling the question’s requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 376,
+    "result": {
+      "judgement": "Query omits DISTINCT so returns many duplicate rows, while the question asks for the layout types (a set of layouts) of flying-keyword cards, thus not meeting the requirement.",
+      "verdict": true,
+      "issues_found": "duplicates due to missing DISTINCT"
+    }
+  },
+  {
+    "question_id": 597,
+    "result": {
+      "judgement": "SQL correctly counts distinct users located in India who hold the 'Teacher' badge, satisfying all question requirements; no substantive issues found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 257,
+    "result": {
+      "judgement": "Query satisfies a reasonable reading—returning atom_id2 values connected to atoms whose element is sulfur—and uses correct tables/columns without logical flaws.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 430,
+    "result": {
+      "judgement": "Predicted query correctly filters sets in the Shadowmoor block that have Italian translations, orders alphabetically, returns id and name, and limits to two; no substantive errors identified.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 344,
+    "result": {
+      "judgement": "Query satisfies all stated conditions; minor duplicates are acceptable for a simple list.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 281,
+    "result": {
+      "judgement": "SQL correctly filters carcinogenic molecules, isolates the 4th atom via substring, and tallies element counts, fully satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 304,
+    "result": {
+      "judgement": "SQL meets the question’s requirements, selecting each carcinogenic molecule-id with each distinct element it contains; schema usage and logic are sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 425,
+    "result": {
+      "judgement": "Query meets the stated conditions (side NULL and both Angel and Wizard in subtypes) and returns the requested card numbers; no substantive errors detected.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 470,
+    "result": {
+      "judgement": "The query lists several release dates (incl. duplicates) for every set that ever printed the card, but the question asks for the release date of the set, implying a single answer; returning multiple, duplicate dates violates the requirement.",
+      "verdict": true,
+      "issues_found": "Returns 4 rows instead of a single release date; lacks DISTINCT/selection of correct set."
+    }
+  },
+  {
+    "question_id": 751,
+    "result": {
+      "judgement": "Query correctly filters male superheroes, retrieves distinct power names, and returns five items, satisfying “at least five superpowers.”",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 465,
+    "result": {
+      "judgement": "Query correctly checks if any card named “Ancestor's Chosen” has a Korean language entry, matching schema and requirements, so Prover’s pass stands.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 447,
+    "result": {
+      "judgement": "Query correctly returns codes of sets whose expansion type is commander, satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 606,
+    "result": {
+      "judgement": "SQL correctly filters badges by the exact specified timestamp and returns their names; schema usage and logic match the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 646,
+    "result": {
+      "judgement": "The query correctly joins comments with their posts, filters to positive comments using Score > 60, and returns each matching post title along with the commenter’s display name, fulfilling the question requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 480,
+    "result": {
+      "judgement": "SQL correctly filters by card name and Italian language, returning the relevant flavor text(s); no clear requirement is violated.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 860,
+    "result": {
+      "judgement": "The query filters for an exact q2 string \"0:01:40\" and returns no rows, so it fails to supply the requested nationality for race 355.",
+      "verdict": true,
+      "issues_found": "Query returns empty result – likely wrong literal format for q2 time, thus does not answer the question."
+    }
+  },
+  {
+    "question_id": 570,
+    "result": {
+      "judgement": "Query correctly joins users and badges, filters by the given display name, and returns the badge name(s), matching the question’s requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 508,
+    "result": {
+      "judgement": "Query correctly applies the required filters (artist = Aleksi Briclot and isTextless = 1) and returns the availability field, fulfilling the request; duplicates are permissible for a “what are” list question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 507,
+    "result": {
+      "judgement": "Query correctly computes (online-only Brazilian-Portuguese cards / all Brazilian-Portuguese cards) * 100; possible duplicate foreign_data rows do not affect the ratio, and schema usage is valid.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 762,
+    "result": {
+      "judgement": "SQL correctly counts occurrences of each power across all hero-power mappings and returns the most frequent one, satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 761,
+    "result": {
+      "judgement": "SQL correctly computes 0.79*AVG(weight_kg) over all superheroes, filters male heroes by gender and that weight threshold, and returns their superhero names.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 719,
+    "result": {
+      "judgement": "The SQL correctly filters heroes with the 'Super Strength' power, applies height_cm > 200, counts distinct heroes, and uses proper joins; logic and schema usage match question requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 894,
+    "result": {
+      "judgement": "The query correctly finds the global minimum milliseconds in lapTimes and returns a matching driver and race, satisfying the question requirements; tie-handling with LIMIT 1 is acceptable because singular phrasing does not mandate listing all ties.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 853,
+    "result": {
+      "judgement": "Query correctly filters races by circuits located in Spain and returns their names, fulfilling the question; duplicates are acceptable since uniqueness was not requested.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 670,
+    "result": {
+      "judgement": "Query correctly filters to the minimum age, then returns the earliest post date among those users, satisfying the request for the youngest user’s first-post date.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 865,
+    "result": {
+      "judgement": "Query correctly filters finished drivers in race 592, orders by earliest date of birth to find the oldest, and returns their name; no schema or logic errors found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 885,
+    "result": {
+      "judgement": "Query correctly picks the max round for 1999 and returns its name and date, matching the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 898,
+    "result": {
+      "judgement": "Query correctly filters Japanese drivers, orders by most recent dob to get the youngest, computes age per evidence, and returns the driver’s forename and surname; no schema or logic errors found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 845,
+    "result": {
+      "judgement": "SQL filters superheroes whose height exceeds 80% of the overall average and lists their associated power_name; joins and columns are correct, so the query satisfies the question despite possible duplicates.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 978,
+    "result": {
+      "judgement": "SQL counts races for every Austrian circuit and returns each location with its lat/lng, satisfying the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 801,
+    "result": {
+      "judgement": "Query correctly computes count of gender_id=1 divided by count of gender_id=2, matching a reasonable interpretation of male-to-female ratio; no schema misuse or logical flaw evident.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 909,
+    "result": {
+      "judgement": "SQL correctly filters European Grand Prix races, counts those hosted in Germany via circuits.country, and computes the percentage, matching the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 766,
+    "result": {
+      "judgement": "SQL correctly finds the maximum strength attribute and returns the full name(s) of all hero(es) with that value, satisfying the question even in case of ties.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 949,
+    "result": {
+      "judgement": "The query sums the cumulative ‘points’ recorded after every race, double-counting the same season totals, so it does not truly identify the constructor with the greatest points; it therefore answers a different quantity than the question implies.",
+      "verdict": true,
+      "issues_found": "Uses SUM(points) over all race snapshots, inflating totals; correct metric should be MAX(points) (or last-race value) per constructor, so returned constructor (Ferrari) is unreliable."
+    }
+  },
+  {
+    "question_id": 868,
+    "result": {
+      "judgement": "Query correctly joins races to circuits for the Malaysian Grand Prix and returns the requested latitude and longitude; duplicate rows do not change the answer.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1032,
+    "result": {
+      "judgement": "Query counts matches per league, selects the league with the highest count, returns its name and match total—meeting all question requirements with correct schema usage.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 984,
+    "result": {
+      "judgement": "The query correctly finds the constructor with the greatest aggregate wins and returns its website, producing Scuderia Ferrari’s URL, which matches the real-world top-winning constructor; no explicit requirement is violated.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 874,
+    "result": {
+      "judgement": "SQL correctly filters the 2006 San Marino Grand Prix and position 2, yielding the expected driver (Alonso); returning the surname suffices for identifying the person, so the answer is correct.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 989,
+    "result": {
+      "judgement": "Query correctly filters the 2008 Canadian Grand Prix winner (position = 1) and returns his name and recorded finishing time, matching question requirements and schema.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1020,
+    "result": {
+      "judgement": "Query correctly returns the player_api_id of the record with the maximum overall_rating, meeting the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 878,
+    "result": {
+      "judgement": "Query meets all stated requirements: it picks raceId 348, finds the minimum lap time by ordering ascending, joins to drivers, and returns the driver’s forename and surname (full name). Schema usage is correct and result plausible; no clear logical or anchor violations found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1158,
+    "result": {
+      "judgement": "Query correctly filters patients born in 1937 and with any lab record having T-CHO ≥ 250, returning patient IDs as the list requested.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1068,
+    "result": {
+      "judgement": "The query correctly joins Player with Player_Attributes, filters for height >170 and dates 2010-2015, and takes the average overall_rating, matching the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1090,
+    "result": {
+      "judgement": "Query correctly restricts to the player(s) with the earliest birthday and returns a long_passing value; lack of date ordering is acceptable given no explicit requirement, so no substantive error found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 927,
+    "result": {
+      "judgement": "Prediction meets the question: it joins drivers to results and returns the driver with the maximum fastestLapSpeed, supplying forename and surname, and no schema misuse or logical flaw is evident.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1159,
+    "result": {
+      "judgement": "Query meets the stated requirement of returning ID, sex and diagnosis for patients having any albumin result < 3.5; duplicates are permissible per guidelines, and schema usage is correct.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1244,
+    "result": {
+      "judgement": "Query satisfies both conditions (First Date year >1992, PT<14) using correct tables and returns distinct patient IDs, matching the request to list qualifying patients; no substantive errors found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1130,
+    "result": {
+      "judgement": "Query correctly filters chanceCreationPassingClass = 'Safe' and returns the teams' short names; no substantive requirement is violated.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1391,
+    "result": {
+      "judgement": "Query correctly counts students in each major and returns Finance/Physics ratio, satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1359,
+    "result": {
+      "judgement": "Query correctly computes the ratio of Advertisement budget amounts for 'Yearly Kickoff' to those for 'October Meeting', matching the asked \"how many times\" comparison.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 999,
+    "result": {
+      "judgement": "The SQL correctly joins results with races and selects the race having the minimum fastestLapTime, satisfying the request for the race that recorded the quickest lap; no clear schema misuse or logical flaw is evident.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1013,
+    "result": {
+      "judgement": "Query reasonably identifies the Austrian Grand Prix races and returns the fastest lap time, satisfying the request for the circuit’s lap record; no clear requirement is violated.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1422,
+    "result": {
+      "judgement": "Query correctly filters events held at MU 215 and returns their type, which represents the requested category; duplicates are not explicitly disallowed by the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1104,
+    "result": {
+      "judgement": "Query correctly filters by player and exact date and returns the requested potential value, matching the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1129,
+    "result": {
+      "judgement": "Query correctly filters Team_Attributes for buildUpPlaySpeedClass = 'Slow' and returns the associated Team.team_long_name; duplicates are permissible since the question does not request uniqueness.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1510,
+    "result": {
+      "judgement": "Query correctly filters Czech gas-station transactions, calculates total price per transaction (Amount*Price), and averages them, matching the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1177,
+    "result": {
+      "judgement": "SQL correctly filters by patient id and date then evaluates T-CHO < 250, returning boolean 1 (normal); fully satisfies the yes/no question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1473,
+    "result": {
+      "judgement": "The query correctly filters SME customers, restricts to year 2013 via the Date prefix, applies the dataset-specified formula AVG(Consumption)/12, and returns the requested single value, so it satisfies the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1214,
+    "result": {
+      "judgement": "Query correctly filters TP < 6.0 and returns each patient’s ID, sex, and birthday; extra duplicate rows do not violate any stated requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1294,
+    "result": {
+      "judgement": "The SQL correctly filters patients with creatinine < 1.5, orders by aCL IgA to get the maximal value, and returns that patient’s ID; join and LIMIT logic satisfy the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1514,
+    "result": {
+      "judgement": "Query correctly filters for the specified date and time, joins to obtain the customer’s currency, and returns that currency; duplicates do not violate the requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1430,
+    "result": {
+      "judgement": "Query correctly filters Pizza expense on 2019-09-10 and returns the requested last name and position fields.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1465,
+    "result": {
+      "judgement": "SQL correctly joins expense with budget and retrieves the category for expenses whose description is 'Posters'; duplicates do not violate the query’s correctness.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 172,
+    "result": {
+      "judgement": "The SQL correctly counts all dispositions whose account_id is between 1 and 10 and whose type is OWNER or DISPONENT, matching a reasonable reading of the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 86,
+    "result": {
+      "judgement": "CharterNum is documented as a 4-digit text field, so the value for charter number 40 will appear as “0040”, not “40”; filtering with ‘40’ misses the required row(s) and indeed returns none, so the query does not answer the question.",
+      "verdict": true,
+      "issues_found": "Filter value does not match 4-digit CharterNum format, leading to empty result."
+    }
+  },
+  {
+    "question_id": 1492,
+    "result": {
+      "judgement": "Query correctly filters KAM customers and computes (count with EUR)/(total KAM)*100, matching the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 505,
+    "result": {
+      "judgement": "Query satisfies the question by selecting the Simplified Chinese translation for the set named \"Mirrodin\"; schema usage and filters are correct.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 426,
+    "result": {
+      "judgement": "Prediction meets the query: it selects sets with NULL/empty mtgoCode, orders by name alphabetically, and returns the first three with code and name.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1441,
+    "result": {
+      "judgement": "The SQL correctly joins member and major, filters by major name \"education\", college, and position \"Member\", then counts the matching member_ids, fully satisfying the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 223,
+    "result": {
+      "judgement": "Query correctly filters by the given bond_id and returns the two atom IDs involved; duplicate reverse row does not alter the set of atoms asked for.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 711,
+    "result": {
+      "judgement": "The query correctly counts distinct users aged 40 who have at least one comment with score 0, matching the question’s requirements and using appropriate schema columns.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 437,
+    "result": {
+      "judgement": "SQL applies correct filters (borderColor='black' and isFullArt=1) and returns the names, meeting the question requirements; duplicates are permissible.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 794,
+    "result": {
+      "judgement": "Query correctly selects the hero with the highest Speed attribute and returns that hero’s name; no requirement is unmet.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1491,
+    "result": {
+      "judgement": "The query correctly filters for the 'Value for money' segment and returns the count per country, letting users see totals and deduce which country has more.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 619,
+    "result": {
+      "judgement": "SQL correctly filters badges named 'Supporter', joins to users, restricts age to adults (19-65), and counts distinct users, satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 739,
+    "result": {
+      "judgement": "Query correctly filters heroes possessing the 'Death Touch' power and returns their superhero_name, matching the question’s requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 849,
+    "result": {
+      "judgement": "SQL correctly fetches the URLs (locations) of all race introductions for races whose circuit name is exactly 'Circuit de Barcelona-Catalunya', matching the question’s requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 563,
+    "result": {
+      "judgement": "The SQL correctly locates the comment by user 3025 at the specified timestamp, joins to its post, and returns that post’s FavoriteCount, matching the question’s requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 940,
+    "result": {
+      "judgement": "The SQL correctly filters the 2008 Chinese Grand Prix, selects only drivers with a non-NULL time (finishers), counts distinct drivers, and thus answers the count requested; no schema or logical errors found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 736,
+    "result": {
+      "judgement": "SQL correctly finds the superhero with the minimum Intelligence value, fulfilling the request for the dumbest superhero.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 399,
+    "result": {
+      "judgement": "The query lists each card’s pair of subtype/supertype columns instead of producing the unified set of individual types; thus it neither unions the two fields nor de-duplicates or splits comma-separated lists, so the result does not represent “all types” as required.",
+      "verdict": true,
+      "issues_found": "Returns per-card rows with two separate columns (many NULLs and combined strings) rather than the distinct union of individual sub- and super-types, so it misses the semantic requirement of listing the full set of types."
+    }
+  },
+  {
+    "question_id": 1099,
+    "result": {
+      "judgement": "Query correctly retrieves Abdou Diallo’s preferred_foot (left); duplicates do not violate the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 481,
+    "result": {
+      "judgement": "Query satisfies the card-name and non-null flavor-text conditions, joins tables correctly on uuid, selects distinct languages, and the result format matches the question’s request.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 373,
+    "result": {
+      "judgement": "Query correctly returns the names of all cards whose artist field is exactly “Aaron Boyd”, matching the question’s requirement; duplicates are permissible and no schema or logical errors are evident.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1437,
+    "result": {
+      "judgement": "Query satisfies date, approval, attendance conditions and returns member names with event links using correct tables; no substantive error found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 552,
+    "result": {
+      "judgement": "Query correctly selects badge names for user with DisplayName 'csgillespie' using proper join and filter; results satisfy the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 456,
+    "result": {
+      "judgement": "The query omits the card’s actual type (“Creature”) by returning only subtypes and supertypes, so the answer is incomplete for “all types”.",
+      "verdict": true,
+      "issues_found": "Missing the main type (from types/type column), duplicates irrelevant"
+    }
+  },
+  {
+    "question_id": 1281,
+    "result": {
+      "judgement": "The query correctly restricts to patients with GOT ≥ 60, then takes the maximum Birthday value, which per evidence corresponds to the youngest patient; duplicates from multiple lab rows do not affect MAX, and schema usage is proper, so the answer is satisfied.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 477,
+    "result": {
+      "judgement": "The SQL correctly filters cards from the Coldsnap set and intersects with the three specified artist names, returning those who actually have cards there; logic, joins and result all match the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 720,
+    "result": {
+      "judgement": "Query correctly filters heroes having >15 distinct powers and returns their full_name, satisfying the question’s requirements; no substantive issues found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 728,
+    "result": {
+      "judgement": "Query correctly filters Marvel Comics superheroes, groups by eye colour, orders by descending count, returning the colours ranked by popularity as required.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 634,
+    "result": {
+      "judgement": "Query follows evidence definition, compares total view counts for each author, returns the higher one, and uses correct tables/columns; no substantive issues found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1116,
+    "result": {
+      "judgement": "SQL correctly returns the player(s) whose height equals the maximum height, fulfilling the request for the tallest players' names.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1433,
+    "result": {
+      "judgement": "The query correctly filters zip_code rows where type = 'PO Box' and returns the geographic field that actually exists (county); given the schema lacks any country column, interpreting the question as a typo for “counties” is reasonable, and the SQL is otherwise sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 916,
+    "result": {
+      "judgement": "Prediction meets the question requirements: it selects surnames from drivers where nationality is Italian; schema usage and logic are correct.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1197,
+    "result": {
+      "judgement": "The SQL correctly selects the first documentation date (Description) and disease (Diagnosis) for patient ID 48473, fully satisfying the question’s requirements without any schema or logic errors.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 907,
+    "result": {
+      "judgement": "SQL correctly filters races to year 2017, joins to obtain hosting country, and orders by event date; extra date column is harmless and all requirements are met.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 854,
+    "result": {
+      "judgement": "SQL correctly joins races with circuits, filters on race name 'Australian Grand Prix', and returns the latitude and longitude coordinates, satisfying the question; duplicate rows are benign.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 72,
+    "result": {
+      "judgement": "Query correctly filters 2014-2015 records for Fremont schools with EdOpsCode 'SSS' and sums the Ages 5-17 enrollment, satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 81,
+    "result": {
+      "judgement": "Query restricts to schools that have a FRPM record, so it may miss the true southern-most California school, and the returned city Oroville (~39°N) is clearly not the lowest latitude in the state; therefore the SQL does not correctly answer the question.",
+      "verdict": true,
+      "issues_found": "Incorrect result due to unnecessary inner join limiting schools set; returned school is obviously not at lowest latitude."
+    }
+  },
+  {
+    "question_id": 1277,
+    "result": {
+      "judgement": "Query correctly counts distinct patients whose DNA < 8 and whose Patient.Description is NULL, matching all question requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1161,
+    "result": {
+      "judgement": "Query satisfies all stated conditions (Admission '+', age ≥ 50, average of aCL IgG) using correct tables and columns; no substantive errors detected.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1366,
+    "result": {
+      "judgement": "The SQL correctly selects first and last names of members whose attendance rows link to the event record named 'October Meeting', satisfying the question's requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1367,
+    "result": {
+      "judgement": "Query correctly counts members per college via major relationship and returns the college with the highest count, satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1399,
+    "result": {
+      "judgement": "SQL correctly checks for any attendance record linking Maya Mclean to an event named 'Women's Soccer', returning a boolean answer, satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 138,
+    "result": {
+      "judgement": "Prediction correctly selects the district with the second-highest 1995 crime total (using A15) and counts male clients in that district; no schema misuse or logical flaw is evident.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1440,
+    "result": {
+      "judgement": "Query correctly filters expenses by cost and date, joins to members, and returns their emails; duplicates are acceptable since question doesn’t require uniqueness.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 163,
+    "result": {
+      "judgement": "The SQL correctly filters loans with status 'A', links them to their accounts and districts, aggregates per district, and returns the district (by id) with the highest count, matching the question’s intent; no clear schema or logical error is evident.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 248,
+    "result": {
+      "judgement": "The query correctly filters triple bonds in molecule TR041 and returns the atom pairs involved; duplicate reverse-order rows are acceptable for a list question and no schema or logic error is present.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 230,
+    "result": {
+      "judgement": "Query correctly joins molecule and atom to provide each element and the molecule label for TR060, satisfying the question; duplicates are acceptable given wording.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1,
+    "result": {
+      "judgement": "Query filters on a non-existent SOCType value (“Continuation School”), producing no matching rows, so it fails to return the requested three lowest rates for continuation schools.",
+      "verdict": true,
+      "issues_found": "Incorrect continuation-school filter leads to empty result; therefore requirements unmet."
+    }
+  },
+  {
+    "question_id": 321,
+    "result": {
+      "judgement": "SQL correctly fetches the molecule_id for both specified atom_ids, showing they belong to molecule TR000; duplication is benign and meets the question’s intent.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1285,
+    "result": {
+      "judgement": "Query picks the patient with the overall latest First Date and only then checks for LDH≥500, while the question requires choosing the latest patient AMONG those who have abnormal LDH; this anchor mis-ordering makes the logic incorrect and yields NULL.",
+      "verdict": true,
+      "issues_found": "Chooses wrong patient set (latest overall, not latest among abnormal LDH patients) causing missing result."
+    }
+  },
+  {
+    "question_id": 250,
+    "result": {
+      "judgement": "Query correctly filters carcinogenic molecules, counts their double bonds, orders by that count and returns the top molecule; extra join may duplicate rows but would scale counts uniformly and not affect ranking, so no substantive error.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 28,
+    "result": {
+      "judgement": "Query satisfies the question: it filters locally funded schools, computes the required difference, compares it to the average over the same set, and returns School and DOCType without schema misuse or logical flaws.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 327,
+    "result": {
+      "judgement": "Query meets the stated requirements: it filters label='-' for non-carcinogenic molecules, joins to atom, groups by molecule, and keeps those with atom count >5, returning the molecule IDs as asked.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 97,
+    "result": {
+      "judgement": "SQL correctly filters accounts with frequency 'POPLATEK PO OBRATU' and disposition type 'DISPONENT', returning distinct client IDs as requested.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 318,
+    "result": {
+      "judgement": "Prediction correctly retrieves the molecule_id associated with the specified bond_id, matching schema and question requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 40,
+    "result": {
+      "judgement": "The query correctly restricts to Fresno Unified schools, orders by AvgScrRead ascending to find the lowest-scoring school, joins to the schools table to obtain its phone, and returns one phone number; no clear requirement is violated.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 358,
+    "result": {
+      "judgement": "Query correctly filters by the card name and shows the borderColor, and despite duplicate rows the value is consistently \"black\", satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 389,
+    "result": {
+      "judgement": "Query correctly selects card names whose originalType is exactly 'Creature - Elf' and pairs them with each ruling date, fulfilling the request; schema usage and join are valid, and duplicates are allowable since uniqueness wasn’t specified.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 195,
+    "result": {
+      "judgement": "Predicted query correctly returns the bond_type that occurs most frequently, fulfilling the question requirements without schema or logical errors.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 102,
+    "result": {
+      "judgement": "The query correctly lists distinct account_ids whose opening date precedes 1997-01-01 and that have at least one transaction with balance over 3000 USD, satisfying the stated conditions; no clear requirement is violated.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 167,
+    "result": {
+      "judgement": "The query correctly filters junior cards issued on or after 1997-01-01 and returns distinct corresponding client IDs, satisfying the question requirements using appropriate schema joins.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 364,
+    "result": {
+      "judgement": "The query correctly joins cards with legalities, filters by the exact card name, and returns the status values, which all show \"Legal\"; this satisfies the question’s request for the card’s status despite duplicate rows.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 440,
+    "result": {
+      "judgement": "The SQL correctly queries the language for the given translation and matches the schema; empty result merely shows that the literal string is absent, not a logical flaw.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 367,
+    "result": {
+      "judgement": "The SQL only checks for a Phyrexian translation at the SET level and then pulls every card in those sets, so it does not actually identify artists of cards printed in the Phyrexian language; this violates the question’s requirement and can return wrong (or no) results.",
+      "verdict": true,
+      "issues_found": "Filters on set_translations.language instead of card-level language, causing over-/under-inclusion; result therefore does not reliably answer the question."
+    }
+  },
+  {
+    "question_id": 357,
+    "result": {
+      "judgement": "Query correctly fetches the promoTypes for all Duress card entries; extra NULLs do not violate any explicit requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 433,
+    "result": {
+      "judgement": "The query divides only by the number of Chinese-Simplified cards, so it returns the share of online-only cards within that language, not the percentage of all cards that are both Chinese-Simplified and online-only as asked.",
+      "verdict": true,
+      "issues_found": "Denominator incorrectly restricted by language filter; should divide by total cards, not only Chinese-Simplified ones."
+    }
+  },
+  {
+    "question_id": 431,
+    "result": {
+      "judgement": "All required conditions (isForeignOnly = 0, isFoilOnly = 1, Japanese translation) are correctly applied and the query returns the set IDs as requested, so the prediction is acceptable.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 365,
+    "result": {
+      "judgement": "Query correctly selects the type of the card with the exact name and returns consistent results; duplicates do not affect correctness.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 562,
+    "result": {
+      "judgement": "SQL correctly filters posts by 1910 views and returns the CommentCount, satisfying the question with no evident schema or logic errors.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 546,
+    "result": {
+      "judgement": "Query correctly returns all distinct user display names whose Id appears as OwnerUserId on at least one post with ClosedDate not null, satisfying “users who owns a post that is well-finished.”",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 464,
+    "result": {
+      "judgement": "SQL correctly filters the set by its German translation and returns the associated card names, meeting all requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 421,
+    "result": {
+      "judgement": "Query satisfies all specified constraints (unknown power, arena-league promo, alphabetical ordering, first three results) using correct schema columns, so prediction is acceptable.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 529,
+    "result": {
+      "judgement": "SQL correctly returns set names with at least one Korean translation and no Japanese translation; all requirements met, schema usage valid.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 710,
+    "result": {
+      "judgement": "Predicted query aligns with the question: it selects comments belonging to posts whose CommentCount = 1 and counts those with Score = 0, satisfying all stated requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 359,
+    "result": {
+      "judgement": "Query returns four different rows (including NULL and an incorrect type) instead of the single original type requested, so it does not satisfy the question’s requirement.",
+      "verdict": true,
+      "issues_found": "returns extra and wrong rows; missing DISTINCT/filters"
+    }
+  },
+  {
+    "question_id": 418,
+    "result": {
+      "judgement": "Query satisfies the question by selecting the availability (printing type) of all cards whose artist is Daren Bader; this meets the stated requirements despite duplicate rows.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 835,
+    "result": {
+      "judgement": "SQL correctly filters Marvel Comics heroes, counts those aligned as 'Good', divides by total Marvel heroes and returns the percentage, matching the question requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 504,
+    "result": {
+      "judgement": "Query meets the stated requirements—counts cards in that set with converted mana cost 3 using correct join and filters; no schema or logical errors detected.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 400,
+    "result": {
+      "judgement": "Query correctly selects distinct set codes from set_translations where language is Spanish, satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 832,
+    "result": {
+      "judgement": "The query correctly finds the superhero with the maximum height_cm and returns the superhero_name, meeting the question’s requirement to “Name the tallest superhero.”",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 639,
+    "result": {
+      "judgement": "The question explicitly defines “R language” via TagName = 'r', yet the query never touches the tags table or the TagName column; instead it guesses a ‘|r|’ pattern inside posts.Tags, yielding 0 % and relying on an unstated delimiter, so the required anchor is violated and the percentage is unreliable.",
+      "verdict": true,
+      "issues_found": "Query ignores TagName anchor (no join to tags table), assumes un-specified tag delimiter, and likely under-counts R posts, producing incorrect result."
+    }
+  },
+  {
+    "question_id": 1033,
+    "result": {
+      "judgement": "SQL correctly filters birthdays from 1990-01-01 (inclusive) up to but not including 1996-01-01, then applies AVG(height), satisfying the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 522,
+    "result": {
+      "judgement": "Query meets the question’s filters (edhrecRank = 1 and status = 'Banned') and returns card name plus banned format; duplicates are permissible since uniqueness wasn’t requested.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 638,
+    "result": {
+      "judgement": "SQL correctly selects distinct DisplayName from users who have a badge with Name = 'Organizer', satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 483,
+    "result": {
+      "judgement": "Query correctly filters by set name 'Coldsnap' and language 'Italian', retrieves the foreign rules text for each card; logic matches question requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 814,
+    "result": {
+      "judgement": "SQL correctly joins hero_attribute to superhero and colour and filters for attribute_value = 100, returning the requested skin colours; no requirement for distinctness or specific attribute was stated, so query meets the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 954,
+    "result": {
+      "judgement": "Prediction satisfies all conditions: filters Japanese drivers and 2007-2009 races, defines completion by time IS NOT NULL, computes correct ratio *100, and uses proper joins/columns.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 758,
+    "result": {
+      "judgement": "Query satisfies height 185 and race human, joins via hair_colour_id to colour and returns colour values; duplicates are acceptable since singular wording doesn’t explicitly require uniqueness.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 786,
+    "result": {
+      "judgement": "Query correctly counts rows whose Strength attribute equals the global maximum, matching the number of heroes with the highest strength.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 808,
+    "result": {
+      "judgement": "SQL correctly filters superheroes by the specified height and weight and returns their races, using proper tables and joins; no semantic requirement is violated.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1178,
+    "result": {
+      "judgement": "The SQL correctly filters AORTITIS patients, uses the plausible earliest-date field to choose the first one, and returns the requested gender; no clear requirement is violated.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 952,
+    "result": {
+      "judgement": "Query correctly filters position = 1 and returns the constructors’ names; duplicates are acceptable for a “which” list question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1022,
+    "result": {
+      "judgement": "Query correctly finds the minimum potential in Player_Attributes and returns the corresponding preferred_foot value(s); duplicates are harmless and no schema or logic errors are present.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1315,
+    "result": {
+      "judgement": "The SQL correctly identifies the event by name and counts distinct members who attended it, satisfying the question’s requirement with appropriate schema use.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 732,
+    "result": {
+      "judgement": "The SQL correctly filters for Speed attribute, orders ascending to get the minimum speed hero, joins to the superhero’s publisher and returns the publisher name, fulfilling the question’s intent.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1216,
+    "result": {
+      "judgement": "The SQL correctly selects male patients whose albumin is outside the 3.5–5.5 range and orders them by birthday descending; duplicates are acceptable for a listing question, so the prediction meets all explicit requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 899,
+    "result": {
+      "judgement": "Query meets all stated requirements: it filters races to 1990-2000, groups by circuit, keeps those with exactly four races, and returns circuit names, with correct schema usage. No substantive errors evident.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 939,
+    "result": {
+      "judgement": "Predicted query correctly filters British drivers, the 2008 Australian GP race, counts distinct participants, and uses proper schema; no issues found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 913,
+    "result": {
+      "judgement": "Query correctly identifies the circuit with maximum altitude and returns its country (plus an extra harmless column); logic, tables and ordering are appropriate, so prediction is acceptable.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1071,
+    "result": {
+      "judgement": "SQL correctly filters on the specified attribute values and returns the team short name; any duplicate rows do not conflict with the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1014,
+    "result": {
+      "judgement": "Uses MIN on the TEXT column `time`, so comparison is lexicographic, not numeric; this can pick a longer lap (e.g., “15:14.219”) over a faster one (e.g., “1:14.000”), meaning the reported “lap records” may be wrong. It should compare the numeric `milliseconds` column instead.",
+      "verdict": true,
+      "issues_found": "lexicographic MIN on TEXT time, potentially incorrect fastest time"
+    }
+  },
+  {
+    "question_id": 992,
+    "result": {
+      "judgement": "Prediction meets all stated requirements—filters German nationality, birth years 1971–1985 inclusive, returns full name/url/dob, and orders by dob descending.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1533,
+    "result": {
+      "judgement": "Query correctly identifies customers whose unit price (Price/Amount) for product 5 exceeded 29 and returns their Consumption value for date ‘201208’; schema usage and filters match the question, with only harmless duplicate rows.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1065,
+    "result": {
+      "judgement": "The query correctly joins Team with Team_Attributes, filters rows where buildUpPlaySpeedClass = 'Fast', and returns the required team_long_name field; any duplicates stem from multiple attribute records and are not disallowed by the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1054,
+    "result": {
+      "judgement": "The query correctly locates David Wilson in Player, joins to his attributes, and returns the defensive_work_rate value, which is consistently 'medium'; duplicates do not violate the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 91,
+    "result": {
+      "judgement": "Query correctly computes the average unemployment rates for 1995 (A12) and 1996 (A13) across all districts, allowing direct identification of the higher year; logic and schema usage are sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 846,
+    "result": {
+      "judgement": "The query correctly filters raceId 20, joins to drivers, orders by Q1 time descending to capture the five slowest (eliminated) drivers, and returns their driverRef names; no clear requirement is violated and schema usage is sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1050,
+    "result": {
+      "judgement": "Query correctly finds the latest (youngest) birthday in Player, joins to Player_Attributes to obtain preferred_foot, and returns one value, meeting all requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1512,
+    "result": {
+      "judgement": "SQL correctly totals each customer’s spending on 2012-08-25 and returns the top spender, matching the question’s intent.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1235,
+    "result": {
+      "judgement": "Query meets question requirements; it filters RBC < 3.5, returns patient ID, diagnosis, and a reasonable age calculation—even though duplicates appear, the question didn’t require distinct rows.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1168,
+    "result": {
+      "judgement": "Query omits any ordering on Laboratory.Date, so if the oldest SJS patient has more than one lab record the LIMIT 1 will return an arbitrary date, not the (first/earliest) date the medical work was completed that the question asks for; thus the answer is not guaranteed correct.",
+      "verdict": true,
+      "issues_found": "Missing ORDER BY on lab date makes returned date nondeterministic; potential logical error for singular date requirement."
+    }
+  },
+  {
+    "question_id": 1250,
+    "result": {
+      "judgement": "SQL correctly filters patients diagnosed as 'SLE' and with proteinuria between 0 and 30, returning their patient IDs, satisfying the question requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1426,
+    "result": {
+      "judgement": "SQL matches question requirements, correctly retrieving last name, department, and college for members majoring in Environmental Engineering.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1249,
+    "result": {
+      "judgement": "SQL correctly joins patients with lab records where U-PRO is at least 30 and returns their diagnoses; no schema misuse or logical error identified, so the prediction satisfies the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 300,
+    "result": {
+      "judgement": "The query correctly lists the elements (one per atom row) that make up molecule TR186, satisfying the question’s request to identify the atoms of that molecule.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1387,
+    "result": {
+      "judgement": "Query lists every student who filed an expense for that event rather than the single student entrusted to manage the budget, so the logic does not match the question and yields extra names.",
+      "verdict": true,
+      "issues_found": "Uses expense table instead of a manager link/role, returning all spenders; result cardinality (two names) conflicts with singular “Which student” wording."
+    }
+  },
+  {
+    "question_id": 1419,
+    "result": {
+      "judgement": "SQL correctly filters by the specified event_date and returns the event’s type, satisfying the question’s request for its category.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1253,
+    "result": {
+      "judgement": "Prediction satisfies the question: it restricts IGA to the normal range, picks the maximal value, and returns that patient’s diagnosis; no schema or logic errors identified.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1219,
+    "result": {
+      "judgement": "SQL correctly restricts to each patient’s latest lab, applies sex-specific normal-UA thresholds, and returns the average UA, satisfying the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1499,
+    "result": {
+      "judgement": "Query correctly filters EUR customers, computes each customer’s SUM(Consumption)/12 and returns the overall MAX, matching the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1318,
+    "result": {
+      "judgement": "Query correctly counts attendance per event and returns the event with the greatest count, fulfilling the question’s intent; no schema misuse or logical flaw detected.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1487,
+    "result": {
+      "judgement": "SQL satisfies all stated conditions—filters by LAM segment, Euro currency, October 2013 date, and selects the customer with max consumption—so the prediction correctly answers the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1195,
+    "result": {
+      "judgement": "Query includes correct tables, filters (sex='F', diagnosis='SLE', PLT>400) and returns AVG(ALB); schema usage and logic are sound, so prediction satisfies the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1449,
+    "result": {
+      "judgement": "Query correctly filters expenses >100, joins to members and majors, and returns their names and majors; duplicates are acceptable as question doesn’t forbid them.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1509,
+    "result": {
+      "judgement": "Query satisfies all conditions: joins transactions with CZE gas stations and counts those dated strictly after 2012-01-01; schema usage is correct.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 500,
+    "result": {
+      "judgement": "Query returns an extra NULL row (no Japanese name) so result set does not match required Japanese set names, therefore prediction is incorrect.",
+      "verdict": true,
+      "issues_found": "includes NULL translation which is not a Japanese name; extra row violates exact answer set"
+    }
+  },
+  {
+    "question_id": 1527,
+    "result": {
+      "judgement": "The query correctly computes total revenue per gas station (Amount * Price), orders by the total, and returns the ID of the station with the maximum value, fully satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 594,
+    "result": {
+      "judgement": "The query correctly joins posts to users via OwnerUserId, filters for post ID 1, and returns the creator’s display name and reputation, satisfying the question’s requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 742,
+    "result": {
+      "judgement": "The SQL correctly joins superhero with race and counts rows where race = 'Vampire', satisfying the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1035,
+    "result": {
+      "judgement": "Query meets the stated condition (>50 and <60) on buildUpPlaySpeed and correctly returns the requested team_fifa_api_id column; duplicates are not disallowed by the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1225,
+    "result": {
+      "judgement": "SQL correctly filters T-BIL >= 2.0, joins to get patient sex, groups by sex, and lists distinct patient IDs as requested; no schema or logical errors found.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1338,
+    "result": {
+      "judgement": "The SQL only filters by the event but does not restrict expenses to that event (e.g., by expense_date); it therefore returns every expense ever made by members who attended the meeting rather than “each expense in October Meeting,” so the answer can be wrong.",
+      "verdict": true,
+      "issues_found": "Query lacks anchor tying expenses to the specific event date, pulling all expenses of attending members instead; hence it may include unrelated expenses and mis-answers the question."
+    }
+  },
+  {
+    "question_id": 934,
+    "result": {
+      "judgement": "Dataset’s grid position 4 for the 1989 Australian Grand Prix belongs to Riccardo Patrese, not Alessandro Nannini, so the query returns the wrong driver.",
+      "verdict": true,
+      "issues_found": "returns incorrect driver; grid=4 driver mismatch"
+    }
+  },
+  {
+    "question_id": 1209,
+    "result": {
+      "judgement": "Query drops patients sharing the same diagnosis and orders by an unseen birthday value, so requested patient-level list in birth-date order is not satisfied.",
+      "verdict": true,
+      "issues_found": "Uses DISTINCT on Diagnosis, collapsing multiple qualifying patients with the same diagnosis; ordering by Birthday after this collapse is undefined and no longer represents patient birth-date order, violating the question’s requirement to list diagnoses per patient ordered by birthday."
+    }
+  }
+]

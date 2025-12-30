@@ -59,13 +59,17 @@ if __name__ == "__main__":
     parser.add_argument("--threads", type=int, default=1)
     parser.add_argument("--input", type=str, default="sample.json")
     args = parser.parse_args()
-    reasoning_model = "google/gemini-2.5-pro"
+    reasoning_model = "deepseek/deepseek-r1-0528"
     instruct_model = "deepseek-chat"
     partial = False
 
-    input_stem = re.sub(r"(-result)$", "", os.path.splitext(os.path.basename(args.input))[0])
-    output_dir = f"output/{input_stem}/{reasoning_model}-{input_stem}-eval"
+    input_stem = os.path.splitext(os.path.basename(args.input))[0]
+    reasoning_model_safe = reasoning_model.replace("/", "-")
+    method_root_dir = os.path.join("output", "rose-vec", input_stem)
+    output_dir = os.path.join(method_root_dir, reasoning_model_safe, "ROSE")
     os.makedirs(output_dir, exist_ok=True)
+    problems_file_path = os.path.join(method_root_dir, "problem_question_ids.json")
+    existing_results_path = os.path.join(output_dir, "eval_results.json")
 
     Prover = Prover(model=reasoning_model, output_dir=output_dir)
     Refuter = Refuter(model=reasoning_model, output_dir=output_dir)
@@ -73,9 +77,6 @@ if __name__ == "__main__":
 
     problem_ids: List[str] = []
     num_threads = max(1, int(args.threads))
-    method_root_dir = os.path.join("output", input_stem)
-    problems_file_path = os.path.join(method_root_dir, "problem_question_ids.json")
-    existing_results_path = os.path.join(output_dir, "eval_results.json")
 
     with open(args.input, "r", encoding="utf-8") as f:
         questions = json.load(f)

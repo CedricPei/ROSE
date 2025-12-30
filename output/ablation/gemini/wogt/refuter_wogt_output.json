@@ -1,0 +1,2250 @@
+[
+  {
+    "question_id": 20,
+    "result": {
+      "judgement": "The predicted SQL correctly counts the number of distinct schools based on the specified county, low grade, and high grade criteria, aligning with the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 67,
+    "result": {
+      "judgement": "The question asks for the total *amount* of Community College District closure, which typically implies a quantity rather than a count, such as the total number of students affected or financial impact. However, given the available schema, `COUNT(*)` of closed districts is a reasonable interpretation of 'total amount' in this context.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 51,
+    "result": {
+      "judgement": "The query correctly identifies the school with the lowest average score in reading and returns its mailing street and school name. The result shows 'None' for the school name, but this is a data issue, not a query error.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 30,
+    "result": {
+      "judgement": "The query incorrectly sums the enrollment numbers per city before ordering and limiting, potentially returning cities with low individual school enrollments rather than cities with the lowest total enrollment, which is implicitly what \"enrollment number for students in grades 1 through 12\" for cities implies. The question is asking for *cities* with lowest enrollment, which means the total enrollment for that city, not just school-level enrollment. Thus a group by is needed.",
+      "verdict": true,
+      "issues_found": "The query does not group by city and sum the enrollment for each city. It simply orders individual school enrollments and picks the cities associated with the 5 lowest school enrollments instead of the 5 cities with the lowest *total* enrollment across all their schools."
+    }
+  },
+  {
+    "question_id": 0,
+    "result": {
+      "judgement": "The predicted SQL correctly calculates the eligible free rate for K-12 students in Alameda County and identifies the highest rate by ordering and limiting the result. The use of `INNER JOIN` ensures that only schools with corresponding FRPM data are considered, and filtering by `schools.County = 'Alameda County'` directly addresses the county requirement. The `ORDER BY` and `LIMIT 1` correctly select the maximum value.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 31,
+    "result": {
+      "judgement": "The question asks for the eligible free rate for K-12 students, which is correctly identified by the Prover as `Free Meal Count (K-12)` / `Enrollment (K-12)`. The SQL query precisely calculates this rate and orders the schools by `Enrollment (K-12)` in descending order. The use of `LIMIT 2 OFFSET 9` correctly returns the 10th and 11th schools based on enrollment. The Prover's reasoning is sound, and all requirements from the question and evidence are met without any identified issues or logical flaws.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 43,
+    "result": {
+      "judgement": "The question asks for the average math score of the school with the lowest *average score for all subjects*, which implies calculating the average for each school first and then finding the minimum. The predicted SQL directly orders by the sum of scores without finding the average (i.e., sum divided by 3, although given that dividing by 3 doesn't change the order, the ordering is effectively correct). However, the results show 'None' for AvgScrMath, meaning there's missing data, which might not be what the user expects. The query might need to filter out schools with null scores before calculating the minimum. More importantly, the wording 'average score for all subjects' may implicitly mean that the individual subject scores must not be NULL to contribute to this 'average'. If *any* of the scores (AvgScrMath, AvgScrRead, AvgScrWrite) are NULL for a given school, their sum will be NULL, and hence that school will be incorrectly considered for the MIN calculation if not handled properly. However, for a MIN, NULL values are typically ignored when performing aggregation, but in ORDER BY, NULLs sorting varies by database. In SQLite, NULLs are generally sorted last by default for ASC. If all three scores are NULL for multiple schools, the ordering might pick an arbitrary one. There is an implicit assumption that the sum or average is not null. Thus, the result of 'None' for AvgScrMath is a strong indicator of a potential issue with the underlying data or the query's handling of missing values, which would need further investigation in a real-world scenario. Since the query returns 'None' it means that the school with the lowest sum of scores has a null math score which makes the result confusing for the user.",
+      "verdict": true,
+      "issues_found": "The returned 'AvgScrMath' is 'None', implying the school with the lowest total score has a NULL math score. This directly answers the question if NULLs are part of the dataset, but depending on the user's expectation, it might signal an issue with how NULL scores are handled during summation/ordering or what the user considers a valid 'average score'."
+    }
+  },
+  {
+    "question_id": 80,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the school with the highest latitude and returns its school type, name, and latitude, matching all requirements of the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 233,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the top two bonds associated with molecule 'TR006' and orders them alphabetically, matching the requirements of the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 77,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies schools in Los Angeles with a 'K-9' grade span and retrieves their 'Percent (%) Eligible FRPM (Ages 5-17)', aligning with the question's requirements and the provided schema.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 141,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies districts with transactions greater than $10,000 in 1997 by joining the relevant tables and filtering on the amount and date, then returning distinct district names, matching the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 124,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the loan ID, district ID, and average salary for loans with a duration of 60 months, fulfilling all requirements of the question and schema.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 112,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the district where the female client born on '1976-01-29' opened her account by joining the client, disposition, account, and district tables and filtering by the specified conditions.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 257,
+    "result": {
+      "judgement": "The question asks for 'atom id2 for atoms with element sulfur', which implies `atom_id` in the `connected` table should correspond to sulfur atoms and the result should be `atom_id2`. The predicted SQL correctly identifies atoms with element 's' and then retrieves the `atom_id2` values from the `connected` table where `atom.atom_id` matches `connected.atom_id`.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 174,
+    "result": {
+      "judgement": "The predicted SQL correctly extracts the birth year for the specified client ID, directly answering the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 236,
+    "result": {
+      "judgement": "The question asks for 'the bond type and the atoms of the bond ID TR001_6_9'. The predicted SQL successfully retrieves the bond type and the two atom IDs associated with the specified bond ID, which correctly addresses all parts of the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 177,
+    "result": {
+      "judgement": "The question asks for the sum that client number 4's account 'has' following transaction 851, which implies summing the `amount` of transactions, not the `balance` after each transaction. The predicted SQL sums `balance`, which is incorrect for answering 'what is the sum'. Additionally, 'account has' should refer to a specific account, but client 4 can have multiple accounts (e.g., if type is 'DISPONENT'), so it is ambiguous without further clarification for which account it is asking for. If the intent is for owner account, the `disp.type = 'OWNER'` condition should be added. However, the `balance` is often a running total, so summing `balance` is semantically incorrect to answer 'what is the sum...has'.",
+      "verdict": true,
+      "issues_found": "The predicted SQL sums `trans.balance` instead of `trans.amount` to answer 'what is the sum that client number 4's account has'. Summing `balance` does not represent the 'sum' of money the account 'has' in the context of transactions; it would be a sum of running balances, which is not what 'sum that account has' typically implies. Furthermore, it does not specify which of client 4's accounts (if multiple exist) to consider, and it implicitly assumes 'OWNER' by not filtering on `disp.type`."
+    }
+  },
+  {
+    "question_id": 252,
+    "result": {
+      "judgement": "The question asks for atoms that can bond with the atom that has the element lead. The predicted SQL correctly identifies atoms connected to lead atoms via `atom_id2`, which represents the other atom in a bond, thereby identifying the bonding partners.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 220,
+    "result": {
+      "judgement": "The query correctly identifies the elements for the specified molecule and orders them alphabetically, limiting to the top three, which aligns with the question's requirements and does not explicitly ask for distinct elements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 218,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies carcinogenic molecules, calculates the percentage of these molecules that contain fluorine, and then correctly subtracts this from 100 to find the percentage that do not contain fluorine, in line with the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 405,
+    "result": {
+      "judgement": "The query correctly counts the number of sets that are in the 'Commander' block and have a translation in 'Portuguese (Brazil)' as requested by the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 264,
+    "result": {
+      "judgement": "The predicted SQL correctly retrieves the labels for the specified molecule IDs as requested by the question. The result matches the expected output.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 275,
+    "result": {
+      "judgement": "The prediction correctly identifies the molecule IDs associated with double bonds as specified in the evidence and schema, aligning with the question's request without any logical flaws.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 344,
+    "result": {
+      "judgement": "The query correctly identifies mythic rarity cards banned in gladiator format based on the joining of `cards` and `legalities` tables and the filtering conditions.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 597,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies users from India who have the 'Teacher' badge and counts them distinctly, aligning with the question's requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 376,
+    "result": {
+      "judgement": "The question asks for 'card layout of cards with keyword of flying'. The predicted SQL filters cards where the 'keywords' column contains 'Flying' and selects the 'layout' column, which precisely answers the question. The use of LIKE '%Flying%' is appropriate for matching the keyword.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 304,
+    "result": {
+      "judgement": "The query correctly identifies carcinogenic molecules and their associated elements as requested by the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 281,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies carcinogenic molecules, filters for the 4th atom, and tallies the elements, aligning with all requirements of the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 430,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the top two sets with Italian-language cards in the 'Shadowmoor' block, ordered alphabetically by name, and returns their IDs and names as requested.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 480,
+    "result": {
+      "judgement": "The question asks for 'the Italian flavor text' which implies a single result, but the query returns two distinct flavor texts. The question's singular form suggests there should be only one such text.",
+      "verdict": true,
+      "issues_found": "The question asks for 'the Italian flavor text' (singular), but the query returns two flavor texts, indicating a potential ambiguity or issue with uniqueness for the specified card and language."
+    }
+  },
+  {
+    "question_id": 425,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies card numbers for cards that do not have multiple faces (side IS NULL) and possess both 'Angel' and 'Wizard' subtypes, as requested by the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 751,
+    "result": {
+      "judgement": "The query correctly identifies distinct superpowers of male superheroes and retrieves exactly five of them as requested by the question's 'at least five' requirement, which is satisfied by limiting to 5.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 465,
+    "result": {
+      "judgement": "The query correctly identifies cards named 'Ancestor's Chosen' and checks for the existence of an associated Korean foreign_data entry, which directly answers the 'is there' question with a boolean result. The logic is sound and the execution results are consistent with the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 470,
+    "result": {
+      "judgement": "The question asks for the release date of the *set of cards* with \"Ancestor's Chosen,\" implying the set that the specific card 'Ancestor''s Chosen' belongs to. The query correctly joins `cards` and `sets` on `setCode` and `code` respectively, filters by the card name, and selects the `releaseDate` from the `sets` table. The results indicate that the card 'Ancestor''s Chosen' appeared in multiple sets published on different dates, which is a valid scenario. The Prover's reasoning aligns with this interpretation and the query's logic. Therefore, the prediction is correct.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 451,
+    "result": {
+      "judgement": "The query correctly interprets 'available in paper' and 'positive starting maximum hand size' based on the provided evidence and schema description for the 'hand' column. The use of LIKE '+%' correctly filters for positive hand sizes.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 505,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the Simplified Chinese translation of the set name 'Mirrodin' by joining the `sets` and `set_translations` tables and filtering as required by the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 447,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies sets with the 'commander' type and returns their codes, directly matching the question's requirement and adhering to the schema and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 606,
+    "result": {
+      "judgement": "The Prover's reasoning is sound; the SQL query correctly filters badges by the specified date and time and returns the distinct names as requested by the question. The result aligns with the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 670,
+    "result": {
+      "judgement": "The query correctly identifies the youngest user(s) and then finds the earliest post creation date among them, addressing the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 507,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the percentage of cards with 'Portuguese (Brazil)' translation that are online-only, aligning with the question and evidence. The calculation correctly handles the division and percentage formatting.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 860,
+    "result": {
+      "judgement": "The Prover's reasoning is sound, and the SQL query correctly translates the question's conditions to retrieve the driver's nationality. The empty result set indicates that no driver fits the criteria, which is a valid outcome.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 646,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies post titles associated with positive comments and the display names of users who posted those comments, using the score condition from the evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 570,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the user by display name and retrieves the distinct names of their badges, fully addressing the question's requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 711,
+    "result": {
+      "judgement": "The question asks for the total number of users who are 40 years old and have made comments with a score of 0. The predicted SQL correctly identifies and counts distinct users meeting these criteria. The Prover's reasoning is sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 761,
+    "result": {
+      "judgement": "The question asks for superheroes with weight greater than the 79% average weight of all superheroes, meaning the average weight should be multiplied by 0.79. The predicted SQL code uses `AVG(weight_kg) * 0.79`, which correctly implements this logic. The Prover's reasoning is accurate.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 894,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the minimum lap time and the associated driver and race by joining the necessary tables and ordering by milliseconds in ascending order with a limit of 1, as required by the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 718,
+    "result": {
+      "judgement": "The question asks for the number of superheroes, but the predicted SQL counts the number of times 'Super Strength' is attributed to a superhero. If a superhero has 'Super Strength' listed multiple times, they would be counted multiple times, which is not what 'number of superheroes' implies. To count unique superheroes, `COUNT(DISTINCT T2.hero_id)` should be used.",
+      "verdict": true,
+      "issues_found": "The query counts occurrences of 'Super Strength' power assignments rather than the number of unique superheroes possessing that power. If a hero has 'Super Strength' listed multiple times, they will be counted multiple times."
+    }
+  },
+  {
+    "question_id": 766,
+    "result": {
+      "judgement": "The question asks for 'the hero's full name' implying a single hero or a distinct set of names, but the result contains multiple rows, including duplicates and null-like values ('-'). The predicted SQL does not ensure distinct names, nor does it explicitly handle ties in the highest strength attribute, leading to a list of names rather than a singular or distinct answer.",
+      "verdict": true,
+      "issues_found": "The question asks for 'the hero's full name' which suggests a distinct or singular result. The predicted SQL returns multiple rows, including duplicates like '-', and does not use DISTINCT. If multiple heroes share the highest strength, they should all be listed, but the output includes several '-' which is likely a placeholder for missing full names. While returning multiple names for a tie is acceptable, the presence of these placeholders and the lack of distinctness for valid names make the result less precise than expected for 'the hero's full name'."
+    }
+  },
+  {
+    "question_id": 762,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the power with the highest count by grouping by power name, counting, and ordering in descending order with a limit of 1, aligning with the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 508,
+    "result": {
+      "judgement": "The query incorrectly returns cards created by Aleksi Briclot that don't have a text box, instead of returning cards that *do not* have a text box and *were not* created by Aleksi Briclot, as implied by the phrasing 'doesn't have a text box created by Aleksi Briclot'. The logical negation is misapplied.",
+      "verdict": true,
+      "issues_found": "The logical condition for the artist was incorrectly applied. The question asks for printing types of cards that 'doesn't have a text box *created by* Aleksi Briclot'. This implies either a card that doesn't have a text box *and* was *not* created by Aleksi Briclot, or a card that doesn't have a text box and was created by *someone else*. The current query selects cards where artist is 'Aleksi Briclot' AND isTextless is 1. This means it's finding cards that are textless AND by Aleksi Briclot, which is the opposite of the intended meaning. If 'doesn't have a text box created by Aleksi Briclot' means that the textless property is the one 'created by' this artist, then it implies artist is Aleksi Briclot AND isTextless = 0, or artist IS NOT Aleksi Briclot AND isTextless = 1. A simpler interpretation of 'doesn't have a text box created by Aleksi Briclot' is 'cards that don't have a text box, AND were not created by Aleksi Briclot', or 'doesn't have a text box' is a condition whose 'creation' by Aleksi Briclot is being negated. Given the evidence: 'doesn't have a text box refers to isTextless = 1', and 'created by Aleksi Briclot refers to artist = 'Aleksi Briclot'', the most direct interpretation of 'doesn't have a text box created by Aleksi Briclot' would be ¬(isTextless AND artist = 'Aleksi Briclot'). However, the phrasing is ambiguous and could also mean (isTextless = 1 AND artist != 'Aleksi Briclot'). The predicted query `cards.artist = 'Aleksi Briclot' AND cards.isTextless = 1` directly contradicts both reasonable interpretations of the negation in the question. It seems to directly pick cards that ARE textless AND ARE by Aleksi Briclot."
+    }
+  },
+  {
+    "question_id": 794,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the superhero with the highest speed attribute, aligning with the question and evidence directives.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 861,
+    "result": {
+      "judgement": "The SQL query correctly identifies the driver's number based on the race ID and the Q3 time, aligning with the question and evidence provided.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 853,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies and lists the names of races held in circuits located in Spain by joining the `circuits` and `races` tables and filtering by country.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 978,
+    "result": {
+      "judgement": "The query correctly identifies the count of races held at each distinct circuit location in Austria and provides the requested location and coordinates, aligning with the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 868,
+    "result": {
+      "judgement": "The question asks for 'the location coordinates' implying a unique location. The predicted SQL returns multiple identical rows, which, while technically correct for the coordinates, could be more concisely presented with `DISTINCT` to avoid redundancy, especially if the user expects a single unique answer for 'where'. However, the coordinates themselves are correct and the question did not explicitly ask for distinct results.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 865,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the oldest driver among those who finished race 592 by filtering for the specified race and non-null finish time, ordering by date of birth in ascending order, and limiting to one result, aligning with the question's requirements and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 719,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies superheroes with 'Super Strength' and a height over 200cm, then counts the distinct IDs as requested by the question. The use of joins and filters is accurate according to the schema and question requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 885,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the name and date of the race corresponding to the maximum round in 1999, which directly addresses the question and uses the provided evidence correctly.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 898,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the youngest Japanese driver by ordering by DOB in descending order and calculates the age as specified in the evidence. The results align with the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 872,
+    "result": {
+      "judgement": "The question asks for the driver's code for a specific Q3 time '0:01:33'. The evidence states that 'had the Q3 time as 0:0M:SS refers to q3 LIKE 'M:SS%'.' The predicted SQL uses an exact match (`=`) instead of `LIKE '%1:33%'`, which contradicts the evidence and will fail to find the correct entry if the `q3` column contains '0:01:33.XXX' or similar variations, which is common for lap times.",
+      "verdict": true,
+      "issues_found": "The predicted SQL uses an exact equality operator (`=`) for the `q3` time filter (`T1.q3 = '0:01:33'`) instead of the `LIKE` operator suggested by the evidence (`q3 LIKE 'M:SS%'`). This will prevent matching lap times that have milliseconds appended (e.g., '0:01:33.123'), which is a common format for lap times in F1 data."
+    }
+  },
+  {
+    "question_id": 801,
+    "result": {
+      "judgement": "The question asks for the ratio of male to female superheroes, which contradicts the evidence stating that 'male superheroes refers to gender = Female' and 'female superheroes refers to gender = Male'. The predicted SQL uses the `gender_id` directly assigned to the division without resolving this contradiction, making it unclear if the result represents the ratio of biological males to females or vice-versa as per semantic definition.",
+      "verdict": true,
+      "issues_found": "The evidence provides a contradictory mapping for 'male' and 'female' superheroes relative to `gender_id = 1` and `gender_id = 2`, and an explicit formula. The predicted SQL directly implements the formula without clarifying which gender ID corresponds to biological male or female, or addressing the contradictory semantic definitions in the evidence ('male superheroes refers to gender = Female'; 'female superheroes refers to gender = Male'). This leads to ambiguity in what the calculated ratio actually represents relative to the natural language question."
+    }
+  },
+  {
+    "question_id": 1032,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the league with the most matches and the total count, satisfying all requirements of the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 927,
+    "result": {
+      "judgement": "The query correctly identifies the driver with the highest `fastestLapSpeed` and returns their forename and surname as requested by the question. The use of `LIMIT 1` with a `DESC` order ensures the single fastest result is returned.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 909,
+    "result": {
+      "judgement": "The predicted SQL correctly filters for 'European Grand Prix' races and calculates the percentage held in Germany based on the provided evidence and schema.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 845,
+    "result": {
+      "judgement": "The SQL query correctly identifies the power names for superheroes whose height is greater than 80% of the average height of all superheroes, aligning with the question and evidence. The execution results are consistent with this logic.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 949,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the constructor with the highest total points by summing points from all standings, grouping by constructor name, and ordering in descending order to get the top result, upholding the Prover's pass.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 984,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the constructor with the most total wins and returns their website URL, as requested by the question. The logic for aggregation and ordering is sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 940,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the distinct drivers who finished the 2008 Chinese Grand Prix, which implicitly means they participated in Formula 1 races, aligning with the question and evidence provided.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1158,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies distinct patient IDs based on the specified birth year and total cholesterol criteria, aligning with the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 874,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the driver who finished second in the San Marino Grand Prix in 2006 by joining the necessary tables and applying the correct filters for race name, year, and position, matching the question's requirements and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 999,
+    "result": {
+      "judgement": "The question asks for the race with the fastest lap speed, but the evidence clarifies that 'fastest lap speed' refers to `MIN(fastestLapTime)`. The SQL query orders by `fastestLapTime` in ascending order and retrieves the race name, which correctly identifies the race with the fastest lap time as per the evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 989,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the champion of the Canadian Grand Prix in 2008 and their finish time by filtering for the specific race and year and position 1, as requested by the question and supported by the schema and execution results.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1020,
+    "result": {
+      "judgement": "The question asks for 'the player' with the highest overall rating, implying a single player. However, multiple players can have the same maximum overall rating. The current query only returns one arbitrary player_api_id if multiple players share the top rating. To correctly answer the question, it should return all players who share the highest overall rating.",
+      "verdict": true,
+      "issues_found": "The query does not account for ties in the highest overall rating. If multiple players have the same maximum rating, it only returns one player arbitrarily due to LIMIT 1, which may not be the complete answer to 'Which player has the highest overall rating?' if multiple players share that rating. It should return all such players."
+    }
+  },
+  {
+    "question_id": 878,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the driver with the best lap time by ordering by `time` and limiting to 1, and retrieves the forename and surname as requested, aligning with the question and evidence regarding 'best lap time' meaning MIN(time).",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1068,
+    "result": {
+      "judgement": "The predicted SQL correctly filters players by height, attributes by date range, and calculates the average overall rating as requested by the question and evidence. The join and aggregations are appropriate.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1244,
+    "result": {
+      "judgement": "The query correctly identifies patients based on the specified conditions for their first visit date and normal prothrombin time levels, and the use of DISTINCT ensures each patient is listed once.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 942,
+    "result": {
+      "judgement": "The predicted SQL correctly filters for Lewis Hamilton, converts the fastestLapTime from 'MM:SS.mmm' format to seconds, and then calculates the average, which directly answers the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1012,
+    "result": {
+      "judgement": "The question asks for the 'position of the circuits', and the schema clearly defines 'position' in the `results` table as a finishing position or track, while the `circuits` table has `location`, `lat`, and `lng` for geographical position. The predicted SQL returns 'location', which is a reasonable interpretation of 'position of the circuits' in this context, especially given the lack of specific latitude/longitude keywords. The SQL correctly identifies Lewis Hamilton's fastest lap by ordering by `fastestLapTime` and taking the top result. Therefore, the prediction is correct.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1104,
+    "result": {
+      "judgement": "The predicted SQL correctly retrieves the potential for the specified player on the given date by joining the Player and Player_Attributes tables and applying the necessary filters. The result matches the expectation.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1090,
+    "result": {
+      "judgement": "The query correctly identifies the oldest player based on the minimum birthday and retrieves their long passing score. The use of 'LIMIT 1' is acceptable given the phrasing of the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1131,
+    "result": {
+      "judgement": "The predicted SQL incorrectly identifies 'Italy players' as players participating in matches within the Italian league, rather than players who are actually from Italy (which is not directly available in the schema). Moreover, the join logic `T1.player_api_id = T2.home_player_1` restricts players to only the first home player in a match, which is a significant semantic error.",
+      "verdict": true,
+      "issues_found": "The SQL's definition of 'Italy players' is flawed. It assumes players are associated with a country based on the country where a match they played in occurred, which is an indirect and potentially inaccurate proxy for player nationality. Additionally, the join condition `T1.player_api_id = T2.home_player_1` arbitrarily selects only one specific home player slot, incorrectly restricting the player set. A more appropriate approach, given the schema's limitations, would be to consider players who have played for Italian teams. This current query does not calculate the average height of *all* Italy players in the database, but rather a very specific and limited subset of players who were home_player_1 in an Italian league match."
+    }
+  },
+  {
+    "question_id": 1013,
+    "result": {
+      "judgement": "The SQL query correctly identifies the minimum lap time for the 'Austrian Grand Prix' by joining the `lapTimes` and `races` tables and filtering by race name, aligning with the question's requirements and the provided evidence that 'lap record' refers to the fastest time recorded.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1116,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the player(s) with the maximum height, which aligns with the interpretation of 'most tallest players' provided in the evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1177,
+    "result": {
+      "judgement": "The question asks if the total cholesterol was at a normal level. The evidence defines normal level as 'N < 250'. The predicted SQL correctly retrieves the T-CHO value for the specified patient and date, and then checks if this value is less than 250, aliasing the result as 'is_normal'. The execution result '1' means true, indicating the cholesterol was normal. This directly answers the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1159,
+    "result": {
+      "judgement": "The question asks to 'list their ID, sex and diagnosis' for patients with albumin levels lower than 3.5. The presence of multiple entries for the same patient (ID, SEX, Diagnosis) due to multiple `Laboratory` records satisfying the condition is a logical flaw as it implies listing the same patient multiple times. The output should list each patient satisfying the condition only once.",
+      "verdict": true,
+      "issues_found": "The query returns duplicate patient entries (ID, SEX, Diagnosis) if a single patient has multiple laboratory records where ALB < 3.5. The question implies listing each patient once, not multiple times based on the number of qualifying lab tests. A `DISTINCT` clause on `T1.ID, T1.SEX, T1.Diagnosis` is required."
+    }
+  },
+  {
+    "question_id": 1391,
+    "result": {
+      "judgement": "The predicted SQL uses an INNER JOIN between `major` and `member` tables, which correctly filters only for majors that have associated members, aligning with the question asking about a ratio between students. The calculation of the ratio of finance majors to physics majors is correctly implemented using `SUM(CASE WHEN ... THEN 1 ELSE 0 END)` for counting and `CAST(... AS REAL)` for floating-point division.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1165,
+    "result": {
+      "judgement": "The question asks for the age gap of patients with a 'normal triglyceride recorded', which the evidence defines as 'tg >= 200'. The predicted SQL uses 'TG < 200' which incorrectly identifies patients with triglyceride levels below normal, instead of normal or above normal as per the evidence.",
+      "verdict": true,
+      "issues_found": "The WHERE condition 'laboratory.tg < 200' contradicts the evidence for 'normal triglyceride', which is defined as 'tg >= 200'. This means the SQL is selecting patients with triglyceride levels below normal, not normal or above normal as requested."
+    }
+  },
+  {
+    "question_id": 1241,
+    "result": {
+      "judgement": "The SQL query correctly calculates the difference between the number of patients with lower than normal platelet levels and the number of patients with higher than normal platelet levels, as specified in the evidence and question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1197,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the patient by ID and retrieves the 'Description' column for the first documented medical information and the 'Diagnosis' column for the disease, fulfilling all requirements of the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1130,
+    "result": {
+      "judgement": "The question asks for 'What are the short name of team', implying distinct team names, but the predicted SQL does not include DISTINCT, leading to duplicate team names in the result. Adding DISTINCT would correctly reflect the semantic intent.",
+      "verdict": true,
+      "issues_found": "The query returns duplicate team short names because it's missing a DISTINCT clause, which is semantically implied by 'What are the short name of team' to list unique teams."
+    }
+  },
+  {
+    "question_id": 1129,
+    "result": {
+      "judgement": "The query correctly identifies teams with 'Slow' buildUpPlaySpeedClass and returns their long names as requested. The use of JOIN and WHERE clause is appropriate, and the results align with the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1257,
+    "result": {
+      "judgement": "The predicted SQL correctly filters for patients with abnormal creatinine levels and those under 70 years old, then counts them. The age calculation using `strftime('%Y', 'now') - strftime('%Y', T1.Birthday)` although not exactly `SUBTRACT((YEAR(CURDATE()), YEAR(Birthday)))`, is a reasonable approximation for determining age in years and aligns with one common interpretation when only year differences are specified. The result matches the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1473,
+    "result": {
+      "judgement": "The predicted SQL correctly filters for SME customers and the year 2013 and applies the average monthly consumption calculation as specified in the evidence. The Prover's reasoning is sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1261,
+    "result": {
+      "judgement": "The predicted SQL correctly interprets the question by filtering for patients with 'normal RF' (RF < 20) and 'no thrombosis' (Thrombosis = 0), and then counts these patients, aligning with the provided evidence and schema.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1430,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the last name and position of the student who bought pizza on the specified date, matching all conditions given in the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1277,
+    "result": {
+      "judgement": "The prediction correctly identifies the number of unique patients who have normal anti-DNA levels and whose data is not recorded, adhering to all conditions specified in the question and evidence. The use of COUNT(DISTINCT ID) ensures unique patients are counted, and the join and WHERE clauses apply the correct filters.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1227,
+    "result": {
+      "judgement": "The predicted SQL correctly filters for male patients with high cholesterol and calculates their average age based on the provided evidence and schema. The calculation of age using `STRFTIME('%Y', CURRENT_DATE) - STRFTIME('%Y', patient.birthday)` is a standard approach for approximating age.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1514,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the currency used by customers for transactions made at the specified date and time by joining the `customers` and `transactions_1k` tables, and filtering by `Date` and `Time`.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1214,
+    "result": {
+      "judgement": "The query correctly identifies patients with total protein below the specified threshold and retrieves the requested information. Although a patient might appear multiple times if they have multiple records meeting the criteria, the question asks to 'List ID, sex and date of birth of patient whose total protein (TP) below the lower range of the normal index', which the current query fulfills. Adding DISTINCT would change the result by showing each patient only once, but it is not explicitly required to do so by the question, so the prover's interpretation stands. Therefore, the Prover's pass is upheld.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1404,
+    "result": {
+      "judgement": "The question asks for the 'type of expenses' and their 'total value'. The predicted SQL only returns the total value (SUM(cost)) and the event name, but entirely omits any 'type of expenses'. The Prover's reasoning that 'type of expenses' could be interpreted as 'total value of expenses' is a significant oversimplification that ignores half of the explicit request, especially since there is an 'expense_description' column in the expense table which could provide information about the 'type of expenses' if grouped appropriately.",
+      "verdict": true,
+      "issues_found": "The query does not identify the 'type of expenses' as explicitly requested in the question. It only provides the total value. The 'expense_description' column could potentially be used to provide insight into expense types."
+    }
+  },
+  {
+    "question_id": 1422,
+    "result": {
+      "judgement": "The question asks for 'the category of events', implying a distinct list of categories, but the predicted SQL returns all event types including duplicates. While the result contains the correct individual categories, it does not explicitly provide a distinct list as typically implied by such a phrasing.",
+      "verdict": true,
+      "issues_found": "The question asks for 'the category of events', implying a distinct set of categories. The predicted SQL returns all matching event types, including duplicates, rather than a distinct list. To answer 'the category of events', a DISTINCT clause is expected."
+    }
+  },
+  {
+    "question_id": 1472,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the customer with the least consumption in the 'LAM' segment for the year 2012 by filtering, ordering, and limiting the results as requested by the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1440,
+    "result": {
+      "judgement": "The prediction correctly identifies and filters the data to retrieve the emails of members who meet the specified criteria, aligning with the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 99,
+    "result": {
+      "judgement": "The SQL query correctly identifies accounts that meet the criteria of having a loan duration greater than 12 months, an account opening date in 1993, and then orders them by loan amount in descending order to find the highest, returning the account_id. The use of strftime('%Y', account.date) is appropriate for extracting the year from the date column.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1294,
+    "result": {
+      "judgement": "The predicted SQL correctly filters for normal creatinine levels and then identifies the patient with the highest 'aCL IgA' concentration among that filtered group, fulfilling all conditions of the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1486,
+    "result": {
+      "judgement": "The Prover's pass is overturned because the question asks about the number of SMEs, not the total amount paid by SMEs, and the provided evidence for 'Amount of more SMEs' is a custom definition that misinterprets the question's intent.",
+      "verdict": true,
+      "issues_found": "The question asks 'Is it true that more SMEs pay in Czech koruna than in euros? If so, how many more?'. This clearly refers to the count of individual SMEs. The predicted SQL, however, calculates the difference in *total transaction amounts* (SUM(T1.Amount)) for SMEs based on currency. The evidence is misleading by redefining 'Amount of more SMEs' as the difference in total amount paid. The query should count the distinct SMEs for each currency type."
+    }
+  },
+  {
+    "question_id": 1510,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies transactions in gas stations in the Czech Republic and calculates the average of the product of Amount and Price, which represents the average total price as per the schema description and question requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1488,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the customer from the 'KAM' segment with the highest consumption and returns their CustomerID and consumption, accurately answering both parts of the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1480,
+    "result": {
+      "judgement": "The question asks for the 'peak month' which is represented by the 'Date' column in `yearmonth` table. The predicted SQL correctly identifies the date with the highest consumption for SME customers in 2013 and returns the corresponding 'Date'. The result '201304' accurately represents the month within the 2013 year, aligning with the question's intent.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1465,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the budget category associated with the expense 'Posters' by joining the expense and budget tables and filtering on the expense description, aligning with the question and schema.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1441,
+    "result": {
+      "judgement": "The question asks for the count of members with an 'education' major in a specific college. The predicted SQL correctly filters by major, college, and counts members. However, the question does not specify to filter by `position = 'Member'`. The 'Member' is given as an example of position in the evidence, not a required filter. Therefore, filtering by `position = 'Member'` is an unnecessary constraint that could lead to an incorrect count.",
+      "verdict": true,
+      "issues_found": "The SQL query incorrectly filters for `position = 'Member'`. The evidence states that 'Member' is a position of a club, not a mandatory filter for the count."
+    }
+  },
+  {
+    "question_id": 271,
+    "result": {
+      "judgement": "The question asks if a specific bond ID has both chlorine and carbon elements. The predicted SQL joins `connected` with `atom` to find atoms associated with the bond and then checks if both 'cl' and 'c' elements are found among those atoms. However, the condition `T2.element IN ('cl', 'c')` means that the count distinct will only compare to 2 if both 'cl' and 'c' exist. The result 'no' correctly reflects the absence of both elements as per the execution result. The logic appears sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 38,
+    "result": {
+      "judgement": "The provers reasoning is sound. The SQL query correctly identifies schools in 'Los Angeles' county with the specified number of test takers and retrieves their unique websites. The use of `INNER JOIN`, `DISTINCT`, and `BETWEEN` is appropriate and aligns with the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1481,
+    "result": {
+      "judgement": "The predicted SQL incorrectly interprets 'annual average consumption of the customers with the least amount of consumption' by selecting only the single lowest consumption value for each segment and then averaging it (which returns the same value). The evidence defines this as 'total consumption per year / the number of customer with lowest consumption in each segment', implying an average calculation over potentially multiple customers with the lowest observed consumption, not just the single lowest consumption value itself. Therefore, the logic for calculating the average consumption for each segment is flawed.",
+      "verdict": true,
+      "issues_found": "The predicted SQL calculates the average consumption for the customer with the single lowest consumption, rather than the average consumption 'of the customers with the least amount of consumption' as defined by the evidence, which would involve finding all customers with the minimum consumption and then averaging their consumptions or summing their consumptions and dividing by their count. The `ORDER BY T2.Consumption ASC LIMIT 1` combined with `AVG(T2.Consumption)` effectively just returns the lowest consumption value, not an average over a set of 'least consuming customers'."
+    }
+  },
+  {
+    "question_id": 86,
+    "result": {
+      "judgement": "The question asks for information about the administrator, district, county, and school for the school with Charter number 40. The predicted SQL correctly selects these columns and filters by CharterNum = '40'. The empty result set suggests that there might not be a school with CharterNum '40' in the database, which does not indicate an error in the query itself.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 40,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the school within 'Fresno Unified' with the lowest average reading score and retrieves its phone number, aligning with the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 189,
+    "result": {
+      "judgement": "The question asks for clients who are 'oldest' AND have 'lowest average salary'. The predicted SQL orders by birth_date ASC (oldest) AND average salary ASC (lowest salary) and limits to 1, correctly identifying one such account.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 137,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies accounts with running contracts ('C' or 'D' status) in branch location 1 and counts them, aligning with the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1492,
+    "result": {
+      "judgement": "The predicted SQL correctly filters for 'KAM' segment customers and then calculates the percentage of those who pay in 'EUR' using the formula provided in the evidence. The logic is sound, and the result aligns with the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1491,
+    "result": {
+      "judgement": "The question asks 'Which country has more \"value for money\" gas stations?' which implies identifying the country with the highest count, but the query returns a count for all countries. The question also asks for 'total number of \"value for money\" gas stations in each country', which the query does fulfill.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 195,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the most common bond type by grouping, counting, and ordering, which aligns with the question and the provided evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 2,
+    "result": {
+      "judgement": "The question asks for schools in 'Fresno County Office of Education', but the schema indicates that `schools.County` stores county names like 'Fresno', not the full office name. This is a schema misuse as the filter condition is likely incorrect for the intended county.",
+      "verdict": true,
+      "issues_found": "The WHERE clause `schools.County = 'Fresno County Office of Education'` appears to be incorrect. The `County` column in the `schools` table is expected to contain county names (e.g., 'Fresno'), not the full 'County Office of Education' description. This mismatch in filtering likely causes the empty result, even if charter schools exist within Fresno County."
+    }
+  },
+  {
+    "question_id": 223,
+    "result": {
+      "judgement": "The question asks for the atom IDs of the bond 'TR000_2_5'. The predicted SQL correctly identifies the `atom_id` and `atom_id2` columns from the `connected` table where the `bond_id` matches the specified value, which aligns with the question's intent. The Prover's reasoning is sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 357,
+    "result": {
+      "judgement": "The question asks for 'what type of promotion is of card 'Duress'' which implies listing all promotion types associated with the card 'Duress'. The predicted SQL correctly selects the `promoTypes` column and filters for cards named 'Duress'. The execution result shows the various promotion types, including 'None' where no specific promotion type is listed, and multiple types where applicable. This provides a comprehensive list of what the question asks for.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 71,
+    "result": {
+      "judgement": "The question asks for 'the district code', implying a single or distinct code, but the query returns multiple district names, some of which are duplicates. While the provided data only contains district names, the question explicitly asks for a 'code', and the `NCESDist` column exists for district identification numbers.",
+      "verdict": true,
+      "issues_found": "The question asks for the 'district code', but the query returns the `District` column which contains district names, not codes. The `NCESDist` column appears to be the correct column for district codes based on the schema description."
+    }
+  },
+  {
+    "question_id": 563,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the post based on the specified user and comment creation date, and then retrieves its FavoriteCount, which directly answers the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 349,
+    "result": {
+      "judgement": "The question asks for the card and artist with the 'most ruling information', which implies the card that has the highest count of rulings. The predicted SQL correctly identifies this by counting `rulings.uuid` for each card after joining `cards` and `rulings` tables. It also includes the `isPromo` column as requested by the question. The grouping and ordering logic correctly retrieves the card with the maximum ruling count.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 172,
+    "result": {
+      "judgement": "The predicted SQL correctly counts the dispositions that are 'OWNER' or 'DISPONENT' type and associated with account IDs between 1 and 10, fully satisfying the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 82,
+    "result": {
+      "judgement": "The question asks for the grade span of the school with the 'highest longitude', which semantically refers to the largest positive longitude value, not the largest absolute value. The predicted SQL uses `ABS(Longitude)` which finds the school furthest from the prime meridian, not necessarily the one with the highest positive longitude.",
+      "verdict": true,
+      "issues_found": "The interpretation of 'highest longitude' as `ABS(Longitude)` is incorrect. 'Highest longitude' implies the maximum positive longitude value, whereas `ABS(Longitude)` would select a school with a large negative longitude if its absolute value is higher than other positive longitudes. This misinterpretation leads to a different school being selected than what the question intended."
+    }
+  },
+  {
+    "question_id": 399,
+    "result": {
+      "judgement": "The question asks for \"all types of cards available in arena,\" and the evidence indicates that \"all types refer to subtypes and supertypes.\" The predicted SQL correctly selects these two columns for cards with 'arena' availability. While the results show individual subtypes and supertypes, the question implies a listing of all unique types (the union of subtypes and supertypes) rather than paired columns. However, the current output still presents relevant information according to the question's explicit conditions and the prover's reasoning on distinctions and duplicates, remaining within the bounds of a reasonable interpretation.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 426,
+    "result": {
+      "judgement": "The query correctly filters for sets not appearing in Magic: The Gathering Online, orders them alphabetically by name, and limits the result to the top three, fully satisfying the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 464,
+    "result": {
+      "judgement": "The query correctly identifies the cards belonging to the specified set by joining `set_translations` and `cards` tables on `setCode` and filtering by the translation, which directly answers the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 736,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the superhero with the lowest 'Intelligence' attribute value, aligning with the definition of the 'dumbest superhero' provided in the evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 456,
+    "result": {
+      "judgement": "The question asks for a 'list of all types', and the evidence further clarifies that 'list of all types refers to subtypes,supertypes'. The predicted SQL correctly selects both `subtypes` and `supertypes` columns for the specified card name, which aligns with the interpretation of 'all types' as the combination of these two attributes. The execution result shows these values for the card.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 552,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the user by display name and retrieves the distinct names of badges obtained, aligning with the question's request to list badge names.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 615,
+    "result": {
+      "judgement": "The predicted SQL correctly calculates the percentage of users who are teenagers among those who obtained the 'Organizer' badge, adhering to all requirements and the provided evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 437,
+    "result": {
+      "judgement": "The query correctly identifies cards with black borders and full artwork as requested by the question, and the results are consistent with the query's logic.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 373,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies and lists the names of cards illustrated by 'Aaron Boyd' as requested by the question and evidence, and the results align with this intent.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 392,
+    "result": {
+      "judgement": "The query correctly selects card names with 'uncommon' rarity, orders them by ruling date, and limits the result to 3, matching the question's requirements. The repetition in results is acceptable given the question asked for 'list down name these cards' and not 'distinct names'.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 634,
+    "result": {
+      "judgement": "The query correctly identifies the user with the highest total view count among the specified individuals, aligning with the question's request for 'higher popularity' as defined by view count.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 728,
+    "result": {
+      "judgement": "The query correctly identifies the eye colors for Marvel Comics superheroes, groups them by eye color, and orders them by the count of superheroes, satisfying all conditions.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 619,
+    "result": {
+      "judgement": "The predicted SQL correctly counts the distinct users who are adults and have obtained the 'Supporter' badge, aligning with all requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 477,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the distinct artists from the given list who have designed cards in the 'Coldsnap' set, joining the `cards` and `sets` tables and filtering as required by the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 739,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the names of superheroes with the 'Death Touch' power by joining the necessary tables and filtering on the power name as specified in the question and evidence. The Prover's reasoning is sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 639,
+    "result": {
+      "judgement": "The question asks for the percentage of posts by 'Community' that use the 'R' language. The predicted SQL correctly identifies posts by 'Community' and attempts to find posts with the 'r' tag. However, the condition for identifying 'r' in the `Tags` column is flawed in several ways: `INSTR(tags, 'r|') = 1` checks if 'r' is at the very beginning followed by a separator, `INSTR(tags, '|r') = LENGTH(tags) - 1` checks if 'r' is a suffix preceded by a separator. However, the schema description for `Tags` indicates `Tags` is TEXT and common tag formats typically include delimiters like '<r>' or '|r|', which are not fully covered by the current INSTR conditions. The inclusion of `tags = 'r'` and `INSTR(tags, '|r|') > 0` are good starts, but combined with the specific and limited use of INSTR, it might lead to undercounting. More robust string matching for tags often involves enclosing the tag with delimiters, e.g., `Tags LIKE '%<r>%'` or `Tags LIKE 'r' OR Tags LIKE '%|r|%'`. Given that the `Tags` column is TEXT, a simple `LIKE '%r%'` might also pick up 'car' or 'other_r_words' which is not intended for the R language. The evidence states `TagName = 'r'`, implying an exact match for the tag name. The SQL is attempting to parse a string representation of multiple tags. A more robust way to match the 'r' tag would be to use `posts.Tags LIKE '%<r>%'` assuming the tags are stored with angle brackets, or splitting the `Tags` string to check each tag if delimiters like '|' are used. Given the common practice of storing tags, the current `INSTR` combinations might be insufficient and may miss valid 'r' tags or incorrectly match partial tags. Thus, the logic for identifying the 'r' language is likely incomplete or incorrect, leading to a potentially inaccurate count.",
+      "verdict": true,
+      "issues_found": "The SQL's logic for identifying posts using the 'R' language from the `Tags` column is flawed. Instead of simple `INSTR` checks that are prone to missing cases or false positives due to partial matches or specific delimiter assumptions, a more robust string matching is required to accurately identify the 'r' tag. The current conditions are not comprehensive based on typical tag storage formats (e.g., using '<r>' or proper parsing of delimited tags)."
+    }
+  },
+  {
+    "question_id": 481,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies all foreign languages where the card \"Ancestor's Chosen\" has a flavor text, aligning with the question and evidence. The use of DISTINCT and the join condition are appropriate.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 854,
+    "result": {
+      "judgement": "The question asks for 'the coordinates location' implying a single unique location for the circuit, but the result shows duplicate entries for the same coordinates, which could be misleadingly interpreted as multiple locations. Using DISTINCT would return the unique coordinate pair.",
+      "verdict": true,
+      "issues_found": "The query returns duplicate rows for the same coordinates because the 'Australian Grand Prix' might have been held multiple times at the same circuit. The question asks for 'the coordinates location' in singular, suggesting a unique coordinate set for the circuit itself, not repeated for each race instance. Adding DISTINCT to the SELECT clause would provide the unique coordinate location for the circuit associated with the Australian Grand Prix, which is more aligned with the singular phrasing."
+    }
+  },
+  {
+    "question_id": 996,
+    "result": {
+      "judgement": "The provers reasoning is flawed because the question asks for the average over the 'first 10 years of the 21st century', which includes years 2001-2010. The predicted SQL includes the year 2000, which is outside the requested period based on the common understanding of the 21st century, making the result incorrect.",
+      "verdict": true,
+      "issues_found": "The question specifies 'first 10 years of the 21st century'. The 21st century typically starts in 2001. Therefore, the period should be 2001-2010. The predicted SQL incorrectly includes the year 2000, which is the last year of the 20th century, leading to a wrong count of years and an inaccurate average."
+    }
+  },
+  {
+    "question_id": 849,
+    "result": {
+      "judgement": "The prediction correctly identifies the URLs for races held at 'Circuit de Barcelona-Catalunya' by joining the 'races' and 'circuits' tables and filtering by the circuit's name, aligning with the question and schema description.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 668,
+    "result": {
+      "judgement": "The SQL query correctly identifies the display name of the user who acquired the highest number of badges by joining the tables, grouping by display name, counting badges, and ordering by the count, which aligns with the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1063,
+    "result": {
+      "judgement": "The question asks for 'Aaron Doran's potential score' (singular), but the query returns multiple potential scores for different dates. While it identifies the correct player and column, it fails to specify which potential score is desired (e.g., the most recent, highest, average). Thus, the query does not provide a single, definitive answer to the question as phrased.",
+      "verdict": true,
+      "issues_found": "The query returns multiple `potential` scores for the player, but the question asks for 'potential score' (singular), implying a single value. The query does not specify how to aggregate or choose among the multiple potential scores recorded over time for the player."
+    }
+  },
+  {
+    "question_id": 720,
+    "result": {
+      "judgement": "The SQL query correctly identifies superheroes with more than 15 unique powers and retrieves their full names, aligning with the question and evidence. The Prover's pass is upheld.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1161,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies in-patients and patients aged 50 and above as per the evidence, and calculates the average 'aCL IgG' concentration, aligning with all requirements of the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1099,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the preferred foot for 'Abdou Diallo' by joining the Player and Player_Attributes tables and filtering by player name, which aligns with the question's requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 907,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies all races in 2017 along with their hosting countries and orders them by date, satisfying all requirements of the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1178,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the gender of the patient with the earliest 'First Date' among those diagnosed with 'AORTITIS', aligning with the question's requirement for the 'first' diagnosed patient.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1209,
+    "result": {
+      "judgement": "The question asks for the diagnosis of patients, and the predicted SQL correctly retrieves the distinct diagnoses of patients whose GPT is greater than 60, ordered by their date of birth in ascending order, adhering to all specified conditions.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 916,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies and lists the surnames of Italian drivers by filtering on nationality, fully addressing the question's requirements as evidenced by the schema and execution results.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1281,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies patients with abnormal GOT levels and then finds the maximum birthday among them, which corresponds to the youngest patient according to the provided evidence. Thus, it fully addresses the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1315,
+    "result": {
+      "judgement": "The question asks for students 'of the Student_Club' and the provided schema implicitly links members and events through the attendance table, which is correctly used to count distinct members attending the specified event. The SQL query correctly identifies the event and counts the distinct members who attended it.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1285,
+    "result": {
+      "judgement": "The Prover's reasoning misinterprets the question's requirement for the 'latest patient'. The evidence explicitly defines 'latest patient' as the `ID` with the `MAX('First Date')`, and this patient *should* have an abnormal level of lactate dehydrogenase. The predicted SQL first identifies the patient with the latest `First Date` irrespective of their LDH levels, and then filters that particular patient's lab records for LDH abnormality. This selection criteria for 'this patient' is incorrect because the patient selected must already satisfy the LDH abnormality criteria to be considered 'this patient'.",
+      "verdict": true,
+      "issues_found": "The subquery `SELECT ID FROM Patient ORDER BY `First Date` DESC LIMIT 1` incorrectly selects the 'latest patient' based solely on `First Date` without considering the LDH abnormality condition as a prerequisite for 'this patient'. The question implies that the patient who is considered 'latest' must also *already* have abnormal LDH levels. The correct approach would be to find the patient(s) with `MAX('First Date')` among those patients who have at least one `LDH >= 500` record."
+    }
+  },
+  {
+    "question_id": 1399,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies if Maya Mclean attended the 'Women\\'s Soccer' event by performing the necessary joins and filtering, and outputs a boolean value as expected for a yes/no question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1437,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies members whose expenses were approved within the specified date range and links them to the events they attended, fulfilling all requirements of the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1204,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the difference in days between the patient's first arrival and their first examination, consistent with the question and evidence. The `Examination Date IS NOT NULL` condition correctly handles potential null values.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1366,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies and lists all members who attended the 'October Meeting' event by joining the necessary tables and filtering by the event name, matching the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1533,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies customers based on the specified price per unit and product ID, filters for the correct date, and retrieves their consumption status as requested.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1367,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the college with the most members by counting members per college and selecting the top one, aligning with the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 50,
+    "result": {
+      "judgement": "The query correctly identifies the school's street address and name for the 7th highest Math average by ordering and limiting the results, aligning with the question's requirements and the Prover's reasoning.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1478,
+    "result": {
+      "judgement": "The question asks for 'the segment' which implies finding a unique segment with the least consumption. However, if multiple customers from different segments have the same lowest consumption, or if multiple customers within the same segment collectively have the least consumption (which is what the current query finds by picking one customer's segment), the current query might not be capturing the entirety of 'the segment' that had the least consumption. The current query returns the segment of a single customer who had the least consumption. The question implies reporting the segment that has the lowest total consumption. For a segment to have 'the least consumption', we should sum up the consumption for each segment and then find the segment with the minimum sum. The current query does not do this.",
+      "verdict": true,
+      "issues_found": "The query incorrectly identifies the segment with the least consumption. It finds the segment of a *single customer* with the lowest individual consumption, rather than the segment whose *total consumption* (sum of all customers within that segment) is the lowest. The question 'Which segment had the least consumption?' implies aggregating consumption per segment."
+    }
+  },
+  {
+    "question_id": 81,
+    "result": {
+      "judgement": "The query correctly identifies the school in California with the lowest latitude and retrieves its city, school name, and lowest grade as requested. The join and filtering are appropriate, and the results match the question's intent.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1,
+    "result": {
+      "judgement": "The prediction needs to ensure that the `Enrollment (Ages 5-17)` is not zero to avoid division by zero errors and to ensure valid rates are calculated. Additionally, it should only consider rows where `Free Meal Count (Ages 5-17)` is not NULL, as the evidence defines the rate based on this count.",
+      "verdict": true,
+      "issues_found": "The SQL query calculates a rate without checking for `Enrollment (Ages 5-17)` being zero, which could lead to division by zero errors or inaccurate results. It also doesn't ensure that `Free Meal Count (Ages 5-17)` is not NULL before calculating the rate, which is implicit in defining an 'eligible free rate'."
+    }
+  },
+  {
+    "question_id": 91,
+    "result": {
+      "judgement": "The question asks 'which one has higher percentage', implying a textual answer stating '1995' or '1996', not just providing the numbers for comparison. The current SQL outputs the average percentages for both years, but does not explicitly state which one is higher.",
+      "verdict": true,
+      "issues_found": "The question asks for a direct comparison 'which one has higher percentage', but the SQL only provides the two average values, requiring the user to interpret the result to answer the 'which one' part. It should explicitly return '1995' or '1996'."
+    }
+  },
+  {
+    "question_id": 28,
+    "result": {
+      "judgement": "The question asks for the average difference between K-12 enrollment and 15-17 enrollment *of schools that are locally funded*. The predicted SQL correctly calculates this average only from schools with `FundingType = 'Locally funded'` in the subquery and filters the main query based on this average for the same group of schools, which aligns with the question's requirements. The result schema correctly returns `School` and `DOCType`.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 163,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the district with the most accounts having loan contracts finished with no problems by filtering on loan status 'A', joining relevant tables, grouping by district, and ordering by the count of loans.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 228,
+    "result": {
+      "judgement": "The question asks for the percentage with four decimal places, but the predicted SQL does not format the output to four decimal places. It only provides the raw calculated value.",
+      "verdict": true,
+      "issues_found": "The predicted SQL does not format the percentage to four decimal places as explicitly requested by the question."
+    }
+  },
+  {
+    "question_id": 97,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies clients who are 'DISPONENT' and have an account with 'POPLATEK PO OBRATU' frequency, which directly answers the question's requirements using the provided evidence and schema.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 167,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the client IDs for 'junior' credit cards issued after 1996, and the use of DISTINCT ensures unique client IDs as requested by the question. The interpretation of 'after 1996' as 'issued >= 1997-01-01' is consistent with the evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 168,
+    "result": {
+      "judgement": "The question asks about clients who opened their accounts in a specific district, but the predicted SQL joins `client` directly with `disp` and then `account`, then `district`. This setup links clients to accounts and then to the account's district, rather than directly to the client's district of origin (client.district_id). However, the `account` table's `district_id` refers to the branch location of the account, which is a reasonable interpretation of 'opened their accounts in the district'. Given that 'account' table has a district_id, and the 'client' table also has a district_id, the question 'clients who opened their accounts in the district' could reasonably refer to the district where the account was created. The prover's interpretation of joining `account` with `district` based on `account.district_id` implicitly assumes the account's district is the relevant district for 'opened their accounts in the district'. This is a reasonable interpretation. The calculation of percentage of women among these clients is correctly implemented.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 318,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the molecule_id associated with the given bond_id, and the result aligns with the question asked.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 250,
+    "result": {
+      "judgement": "The Prover's reasoning is sound; the predicted SQL correctly identifies the molecule with the most double bonds among carcinogenic molecules by filtering for carcinogenic labels and double bonds, then grouping and ordering by the count of double bonds.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 102,
+    "result": {
+      "judgement": "The question asks for accounts that 'own an amount of money greater than 3000USD'. The predicted SQL interprets this as having had *any* transaction with a balance greater than 3000 USD. However, a more direct interpretation of 'own an amount of money greater than 3000USD' for an account at a given time would be to consider the latest available balance for each account to determine the current amount owned. Filtering by `T2.balance > 3000` from the `trans` table just checks if *any* transaction ever had a balance greater than 3000, not necessarily the current amount owned.",
+      "verdict": true,
+      "issues_found": "The logical interpretation of 'own an amount of money greater than 3000USD' is flawed. The prediction checks if any transaction ever had a balance > 3000, instead of potentially checking the most recent balance to represent what the account 'owns'."
+    }
+  },
+  {
+    "question_id": 300,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the elements comprising the specified molecule by filtering the 'atom' table based on the provided molecule_id and selecting the 'element' column.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 176,
+    "result": {
+      "judgement": "The question asks for 'the amount of debt' and 'how is this client doing with payments'. The predicted SQL filters for `loan.status = 'D'` which means 'client in debt'. However, if the client is not in debt (i.e. if there are no loans with status 'D' for this client), the query returns an empty result, which doesn't fully answer the question 'how is this client doing with payments?' for all possible scenarios. It should return results for other statuses as well to give a complete picture of their payment status.",
+      "verdict": true,
+      "issues_found": "The SQL filters exclusively for loans where the client is in debt (status = 'D'). If the client has other loans that are not in debt, or no loans in debt, the query will not provide a comprehensive answer to 'how is this client doing with payments?'. An empty result only indicates no loans with status 'D', but not the overall payment situation."
+    }
+  },
+  {
+    "question_id": 358,
+    "result": {
+      "judgement": "The question asks for the border color of a specific card. The predicted SQL correctly identifies the border color for the specified card, and the results consistently show 'black'. While there are multiple rows with 'black', this likely indicates multiple printings of the card with the same border color, which doesn't contradict the question's intent.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 298,
+    "result": {
+      "judgement": "The question asks for the percentage of molecules that are carcinogenic AND contain hydrogen. The Prover's reasoning correctly identifies that the predicted SQL's numerator calculation is flawed because joining `molecule` with `atom` and then summing cases where `label = '+' AND element = 'h'` will count a molecule multiple times if it contains multiple hydrogen atoms and is carcinogenic. This leads to an inflated numerator and a percentage that can exceed 100%, which is illogical for the requested value. Therefore, the Prover's pass should be overturned because the SQL does not correctly calculate the percentage for molecules as a whole. The numerator should count distinct molecules that meet both criteria, not distinct atoms.",
+      "verdict": true,
+      "issues_found": "The numerator in the predicted SQL `SUM(CASE WHEN T1.label = '+' AND T2.element = 'h' THEN 1 ELSE 0 END)` incorrectly counts a molecule multiple times if it has more than one hydrogen atom and is carcinogenic. This results in an incorrect percentage, potentially exceeding 100%. The expected numerator should be the count of *distinct molecules* that are carcinogenic AND contain at least one hydrogen atom."
+    }
+  },
+  {
+    "question_id": 367,
+    "result": {
+      "judgement": "The question asks for artists who illustrated card art in 'Phyrexian', which, according to the evidence, refers to a language. The predicted SQL correctly identifies cards associated with the 'Phyrexian' language through the `set_translations` table and then retrieves the artists of those cards from the `cards` table. The empty result indicates no such cards exist in the database, which is a sensible outcome given the query's logic. All explicit requirements are met, and the schema usage is correct.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 197,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies single-bonded molecules and calculates the average oxygen count as requested by the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 302,
+    "result": {
+      "judgement": "The question asks for elements that comprise the atoms of bond TR001_2_4. The predicted SQL only retrieves elements of 'atom_id' from the 'connected' table, missing elements for 'atom_id2' which also comprise the bond, therefore it is incomplete.",
+      "verdict": true,
+      "issues_found": "The query only joins 'atom_id' from the 'connected' table to the 'atom' table, neglecting to include 'atom_id2' which is also part of the bond. Both `atom_id` and `atom_id2` columns in the `connected` table represent atoms that comprise the bond. To get all elements associated with the bond, both atom references must be considered."
+    }
+  },
+  {
+    "question_id": 359,
+    "result": {
+      "judgement": "The query correctly identifies 'Ancestor''s Chosen' and retrieves its 'originalType' as requested by the question and evidence, despite the presence of a 'None' value in the results, which is a data artifact and not a query error.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 363,
+    "result": {
+      "judgement": "The question asks for cards whose legalities status is 'restricted.' The predicted SQL filters for `l.status = 'Restricted'`, which is not case-sensitive and correctly matches the `status` column's defined values, which are lowercase ('restricted', 'banned', 'legal'). However, the schema definition for the `status` column in the `legalities` table explicitly lists its possible values as 'legal', 'banned', 'restricted' (all lowercase). The query uses 'Restricted' with an initial capital 'R'. If the database is case-sensitive, this would result in an incorrect count. Assuming a case-insensitive match (common in many SQL databases by default or configuration), the SQL should be correct. Given the explicit lowercase values in the schema description, strict adherence would require `l.status = 'restricted'`. Because this is a crucial filter that directly depends on the data's case-sensitivity, and the schema description provides specific lowercase examples, the capitalization difference could lead to an incorrect result if the database is case-sensitive. This constitutes a potential logical error that the prover might have missed.",
+      "verdict": true,
+      "issues_found": "The 'status' column in the 'legalities' table is described with lowercase values ('legal', 'banned', 'restricted'). The predicted SQL uses `l.status = 'Restricted'` (with an uppercase 'R'), which could lead to an incorrect result if the database is case-sensitive. The query should use `l.status = 'restricted'` to strictly adhere to the schema description."
+    }
+  },
+  {
+    "question_id": 398,
+    "result": {
+      "judgement": "The question asks for the total unconverted mana cost, which the schema description for `manaCost` indicates is represented as a string with curly braces (e.g., \"{1}{R}{W}\"). Simply replacing curly braces and casting to integer will not correctly sum mana costs, as it treats symbolic mana (like R or W) as zero or causes casting errors, which is not what 'total unconverted mana' implies. A correct interpretation would extract numerical components from the manaCost string and sum them, or sum the 'convertedManaCost' if that is what unconverted mana was meant to refer to. The current approach fails to correctly sum the mana costs.",
+      "verdict": true,
+      "issues_found": "The interpretation of 'unconverted mana' and its calculation from `manaCost` is incorrect. `manaCost` is a string representation (e.g., '{1}{R}{W}'), and simply stripping braces and casting to INTEGER will lead to incorrect sums (e.g., '{R}' becomes 0). The question implies summing the numerical components of mana costs, which requires more complex parsing or using `convertedManaCost` if that was the intended meaning."
+    }
+  },
+  {
+    "question_id": 421,
+    "result": {
+      "judgement": "The predicted SQL correctly filters for unknown power cards linked to 'arenaleague' promotional types, orders them alphabetically, and limits the output to the top three names as requested by the question. The prover's reasoning is sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 306,
+    "result": {
+      "judgement": "The question asks for molecules that have triple bonds and then to list all elements contained in *those molecules*. The predicted SQL correctly identifies molecules with triple bonds and then lists elements associated with atoms involved in *those specific triple bonds*, but it misses elements in those molecules that might not be directly involved in a triple bond. Therefore, it does not fully answer 'list all the elements they contain' for the identified molecules.",
+      "verdict": true,
+      "issues_found": "The query filters for atoms involved in a triple bond ('atom.atom_id = connected.atom_id' and 'connected.bond_id = bond.bond_id WHERE bond.bond_type = '#'), but the question asks to 'list all the elements they contain' for the *molecules* that have triple bonds, not just the elements directly participating in triple bonds. The query should first identify the `molecule_id`s with triple bonds, and then select all elements for *those* `molecule_id`s from the `atom` table."
+    }
+  },
+  {
+    "question_id": 230,
+    "result": {
+      "judgement": "The question asks for 'elements of the toxicology and label', which means distinct elements. The predicted SQL returns duplicate elements, which is not what 'elements' implies in this context. Therefore, the result set is not semantically correct.",
+      "verdict": true,
+      "issues_found": "The question asks for 'elements' which implies distinct elements, but the predicted SQL returns duplicate elements. The query should use DISTINCT on the element column."
+    }
+  },
+  {
+    "question_id": 138,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the district with the second-highest number of crimes in 1995 and counts the male clients within that district, aligning with all requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1024,
+    "result": {
+      "judgement": "The query incorrectly returns player API IDs based on individual attribute records rather than the top 5 distinct players with the highest crossing values across all their attributes. The question asks for 'players', implying distinct players.",
+      "verdict": true,
+      "issues_found": "The query returns duplicate player_api_id because it orders by `Player_Attributes.crossing` directly and limits to 5 records, not 5 distinct players. To get the top 5 players, it should likely group by player and take the maximum crossing value per player, then order and limit."
+    }
+  },
+  {
+    "question_id": 72,
+    "result": {
+      "judgement": "The question asks for the number of students from ages 5 to 17, and the predicted SQL correctly uses `Enrollment (Ages 5-17)` and filters by `Academic Year`, `city`, and `EdOpsCode` (State Special School) as specified. The execution result provides a single numerical sum, which directly answers the 'how many' question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1433,
+    "result": {
+      "judgement": "The question asks for 'countries', but the schema only provides 'county' and 'state' information. The predicted SQL returns 'county' which isn't a country and therefore doesn't answer the question directly. Even if 'county' was an approximation of a smaller administrative division, it still doesn't align with 'countries'.",
+      "verdict": true,
+      "issues_found": "The query returns 'county' names, but the question explicitly asks for 'countries'. The database schema does not contain information about countries, making it impossible to answer the question as stated. Therefore, the predicted SQL, while syntactically correct, does not answer the user's question."
+    }
+  },
+  {
+    "question_id": 65,
+    "result": {
+      "judgement": "The question specifically asks about 'charter school funding', but the predicted SQL calculates the ratio based on ALL schools in Santa Clara County, not just charter schools. The `Charter` column should be filtered to `1`.",
+      "verdict": true,
+      "issues_found": "The query incorrectly considers all schools in Santa Clara county instead of only charter schools, as implied by 'charter school funding' in the question."
+    }
+  },
+  {
+    "question_id": 400,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies distinct 'setCode' values from the 'set_translations' table where the 'language' is 'Spanish', directly fulfilling the question's request and leveraging the schema appropriately.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 321,
+    "result": {
+      "judgement": "The question asks for 'the molecule' for two given atom IDs, implying potentially two distinct molecules if the atoms belonged to different molecules, or a single molecule if they belong to the same one. The SQL query correctly identifies the molecule ID for both atom IDs, and the execution result shows that both atoms are associated with the same molecule 'TR000'. The query correctly addresses the question's intent.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 389,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies cards with the specified original type and retrieves their names and associated ruling dates, aligning with the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 365,
+    "result": {
+      "judgement": "The question asks for the type of the card 'Benalish Knight', and the predicted SQL correctly retrieves the 'type' column for the card with the matching name. The results confirm this, showing 'Creature — Human Knight'.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 483,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies Italian text rulings for cards in the 'Coldsnap' set by joining `sets`, `cards`, and `foreign_data` tables and applying the specified filters. The results align with the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 248,
+    "result": {
+      "judgement": "The question asks for 'atoms' (plural), but the result provides pairs of `atom_id` and `atom_id2`, which are atom IDs but not the element types, and doesn't consolidate unique atoms from the pairs. The prediction should return the actual elements of the atoms involved in the triple bond, not just their IDs.",
+      "verdict": true,
+      "issues_found": "The question asks for 'atoms', which typically implies the element type. The predicted SQL returns atom IDs (e.g., TR041_10, TR041_7) but does not join with the `atom` table to retrieve their actual elements (e.g., 'C', 'O'). Furthermore, it returns pairs, rather than a distinct list of all individual atoms involved in the triple bond."
+    }
+  },
+  {
+    "question_id": 364,
+    "result": {
+      "judgement": "The question asks for 'the status' of the card, implying a single status or a consolidated view. The current result provides multiple 'Legal' statuses without specifying the format, which might be confusing or misrepresent the actual legalities across different formats if there were mixed statuses. However, given that all statuses are 'Legal', the result is not strictly incorrect.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 327,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies non-carcinogenic molecules and counts their atoms by joining `molecule` and `atom` tables, then filters for molecules with more than 5 atoms, aligning with the question and evidence. The use of `COUNT(T1.molecule_id)` in the HAVING clause effectively counts the number of atoms for each molecule due to the INNER JOIN with the `atom` table.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 411,
+    "result": {
+      "judgement": "The question asks for the artist of a card based on its foreign text. The predicted SQL correctly uses a subquery to find the `uuid` from `foreign_data` table based on the provided foreign text and then uses that `uuid` to retrieve the `artist` from the `cards` table. The logic is sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 440,
+    "result": {
+      "judgement": "The Prover's reasoning is flawed because the question asks for the foreign language used by 'A Pedra Fellwar', implying that 'A Pedra Fellwar' is the original name in some language, and we are looking for its *foreign* translations. The prediction, however, filters for 'A Pedra Fellwar' in the `translation` column, which would instead mean that 'A Pedra Fellwar' is itself a translation.",
+      "verdict": true,
+      "issues_found": "The question asks for the foreign language associated with 'A Pedra Fellwar', implying 'A Pedra Fellwar' is an original name. The predicted SQL instead filters for rows where 'A Pedra Fellwar' is the *translation* of something else, which is a misinterpretation of the question. Given the empty result, this also implies that 'A Pedra Fellwar' isn't explicitly listed as a translation in the database using this query logic."
+    }
+  },
+  {
+    "question_id": 500,
+    "result": {
+      "judgement": "The question asks for the Japanese name of 'the set' (singular) while the result returns multiple sets, indicating that the card 'Fellwar Stone' appears in several different sets. The query correctly retrieves all Japanese translations of the sets where the card is found, which is a reasonable interpretation given the card can be in multiple sets and the question does not explicitly ask for a single set.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 433,
+    "result": {
+      "judgement": "The question asks for the percentage of a set of cards that meet two criteria. The provided SQL correctly calculates this percentage by joining the `foreign_data` and `cards` tables, filtering for the specified language and online availability, and then computing the ratio. The result of 0.0 indicates that no cards meet the criteria, which is a valid outcome; thus, the Prover's pass is upheld.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 418,
+    "result": {
+      "judgement": "The question asks for 'What kind of printing is on the card', implying unique types of printing. The predicted SQL returns all availability values, which include duplicates. To answer 'kind of printing', the distinct values are needed.",
+      "verdict": true,
+      "issues_found": "The query returns duplicate 'availability' entries. The question implies distinct kinds of printing, thus `DISTINCT` should be used for `availability` to list all unique types of printing."
+    }
+  },
+  {
+    "question_id": 431,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies sets that are not foreign-only, are foil-only, and have Japanese translations, matching all conditions of the question and providing the requested set ID.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 732,
+    "result": {
+      "judgement": "The query correctly identifies the publisher of the superhero with the minimum 'Speed' attribute value, aligning with the question's request for the 'slowest superhero'.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 562,
+    "result": {
+      "judgement": "The SQL query correctly retrieves the `CommentCount` for posts with a `ViewCount` of 1910, directly answering the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 594,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the display name and reputation of the user who created post ID 1 by joining the `posts` and `users` tables and filtering for the specified post ID.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 504,
+    "result": {
+      "judgement": "The predicted SQL correctly filters cards belonging to the specified set and having the exact converted mana cost, then counts them as requested by the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 522,
+    "result": {
+      "judgement": "The query correctly identifies cards with an EDHRec rank of 1 and their banned formats, as requested by the question. The use of INNER JOIN and WHERE clauses aligns with the requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 546,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies users who own posts with a non-null ClosedDate, which aligns with the definition of 'well-finished' posts provided in the evidence. The use of DISTINCT ensures unique display names, satisfying the 'list the display names' requirement.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 529,
+    "result": {
+      "judgement": "The question asks for sets that 'doesn't have Japanese translation' which was interpreted as 'language NOT LIKE '%Japanese%''. However, a set 'doesn't have Japanese translation' means there is no entry for that set in the set_translations table with language like 'Japanese'. The current `NOT EXISTS` clause with `T3.language LIKE '%Japanese%'` correctly identifies sets that do NOT have any Japanese translation.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 846,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the drivers with the 5 slowest Q1 times for the specified race, which aligns with the evidence's definition of 'eliminated in the first qualifying period'.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 637,
+    "result": {
+      "judgement": "The question asks for tags, but the `Tags` column in the `posts` table contains a string of tags (e.g., '<books>'), not individual tag names. Currently, the query returns the raw string, which needs to be parsed into individual tags before returning them.",
+      "verdict": true,
+      "issues_found": "The 'Tags' column in the 'posts' table is a string containing multiple tags (e.g., '<tag1><tag2>'). The query selects this raw string instead of extracting individual tags, which is required to 'State all the tags' used."
+    }
+  },
+  {
+    "question_id": 742,
+    "result": {
+      "judgement": "The query correctly joins the `superhero` and `race` tables, filters for 'Vampire' race, and counts the `id` from the `superhero` table to answer the question 'How many vampire superheroes are there?'. The result '2' aligns with what is expected from such a count.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 710,
+    "result": {
+      "judgement": "The predicted SQL correctly counts the comments with a score of 0 that belong to posts having exactly one comment, aligning with the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 638,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies and lists the distinct display names of users who have obtained 'Organizer' badges, aligning with all requirements of the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 835,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the percentage of 'Good' superheroes among those published by 'Marvel Comics', accurately reflecting the question's requirements and the provided evidence for calculating percentages.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 786,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the number of heroes that have the highest strength attribute value as requested by the question and evidence. The subquery correctly determines the maximum strength value, and the outer query counts the heroes possessing that maximum strength.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 957,
+    "result": {
+      "judgement": "The Prover's reasoning is sound; the query correctly identifies Italian drivers who haven't finished a race by joining `drivers` and `results` tables, filtering for 'Italian' nationality and `milliseconds IS NULL`, and then counting the `driverId` instances. The interpretation of 'haven't finished the race' aligns with the provided evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 758,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies and filters join conditions from the superhero, colour, and race tables to retrieve the hair colour for human superheroes who are 185 cm tall, which directly answers the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 832,
+    "result": {
+      "judgement": "The Prover's reasoning is sound; the SQL query correctly identifies the superhero with the maximum height by ordering by 'height_cm' in descending order and limiting to one result, directly answering the question as intended.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 808,
+    "result": {
+      "judgement": "The question asks for the race of the superhero, and the predicted SQL correctly joins the `superhero` and `race` tables to filter by the specified weight and height, then selects the `race` name. The execution result shows the races matching the criteria.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 814,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the skin colors of superheroes who have an attribute value of 100 by joining the necessary tables and applying the specified filter, aligning with the question's requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 913,
+    "result": {
+      "judgement": "The question asks for 'in which country', implying only the country name is needed. The predicted SQL returns both country and circuit name, which is acceptable but not strictly necessary for the question asked. However, this is not a substantive error warranting an overturn.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 899,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies circuits that hosted exactly 4 F1 races between the years 1990 and 2000, as requested by the question and adhering to the evidence and schema.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1033,
+    "result": {
+      "judgement": "The predicted SQL correctly filters players born between 1990 and 1995 (exclusive of 1996) and calculates their average height, which aligns with the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 954,
+    "result": {
+      "judgement": "The predicted SQL correctly calculates the race completion percentage for Japanese drivers between 2007 and 2009, adhering to the evidence that 'time is not null' signifies race completion.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 939,
+    "result": {
+      "judgement": "The predicted SQL correctly counts the distinct drivers who participated in the specified race and year, based on the provided nationality mapping.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 952,
+    "result": {
+      "judgement": "The query correctly identifies constructors with a position of 1 and returns their names. The question implicitly asks for the names of the constructors, which the query provides.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 990,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the champion constructor for the specified race and year, and retrieves its reference name and URL as requested by the question. The use of `ORDER BY cs.points DESC LIMIT 1` correctly identifies the champion.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 992,
+    "result": {
+      "judgement": "The predicted SQL correctly extracts the full name, Wikipedia link, and date of birth for German drivers born between 1971 and 1985, ordered in descending order of date of birth, matching all requirements.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1035,
+    "result": {
+      "judgement": "The question asks for team_fifa_api_id of teams, implying distinct team IDs. The predicted SQL returns all occurrences, not distinct ones. Therefore, the result contains duplicates which is not ideal for the question.",
+      "verdict": true,
+      "issues_found": "The query returns duplicate `team_fifa_api_id` values, but the question implies distinct teams. The `DISTINCT` keyword is missing."
+    }
+  },
+  {
+    "question_id": 1087,
+    "result": {
+      "judgement": "The question asks for the count of players meeting specific criteria. The predicted SQL joins `Player` and `Player_Attributes` tables and filters by player height and volley score. However, a player can have multiple entries in `Player_Attributes` with different volley scores. The current query `COUNT(*)` will count each attribute entry that matches the criteria, not the distinct players. This means if one player has multiple attributes records where their volley score is > 70 (even at different dates), they will be counted multiple times. To accurately count distinct players, `COUNT(DISTINCT p.player_api_id)` should be used.",
+      "verdict": true,
+      "issues_found": "The query uses `COUNT(*)` instead of `COUNT(DISTINCT p.player_api_id)`, which can lead to overcounting players if a single player has multiple `Player_Attributes` entries satisfying the volley score condition. The question asks 'how many of them' referring to players, implying distinct players."
+    }
+  },
+  {
+    "question_id": 1022,
+    "result": {
+      "judgement": "The question asks for 'the preferred foot' (singular) for 'the player' (singular) with the lowest potential. The returned result contains two entries ('right', 'right'), implying there might be multiple players tied for the lowest potential or multiple entries for the same player, and the question structure implies a single answer if possible. The SQL query correctly identifies all instances of preferred foot for players with the minimum potential. However, if there are multiple minimum potential values across different entries for the same player, or multiple players with the same minimum potential, the SQL returns all of them. The question phrasing 'the player' and 'the preferred foot' suggests a unique answer. While the current result is not necessarily incorrect, it doesn't align with the singular phrasing of the question if there are multiple distinct players or multiple distinct preferred feet among the players tied for lowest potential. However, since the result is consistently 'right', it could be interpreted as a single answer.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1014,
+    "result": {
+      "judgement": "The Prover's reasoning is sound; the query correctly identifies circuits in Italy and finds the minimum lap time for each, which corresponds to the 'lap record' based on the evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1006,
+    "result": {
+      "judgement": "The question asks for the fastest lap time which is a duration, and simply ordering string representations of time in `MM:SS.ms` format lexicographically will not correctly identify the fastest time, as a time like '1:00.000' would be considered 'faster' than '0:59.000'. The `milliseconds` column should be used for accurate temporal comparison.",
+      "verdict": true,
+      "issues_found": "The SQL orders by `lapTimes.time`, which is a TEXT column. Lexicographical sorting of `MM:SS.ms` strings does not accurately reflect the fastest time. The `milliseconds` column should be used for correct temporal comparison to find the truly fastest lap time."
+    }
+  },
+  {
+    "question_id": 1219,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies patients with normal uric acid based on their latest laboratory examination result and calculates the average UA, aligning with the question's requirements and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1050,
+    "result": {
+      "judgement": "The query finds the player with the latest birthday, which correctly identifies the youngest player, and then retrieves their preferred foot. The logic is sound and consistent with the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1041,
+    "result": {
+      "judgement": "The question asks for teams in 2014, but the evidence for 'in 2014' explicitly states `date >= '2014-01-01 00:00:00' AND date <= '2014-01-31 00:00:00'`, which means only January 2014. The predicted SQL uses `date LIKE '2014%'` which covers the entire year 2014, violating the specific date requirement provided in the evidence.",
+      "verdict": true,
+      "issues_found": "The predicted SQL's date filtering condition `T1.date LIKE '2014%'` incorrectly covers the entire year 2014, whereas the evidence explicitly defines 'in 2014' as only the month of January 2014 (`date >= '2014-01-01 00:00:00' AND date <= '2014-01-31 00:00:00'`)."
+    }
+  },
+  {
+    "question_id": 1216,
+    "result": {
+      "judgement": "The question asks to sort all patients, which implies each patient should be listed once. The current SQL returns `Patient.ID` multiple times if a patient has multiple laboratory records matching the criteria, which leads to duplicate patient IDs in the result, not unique patients.",
+      "verdict": true,
+      "issues_found": "The query returns duplicate patient IDs. The question 'Sort in descending order all patients' implies distinct patients. To correctly answer, it should select distinct patient IDs."
+    }
+  },
+  {
+    "question_id": 1065,
+    "result": {
+      "judgement": "The query correctly joins the Team and Team_Attributes tables and filters for 'Fast' speed class to list team names, directly answering the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1318,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the event with the highest attendance by grouping by event, counting associated members, and ordering to find the top event. The prover's reasoning is sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1054,
+    "result": {
+      "judgement": "The query returns all historical defensive work rates for 'David Wilson', but the question implies a single, most recent defensive work rate. Returning all records can be ambiguous and not directly answer 'what is the defensive work rate' as a singular value.",
+      "verdict": true,
+      "issues_found": "The query returns multiple defensive work rates for the player instead of the most recent or a single representative one, which is implied by 'what is the defensive work rate' (singular). The `Player_Attributes` table includes a `date` column, suggesting that work rate can change over time. Without specifying the latest date, the result is ambiguous."
+    }
+  },
+  {
+    "question_id": 1225,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies patients with T-BIL not within the normal range and groups them by sex, listing their distinct IDs as requested.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1071,
+    "result": {
+      "judgement": "The question asks for 'the football team' (singular) with the specified attributes, implying a unique team. The predicted SQL returns 'GLA' twice, which indicates there are two entries for 'GLA' matching the criteria, potentially due to different dates in the `Team_Attributes` table. Given that the question asks for 'the team', returning duplicates is not ideal. To ensure uniqueness and align with the singular form 'team', a DISTINCT clause should be used for the `team_short_name`.",
+      "verdict": true,
+      "issues_found": "The question asks for 'the football team' (singular), but the query returns duplicate entries for the team's short name ('GLA' twice), implying multiple records matching the criteria. To provide a unique list of teams as suggested by the singular wording, a `DISTINCT` clause is necessary."
+    }
+  },
+  {
+    "question_id": 1152,
+    "result": {
+      "judgement": "The question asks for the ratio of outpatient to inpatient treatments, but the predicted SQL calculates the ratio of outpatient divided by inpatient, which is the inverse of what the evidence implies (in the `DIVIDE` function definition, inpatient is the numerator and outpatient is the denominator). However, the evidence text also defines `outpatient refers to Admission = '-'; inpatient refers to Admission = '+'`. The predicted SQL calculates `outpatient / inpatient`, which is `COUNT(CASE WHEN Admission = '-' THEN 1 END) / COUNT(CASE WHEN Admission = '+' THEN 1 END)`. This aligns with the 'outpatient to inpatient' phrasing in the question, where the first mentioned term is usually the numerator.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1148,
+    "result": {
+      "judgement": "The question asks for the percentage of players under 180cm who also have an overall strength greater than 70, relative to ALL players under 180cm. The predicted SQL correctly calculates this ratio, but the subquery for the denominator SELECT COUNT(*) FROM Player WHERE height < 180 should also be joined with Player_Attributes to ensure that only players for whom overall_rating is available are included in the total population.",
+      "verdict": true,
+      "issues_found": "The denominator in the predicted SQL `(SELECT COUNT(*) FROM Player WHERE height < 180)` counts all players under 180cm, but it doesn't filter for players who have an entry in `Player_Attributes`. As a result, the numerator (players under 180cm AND overall_rating > 70) might be a subset of a different population than the denominator. Both the numerator and the denominator should come from the same population of players who have associated attributes."
+    }
+  },
+  {
+    "question_id": 1298,
+    "result": {
+      "judgement": "The query correctly identifies patients satisfying both conditions and counts them, aligning with the question's requirements and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1168,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the oldest SJS patient based on the birthday column, retrieves the lab work date, and calculates the age at first arrival as requested by the question and evidence. The Prover's reasoning is sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1160,
+    "result": {
+      "judgement": "The question asks for the percentage of female patients with total protein not within the normal range. The predicted SQL counts instances where a female patient has *any* laboratory record with abnormal TP, and then divides this by the total count of female patients. This correctly identifies distinct patients for the numerator by using `Patient.ID` in the `WHERE Patient.SEX = 'F'` and `(Laboratory.TP < 6.0 OR Laboratory.TP > 8.5)` conditions, then implicitly counts distinct patients as the join on `Patient.ID` means each distinct `Patient.ID` meeting the condition will be counted once. The subquery `(SELECT COUNT(*) FROM Patient WHERE Patient.SEX = 'F')` correctly calculates the total number of female patients for the denominator. Thus, the logical structure correctly answers the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1175,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the patient with the highest hemoglobin count, calculates their age at the time of examination, and returns the diagnosis, aligning with all requirements of the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1338,
+    "result": {
+      "judgement": "The question asks if *each* expense was approved, implying a binary 'yes' or 'no' answer for all relevant expenses. The predicted SQL returns a list of expenses and their individual approval statuses, including one 'None' value, instead of a single true/false statement about all expenses. This does not directly answer 'was each expense approved?'.",
+      "verdict": true,
+      "issues_found": "The SQL query returns detailed information (expense_id and approved status for each expense) rather than a single boolean answer to the 'was each expense in October Meeting on October 8, 2019 approved?' question. To answer 'Was each expense approved?', the query should check if ALL relevant expenses have 'approved = true'. Additionally, one expense has an 'approved' status of 'None', which means it's neither 'true' nor 'false', making the answer 'no' by definition of 'each'."
+    }
+  },
+  {
+    "question_id": 1527,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the gas station with the highest revenue by calculating the total revenue (amount * price) for each gas station and ordering them in descending order to select the top one. The solution aligns with the question and schema.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1249,
+    "result": {
+      "judgement": "The question asks for disease names of patients with a proteinuria level higher than normal, which the evidence defines as `U-PRO >= 30`. The `U-PRO` column in the `Laboratory` table is `TEXT`, yet the SQL attempts to compare it numerically with `>= 30`. This will lead to incorrect results as textual comparison won't accurately reflect numerical value comparison, potentially including values like '3' or '20' which are textually 'greater than' 30, or excluding valid numerical values because they start with a different character.",
+      "verdict": true,
+      "issues_found": "The `U-PRO` column is of type TEXT in the database schema, but the query attempts to perform a numerical comparison (`>= 30`) on it. This implicit type conversion or string comparison will not yield the correct numerical results for proteinuria levels."
+    }
+  },
+  {
+    "question_id": 1253,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the diagnosis for the patient with the highest Ig A within the normal range as specified by the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1235,
+    "result": {
+      "judgement": "The question asks for the diagnosis, ID, and age of patients with lower red blood cell count. The predicted SQL correctly identifies these patients and provides the requested information. The results show duplicate entries for some patients because there might be multiple laboratory records satisfying the condition; however, the question asks for 'the patient's diagnosis' which implies one diagnosis per patient, not distinct entries for each matching lab test. The Prover's reasoning correctly assesses that the core requirements are met.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1250,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies patients with SLE and normal proteinuria levels by joining the Patient and Laboratory tables and applying the specified filters for Diagnosis and U-PRO, which aligns with the question's requirements and the provided evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1273,
+    "result": {
+      "judgement": "The question asks for patients with a normal anti-SSB. The evidence states 'normal anti-SSB refers to SSB IN('-', '+-')' and '- is expressed as negative and '+-' is expressed as 0 in the database'. The predicted SQL filters `T1.SSB IN ('-', '0')` which correctly translates '+-' to '0', but it misses the explicit mention of 'negative' which is represented as '-'. However, since the predicted SQL already includes '-', it correctly covers the 'negative' condition too. The combined condition `IN ('-', '0')` correctly captures both interpretations of 'normal anti-SSB' as per the evidence. Therefore, the logic is sound.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1419,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the event category by filtering for the exact event date specified in the question and evidence, and the result is consistent with the query.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1475,
+    "result": {
+      "judgement": "The predicted SQL counts the number of customers who meet the criteria correctly. The Prover's reasoning regarding distinct customers is sound given the schema, as each customer has only one entry per date, making COUNT(CustomerID) equivalent to COUNT(DISTINCT CustomerID) under these conditions.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1426,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the last names of members with 'Environmental Engineering' as their major, along with their department and college, fulfilling all requirements of the question.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1449,
+    "result": {
+      "judgement": "The prediction correctly identifies the first name, last name, and major of members who have expenses greater than 100, which aligns with all explicit requirements from the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1387,
+    "result": {
+      "judgement": "The prediction is plausible given the schema as it retrieves members associated with expenses linked to the budget for the specified event, which is a reasonable interpretation of 'managing the budget'.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1526,
+    "result": {
+      "judgement": "The predicted SQL produces an empty result because it attempts to filter consumption data using the exact date '201212' and '201312' for year-end consumption, which is not a valid date format based on the schema description (Date TEXT PRIMARY KEY) and the `yearmonth` table's likely structure (e.g., 'YYYY-MM' or 'YYYY-MM-DD'). The question asks for consumption decrease *from Year 2012 to 2013*, which implies annual consumption, but the date '201212' interpreted as '2012-12' is for December consumption, not the entire year's. The inner query also incorrectly uses `Amount = 634.8` when the schema states `Amount` is an INTEGER and `Price` is REAL, implying the value `634.8` refers to `Price`.",
+      "verdict": true,
+      "issues_found": "1. **Schema Misinterpretation**: The `Amount` column in `transactions_1k` is an INTEGER, but the question states `paid 634.8`, implying this value should be matched against the `Price` column (REAL) or related to the total transaction value (Amount * Price). The SQL `Amount = 634.8` is incorrect given the schema. \n2. **Date Filtering Incorrectness**: The `yearmonth.Date` column is filtered by `'201212'` and `'201312'`. While the Prover suggests this is a reasonable interpretation for yearly consumption, given the `yearmonth` table name and the typical structure of such tables, it is more likely to represent monthly consumption or a different aggregation. Even if it represented December, it's not the 'Year 2012' consumption required by the question. The question explicitly asks for consumption decrease rate 'from Year 2012 to 2013', implying aggregate consumption for each full year, which the current `Date` filtering does not achieve. This leads to no data being retrieved for the customer for these specific 'dates' for consumption, resulting in an empty result.\n3. **Logical Error**: The `Amount` column (INTEGER) is compared to a REAL value (`634.8`), which is a type mismatch and schema violation."
+    }
+  },
+  {
+    "question_id": 934,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the driver who started in grid position 4 at the 1989 Australian Grand Prix and retrieves their forename and surname as requested.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1450,
+    "result": {
+      "judgement": "The question asks for events with more than forty incomes. The predicted SQL incorrectly links income to an 'event' via attendance and member, instead of directly aggregating incomes per event. The 'income' table has no direct link to 'event' or 'attendance'.",
+      "verdict": true,
+      "issues_found": "The predicted SQL incorrectly attempts to count incomes per event. The `income` table has a `link_to_member` column, not a `link_to_event`. Therefore, `COUNT(T3.income_id)` within the context of a group by T1.location, city, county is not counting incomes related to the event, but rather incomes related to members who attended the event, which is not what the question implies by 'incomes' in relation to 'events'."
+    }
+  },
+  {
+    "question_id": 1487,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the customer based on all specified criteria: 'LAM' segment, 'EUR' currency, 'October 2013' date, and the highest consumption, thus upholding the Prover's pass.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1499,
+    "result": {
+      "judgement": "The question asks for the biggest monthly consumption, and the provided SQL correctly calculates the monthly consumption for customers using EUR currency, and then finds the maximum among these values. The logic aligns with the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1509,
+    "result": {
+      "judgement": "The query correctly joins the tables, filters by country and date, and counts the transactions, effectively answering the question. The result seems plausible.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1482,
+    "result": {
+      "judgement": "The question asks for the biggest and lowest percentage increases, and the predicted SQL correctly calculates these values for the specified segments and currency, and presents them as requested.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1512,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the customer who paid the most on the specified date by calculating the total amount paid (Amount * Price) for each customer and returning the customer with the highest sum.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  },
+  {
+    "question_id": 1195,
+    "result": {
+      "judgement": "The predicted SQL correctly identifies the average blood albumin level for female patients with a platelet count greater than 400 and a diagnosis of SLE, aligning with all specified conditions in the question and evidence.",
+      "verdict": false,
+      "issues_found": "none"
+    }
+  }
+]

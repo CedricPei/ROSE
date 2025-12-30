@@ -1,0 +1,1426 @@
+[
+  {
+    "question_id": 69,
+    "result": {
+      "expected_answer": "The status codes and shipment tracking numbers for items that have been ordered and shipped. Requires joining order items with shipments to ensure items are both ordered and shipped.",
+      "sql_description": "Retrieves order item status codes and shipment tracking numbers by joining Order_Items and Shipments tables on order_id.",
+      "reason": "The SQL correctly joins order items with shipments using order_id, ensuring items are both ordered (via Order_Items) and shipped (via Shipments). It selects the requested columns without extraneous constraints. Ambiguity about shipment-item relationships is resolved reasonably through order-level joining given the schema.",
+      "verdict": true,
+      "evidence": "Result shows order_item_status_code (e.g., 'Delivered', 'Out of Stock') and shipment_tracking_number (e.g., 6074, 8149) across 10 rows."
+    }
+  },
+  {
+    "question_id": 53,
+    "result": {
+      "expected_answer": "The product(s) with the highest total number of orders, identified by their product_id, product_name, and product_price. Must include all products if multiple share the maximum order count.",
+      "sql_description": "Retrieves products that have appeared in any order (regardless of frequency), as the subquery returns all product_ids from order_items without restricting to the maximum order count.",
+      "reason": "The subquery returns every product_id with any order count due to missing filtering for the maximum count, violating the 'most frequently' anchor. Predicted SQL returns all ordered products rather than only those with the highest frequency.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 65,
+    "result": {
+      "expected_answer": "A comprehensive list of all invoices showing invoice status code, invoice date, and associated shipment date(s). Since an invoice might have multiple shipments or none, multiple rows per invoice are acceptable.",
+      "sql_description": "Selects invoice status, invoice date, and shipment date from Invoices LEFT JOINed with Shipments on invoice_number. Will return one row per shipment per invoice with NULL in shipment_date for invoices lacking shipments.",
+      "reason": "The query retrieves every invoice with all required fields (status, date, and shipment date). LEFT JOIN ensures all invoices are included, and returning one row per shipment accounts for multiple shipments per invoice. Ambiguity regarding multiple shipment representations is resolved reasonably: multiple rows are acceptable as the question doesn't specify grouping/aggregation.",
+      "verdict": true,
+      "evidence": "20 rows: columns 'invoice_status_code', 'invoice_date', 'shipment_date'. Shows multiple entries for the same invoice (e.g., rows 1-2 with duplicate invoice dates '2018-01-28 20:08:22' and different shipment dates) and NULL shipment dates (e.g., row 0)."
+    }
+  },
+  {
+    "question_id": 70,
+    "result": {
+      "expected_answer": "Retrieve product_name and product_color for order_items that have been shipped (appear in Shipments table), potentially including duplicates as multiple shipments may exist.",
+      "sql_description": "Selects product_name and product_color by joining Products with Order_Items (for ordered items) and Shipments (for shipped status), returning all matching rows.",
+      "reason": "The SQL correctly retrieves only ordered items with shipments via table joins. The question neither specifies distinct results nor prohibits duplicates. The schema confirms shipment existence via order_id links, satisfying all required anchors.",
+      "verdict": true,
+      "evidence": "Result columns: [product_name, product_color]. Rows: 10 entries including duplicates (e.g., row0: iWatch-Red, row1: iPhone6s-Red)."
+    }
+  },
+  {
+    "question_id": 85,
+    "result": {
+      "expected_answer": "Usernames (login_name) and passwords (login_password) of all customers with phone numbers starting with '+12'",
+      "sql_description": "Retrieves customer first names and passwords where phone number starts with '+12'",
+      "reason": "The predicted SQL incorrectly selects 'customer_first_name' instead of 'login_name' as required for usernames. Question unambiguously requires usernames, which map to the login_name column in the schema.",
+      "verdict": false,
+      "evidence": ""
+    }
+  },
+  {
+    "question_id": 67,
+    "result": {
+      "expected_answer": "A list of distinct product names and the corresponding shipment dates for products that have been shipped, with no extraneous constraints (e.g., date ranges, status filters) since none are specified in the question or evidence.",
+      "sql_description": "Retrieves distinct combinations of product names and shipment dates by joining Products, Order_Items, and Shipments tables to ensure only shipped products are included.",
+      "reason": "The query satisfies the question's requirements by: (1) Linking products to shipments via order items to ensure only shipped products are considered. (2) Returning product names and shipment dates with DISTINCT to avoid redundant rows for the same product-date pair. (3) Including all relevant shipments without introducing unsupported constraints. Though the query does not explicitly exclude NULL shipment dates, the evidence shows no NULLs in the result, and the question/evidence does not mandate handling them.",
+      "verdict": true,
+      "evidence": "Result columns: 'product_name', 'shipment_date'. Contains 10 distinct rows with non-NULL values—e.g., 'iWatch' on '2018-03-11', 'iPhone6s' on '2018-03-16', and multiple entries for 'Dell keyboard' across different dates."
+    }
+  },
+  {
+    "question_id": 179,
+    "result": {
+      "expected_answer": "Vehicle ID and model for all vehicles that are manufactured by 'Ziyang' (including those with zero drivers) OR that have been driven by at least two drivers (requires existence in vehicle_driver).",
+      "sql_description": "Returns vehicle ID and model for vehicles manufactured by 'Ziyang' with at least one driver record (first query) OR vehicles with ≥2 driver records (second query), combining both sets with UNION.",
+      "reason": "The first query incorrectly requires vehicles manufactured by 'Ziyang' to have at least one driver record via the JOIN with vehicle_driver, excluding vehicles made by 'Ziyang' but never driven. The condition \"manufactured by 'Ziyang'\" should not depend on driver presence.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 71,
+    "result": {
+      "expected_answer": "List the names and colors of all products that have been shipped. A product is considered shipped if it appears in an order with a shipment record. Duplicates are acceptable since the question does not specify distinct products.",
+      "sql_description": "Retrieves product names and colors by joining Products, Order_Items, Orders, and Shipments, returning a row for each shipment instance.",
+      "reason": "The query correctly identifies shipped products via inner joins across relevant tables. Ambiguity exists around handling product duplication (shipped multiple times), but the question does not require distinct results. The chosen interpretation (listing per shipment instance) is reasonable and matches the SQL execution output.",
+      "verdict": true,
+      "evidence": "Product names and colors with duplicates, e.g., iPhone6s (Red) in rows 1,6,7,8 and iWatch (Red) in rows 0,9; Dell keyboard (Yellow) in rows 2,3."
+    }
+  },
+  {
+    "question_id": 340,
+    "result": {
+      "expected_answer": "For each building that has a region association, return the building's address and the corresponding region name.",
+      "sql_description": "Selects building addresses and region names by joining the building and region tables on Region_ID.",
+      "reason": "The query correctly retrieves the address from the building table and the region name from the region table using an inner join. This satisfies the requirement to return both attributes for each building-region association. The inner join naturally excludes buildings without regions, which aligns with the question's implication of region association.",
+      "verdict": true,
+      "evidence": "Result shows 7 rows with columns Address and Name (e.g., row0: '424 Spadina Crescent E' in 'Abruzzo', row1: '311 6th Ave N' in 'Aosta Valley')."
+    }
+  },
+  {
+    "question_id": 365,
+    "result": {
+      "expected_answer": "Customer details for the customer with the highest count of service interactions, counting all Customer_Interactions records per customer.",
+      "sql_description": "Retrieves customer details by joining Customers and Customer_Interactions, groups by customer ID, orders by interaction count descending, and returns the top result.",
+      "reason": "The SQL correctly interprets 'used services the most times' as counting all interactions per customer. No evidence requires filtering by status or other constraints. Arbitrary tie-breaking is acceptable per ambiguity principles.",
+      "verdict": true,
+      "evidence": "Customer_Details column, row 0: 'Hardy Kutch'"
+    }
+  },
+  {
+    "question_id": 383,
+    "result": {
+      "expected_answer": "Retrieve customer details for customers with at least one interaction where Status_Code is 'Stuck' and Services_and_Channels_Details is 'bad'. The result may include duplicate customer entries if multiple matching interactions exist.",
+      "sql_description": "Selects Customer_Details by joining Customers and Customer_Interactions, filtering interactions where Status_Code = 'Stuck' and Services_and_Channels_Details = 'bad'.",
+      "reason": "The predicted SQL satisfies all anchors: it correctly filters for interactions with 'Stuck' status and 'bad' service/channel details via the Services_and_Channels_Details column. Ambiguity regarding service/channel attributes is reasonably addressed by using the denormalized column. Duplicates are acceptable since the question doesn't require distinct customers.",
+      "verdict": true,
+      "evidence": "Returns 3 customer details at index 0: 'Miss Alexandra Kemmer MD', index 1: 'Sterling Spencer', index 2: 'Mr. Rollin Jakubowski'."
+    }
+  },
+  {
+    "question_id": 98,
+    "result": {
+      "expected_answer": "A list of all pairs (customer_first_name, product_name) representing each buyer and the product they purchased. This requires correctly joining Customers → Orders → Products via proper foreign keys.",
+      "sql_description": "Retrieves customer_first_name from Customers and product_name from Products by joining Customers to Orders via customer_id, then incorrectly joining Orders to Products via order_id = product_id.",
+      "reason": "The SQL uses invalid join condition T3.order_id = T2.product_id between Orders and Products. order_id and product_id represent distinct entities (order identifier vs product identifier) and should not be compared. The query fails to link products to orders through proper relationships (e.g., via Order_Items table or order_product mapping, missing in schema).",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 207,
+    "result": {
+      "expected_answer": "The distinct student answer texts along with their occurrence counts, presented in descending order by count.",
+      "sql_description": "Groups records by Student_Answer_Text, calculates the count of each group using COUNT(*), and sorts the results by count descending.",
+      "reason": "The query satisfies all explicit anchors: it lists all distinct student answer texts with their counts and sorts by count descending. No constraints are imposed beyond the question's requirements, and evidence confirms the result includes all texts with counts in descending order.",
+      "verdict": true,
+      "evidence": "Result columns: Student_Answer_Text and COUNT(*). Rows: Row 0 (ABC, 6), Row 1 (Student absent, 2), Row 2 (C, 2), Row 3 (D, 1), Row 4 (BCD, 1), Row 5 (AC, 1), ordered descending by count."
+    }
+  },
+  {
+    "question_id": 451,
+    "result": {
+      "expected_answer": "The distinct descriptions of detention types that have at least one associated detention record in the Detention table.",
+      "sql_description": "Selects distinct detention type descriptions by incorrectly joining Ref_Detention_Type and Detention tables on description-to-code instead of code-to-code.",
+      "reason": "The join condition incorrectly matches Ref_Detention_Type.detention_type_description (VARCHAR) with Detention.detention_type_code (CHAR). This violates the schema's foreign key relationship where Detention.detention_type_code should reference Ref_Detention_Type.detention_type_code. Correct join should be Ref_Detention_Type.detention_type_code = Detention.detention_type_code.",
+      "verdict": false,
+      "evidence": ""
+    }
+  },
+  {
+    "question_id": 74,
+    "result": {
+      "expected_answer": "The expected answer is the invoice statuses for orders that have not been shipped. Given the absence of an Orders table in the provided schema, this requires identifying invoices that are not linked to any shipment (interpreted as representing unshipped orders).",
+      "sql_description": "The predicted SQL attempts to retrieve invoice statuses by joining Invoices and Shipments, then filtering shipments whose order_id is not found in all shipment order_ids—a logically impossible condition.",
+      "reason": "The WHERE clause condition will never be satisfied because every shipment row's order_id exists in the Shipments table. This query cannot identify unshipped orders, which must lack shipment records. Additionally, without an Orders table, the approach fails to align with the question's requirement.",
+      "verdict": false,
+      "evidence": null
+    }
+  },
+  {
+    "question_id": 342,
+    "result": {
+      "expected_answer": "A list of building names and their corresponding number of stories, limited to buildings located in the region named 'Abruzzo'.",
+      "sql_description": "Retrieves building names and story counts from the building table where the region_id matches the region_id of 'Abruzzo' from the region table.",
+      "reason": "The SQL correctly identifies buildings in 'Abruzzo' through region_id linkage and returns the required attributes (name and number_of_stories) for each building. All explicit anchors are satisfied: region name filtering is properly implemented via subquery.",
+      "verdict": true,
+      "evidence": "Result shows building names and story counts; example row: 'La Renaissance Apartments' (24 stories) at position 0."
+    }
+  },
+  {
+    "question_id": 135,
+    "result": {
+      "expected_answer": "The id and name of every channel that has no program directed by Hank Baskett. This includes channels with no programs and channels whose programs were directed exclusively by others.",
+      "sql_description": "Retrieves all channels and removes those linked to Hank Baskett via programs. Returns channel_id and name for channels unassociated with Hank Baskett.",
+      "reason": "The logic correctly excludes channels directing any program by Hank Baskett using all necessary anchors (INNER JOIN ensures program-association). The EXCEPT operator handles negation accurately without invented constraints.",
+      "verdict": true,
+      "evidence": "Results show multiple channels (13 rows), including IDs 1-14 like 'BBC One' (row0), 'ITV' (row1), 'Dave' (row12), which are channels not directed by Hank Baskett according to execution."
+    }
+  },
+  {
+    "question_id": 548,
+    "result": {
+      "expected_answer": "The names of all clients (each distinct client) and the count of orders placed by each client individually, including clients with zero orders. Clients must not be merged even if they share the same name.",
+      "sql_description": "Retrieves client names and counts orders per client by grouping solely on name, using a left join to include clients without orders.",
+      "reason": "Grouping only by name may merge different clients with identical names, violating the requirement to count orders per individual client. The primary key (IdClient) should be used for grouping to ensure distinct client representation.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 462,
+    "result": {
+      "expected_answer": "The biographical data and student details for students who have at least one behaviour_monitoring_detail that is the most common (mode) across all behaviour records, AND also have at least one behaviour_monitoring_detail (which may differ) that is shared by exactly 3 distinct students.",
+      "sql_description": "Returns bio_data and student_details for students who have either the maximum number of behaviour_monitoring records per student or exactly 3 behaviour_monitoring records per student, without considering the actual behaviour details.",
+      "reason": "The question unambiguously refers to 'result' as behaviour details (content in behaviour_monitoring_details), not the count of records per student. The SQL fails to use behaviour_monitoring_details when grouping and instead counts monitoring records per student while incorrectly confusing 'result' with record counts. This omits the required anchoring to the most common behaviour detail and fails to check for details obtained by exactly 3 students.",
+      "verdict": false,
+      "evidence": ""
+    }
+  },
+  {
+    "question_id": 603,
+    "result": {
+      "expected_answer": "The title of the book with the highest numerical value in the review.Rank column, given the ambiguity in 'highest rank' meaning either best rank (lowest number) or largest rank number. This judgment adopts the interpretation that 'highest rank' means the maximum numerical rank value (largest number).",
+      "sql_description": "Retrieves the book title by joining book and review tables, orders results by review.Rank in descending order, and returns the top result.",
+      "reason": "The term 'highest rank' has ambiguous interpretation without evidence (could mean best/minimum rank or largest numerical rank). The query adopts the 'largest numerical rank' interpretation. Since the evidence provides no clarification, this reasonable interpretation is accepted per ambiguity handling rules. The SQL includes required anchors (join condition, ordering by Rank) and restricts to one result as needed.",
+      "verdict": true,
+      "evidence": "Title: 'A Dance with Dragons' (row 0)"
+    }
+  },
+  {
+    "question_id": 452,
+    "result": {
+      "expected_answer": "Distinct values of the detention_summary column from the Detention table, including NULL if present (since the question does not specify non-NULL descriptions).",
+      "sql_description": "Retrieves distinct values of the detention_summary column from the Detention table without any filters.",
+      "reason": "The query correctly selects distinct descriptions as required. The inclusion of NULL is acceptable because the question does not explicitly require non-NULL descriptions and the evidence provides no contradictory constraints.",
+      "verdict": true,
+      "evidence": "Result shows one row: detention_summary='None' (position 0), representing NULL values."
+    }
+  },
+  {
+    "question_id": 497,
+    "result": {
+      "expected_answer": "The date(s) of transcript(s) for the student who has the loan with the highest amount. If multiple students share the maximum loan amount, one student may be arbitrarily selected. All transcript dates for that student should be returned.",
+      "sql_description": "Retrieves transcript dates for the student with the highest loan amount (arbitrarily selected if multiple students have the same maximum loan).",
+      "reason": "The SQL correctly identifies a student with the maximum loan amount via ORDER BY/LIMIT 1 (acceptable without tie-breaking specification) and retrieves all associated transcript dates. The question does not specify which transcript to return, so returning all dates for the selected student is valid. Anchors for maximum loan and transcript linkage are satisfied.",
+      "verdict": true,
+      "evidence": "Result shows two transcript dates: '1973-08-09 00:00:00.000' (row 0) and '2014-09-13 00:00:00.000' (row 1)."
+    }
+  },
+  {
+    "question_id": 363,
+    "result": {
+      "expected_answer": "The details (Service_Details) of services that appear in more than 3 records in the Customer_Interactions table, interpreted as counting each interaction occurrence as one use.",
+      "sql_description": "Retrieves service details by joining Services and Customer_Interactions, grouping by service ID, and filtering for services with over 3 associated interaction records.",
+      "reason": "The SQL correctly implements counting each interaction as one 'use' without requiring DISTINCT (since the question doesn't specify unique interactions). It satisfies the explicit constraint (>3 uses) and aligns with the natural interpretation of 'used by more than 3 times' as total occurrences.",
+      "verdict": true,
+      "evidence": "Result shows one service: 'driving license' (row 0), implying it met the >3 usage threshold."
+    }
+  },
+  {
+    "question_id": 678,
+    "result": {
+      "expected_answer": "The distinct descriptions of document objects that are parent documents (i.e., documents that have at least one child document, identified by their Document_Object_ID appearing in another row's Parent_Document_Object_ID).",
+      "sql_description": "Retrieves distinct descriptions of document objects that have a parent (i.e., are child documents) by filtering rows where parent_document_object_id is not null.",
+      "reason": "The question explicitly requires descriptions of parent documents (documents that are parents), but the SQL retrieves descriptions of child documents (documents that have parents). This misalignment violates the anchor requirement for 'parent document' as defined by the schema's parent-child relationship.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 713,
+    "result": {
+      "expected_answer": "The document subset with the highest count of distinct documents, returning the subset ID, name, and distinct document count. 'Distinct documents' is interpreted as distinct Document_Object_ID values in Document_Subset_Members.",
+      "sql_description": "Joins document_subsets and document_subset_members, groups by subset ID and name, counts distinct document_object_id per subset, orders by count descending, and returns the top row.",
+      "reason": "The SQL correctly interprets 'distinct documents' as distinct Document_Object_ID (a reasonable choice given ambiguous schema). It satisfies all anchors: distinct count, grouping by subset attributes, and limiting to the top result. Evidence confirms the query executes successfully.",
+      "verdict": true,
+      "evidence": "Result row: Document_Subset_ID=183, Document_Subset_Name='Best for 2001', count=2"
+    }
+  },
+  {
+    "question_id": 554,
+    "result": {
+      "expected_answer": "The name of the client with the highest total quantity of books ordered (sum of Books_Order.amount).",
+      "sql_description": "Retrieves client names grouped by name, sums the quantity of books ordered per client from Books_Order, sorts by total quantity descending, and returns the top result.",
+      "reason": "The SQL correctly interprets 'greatest total amount of books' as the sum of Books_Order.amount (quantity) per client. It satisfies all anchors: joins Client→Orders→Books_Order to compute per-client totals, groups appropriately, and uses LIMIT 1 for the singular result. Ambiguity in whether 'amount' refers to quantity or monetary value is resolved in favor of quantity (Books_Order.amount), which aligns with the question's phrasing and schema evidence.",
+      "verdict": true,
+      "evidence": "Result column 'Name' shows 'Peter Doe' (row 0) as the client with the highest total book quantity."
+    }
+  },
+  {
+    "question_id": 448,
+    "result": {
+      "expected_answer": "List the amount and date of loans for students with two or more achievements. Since the question does not specify handling of multiple loans per student, returning one loan per student (arbitrarily chosen) is acceptable.",
+      "sql_description": "Joins Student_Loans and Achievements by student_id, groups by student_id, and returns one loan amount and date per student having at least two achievements.",
+      "reason": "The question ambiguously implies one loan per student despite potential multiple loans. The predicted SQL reasonably commits to this interpretation by grouping by student_id and selecting loan columns without aggregation, satisfying the two-or-more-achievements constraint via HAVING COUNT(*) >= 2.",
+      "verdict": true,
+      "evidence": "Result shows 6 rows (index 0 to 5) with non-null loan amounts and dates, each representing one student (with ≥2 achievements) and one arbitrarily selected loan."
+    }
+  },
+  {
+    "question_id": 464,
+    "result": {
+      "expected_answer": "The biographical information (bio_data) of students who have the behaviour monitoring detail that occurs most frequently in the Behaviour_Monitoring table. Accepts any one mode if multiple exist due to singular phrasing ('the most common result').",
+      "sql_description": "Retrieves bio_data for students linked to the behaviour_monitoring_details value with the highest occurrence count in Behaviour_Monitoring, allowing duplicate student entries if they have multiple matching records.",
+      "reason": "The SQL correctly identifies the mode of behaviour_monitoring_details and fetches bio_data for associated students. Duplicate student entries are acceptable as the question does not require distinct results. Singular phrasing ('the most common result') justifies LIMIT 1 without tie-handling.",
+      "verdict": true,
+      "evidence": "Execution result shows bio_data column with 6 rows (positions 0-5), including duplicates (e.g., 'Vanessa' at rows 0 and 4)."
+    }
+  },
+  {
+    "question_id": 647,
+    "result": {
+      "expected_answer": "A list of member names where nationality is explicitly not 'England'. NULL nationalities are excluded, which is acceptable given ambiguous handling of unknown values.",
+      "sql_description": "Retrieves names from the member table where Nationality is not equal to 'England'.",
+      "reason": "The SQL correctly filters for non-English nationalities. Excluding NULLs is reasonable since the question does not specify handling of unknown nationalities, and 'not England' implies known non-English values.",
+      "verdict": true,
+      "evidence": "Result shows 8 rows in the 'Name' column: Wally Lewis (row0), Brett Kenny (row1), Garry Jack (row2), Hugh McGahan Peter Sterling (row3), Mal Meninga (row4), No award given (row5), Andrew Johns (row6), Brad Fittler (row7)."
+    }
+  },
+  {
+    "question_id": 454,
+    "result": {
+      "expected_answer": "For each student (with at least one address), return their personal details (interpreted as bio_data column) and associated address type descriptions. Multiple rows per student are acceptable due to multiple address associations.",
+      "sql_description": "Retrieves bio_data from Students and address_type_description from Ref_Address_Types by joining Students_Addresses, returning one row per student-address association.",
+      "reason": "The SQL selects bio_data as personal details—a reasonable interpretation given the column name and ambiguity. It correctly links students to address types via Students_Addresses. No time filter is required as none is specified. Inner joins naturally exclude students without addresses, which aligns with the question's focus on students having address descriptions. Duplicate rows (e.g., Edison having multiple 'Home' entries) are acceptable since the question doesn't require distinct results.",
+      "verdict": true,
+      "evidence": "Result shows bio_data (e.g., 'Keshawn', 'Houston') with corresponding address_type_description (e.g., 'Home', 'College') across 15 rows, confirming retrieval of both requested fields."
+    }
+  },
+  {
+    "question_id": 578,
+    "result": {
+      "expected_answer": "List of book titles authored by Plato where the book's sale price is below the average sale price of all books.",
+      "sql_description": "Selects book titles by joining Book, Author_Book, and Author tables, filtering for author 'Plato' and books with sale price below the overall average sale price.",
+      "reason": "The SQL incorrectly joins tables: Book.Author (CHAR(4)) is mismatched with Author_Book.Author (NUMBER) per schema. Correct join should use Book.ISBN = Author_Book.ISBN to link books to authors. This flaw prevents accurate retrieval of Plato's books.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 820,
+    "result": {
+      "expected_answer": "Distinct city codes from the Direct_distance table that appear in either city1_code or city2_code where the distance value exceeds the average distance across all records.",
+      "sql_description": "Retrieves city1_code from rows where distance exceeds the overall average distance, and city2_code from rows where distance exceeds the same average, then combines them with UNION to remove duplicates.",
+      "reason": "The question ambiguously refers to 'cities with distance greater than average' without specifying aggregation per city. The predicted SQL reasonably interprets this as cities appearing in any pair where the pair's distance exceeds the global average. All required anchors (global average calculation, distance comparison) are satisfied, and duplicates are correctly handled via UNION.",
+      "verdict": true,
+      "evidence": "Result shows 19 distinct city codes: BAL (row0), BKK (row1), BOS (row2), DEL (row3), EWR (row4), HKG (row5), HON (row6), JNB (row7), LON (row8), LOS (row9), NYC (row10), PAR (row11), PEK (row12), PHL (row13), PIT (row14), SAN (row15), SFO (row16), TYO (row17), WAS (row18)."
+    }
+  },
+  {
+    "question_id": 697,
+    "result": {
+      "expected_answer": "List of document IDs for documents related to any document owned by Ransom. Due to ambiguity in relation direction (forward vs. bidirectional), we accept documents linked via forward direction (where Ransom-owned documents are the starting point).",
+      "sql_description": "Retrieves distinct Related_Document_Object_ID values from Document_Subset_Members where the starting document (Document_Object_ID) is owned by Ransom.",
+      "reason": "The question is ambiguous about relation direction. The SQL commits to the forward direction (Ransom-owned documents as starting point), which is reasonable given the schema. The anchor for ownership by Ransom is correctly enforced via WHERE clause.",
+      "verdict": true,
+      "evidence": "Result includes distinct document IDs: 5, 8, 9 (from column Related_Document_Object_ID)."
+    }
+  },
+  {
+    "question_id": 654,
+    "result": {
+      "expected_answer": "The names of club leaders (interpreted via the club_leader table) for clubs with overall ranking > 100. Each leader's name should appear individually, allowing duplicates if a person leads multiple qualifying clubs.",
+      "sql_description": "Retrieves member names by joining club, club_leader, and member tables, filtering for clubs with overall ranking > 100.",
+      "reason": "The SQL correctly uses the club_leader table to identify leaders (reasonable interpretation given schema ambiguity) and applies the ranking constraint. It returns individual leader names per qualifying club, satisfying the question's requirements despite potential duplicates or placeholder names like 'No award given', which are acceptable without explicit exclusion requirements.",
+      "verdict": true,
+      "evidence": "Result includes 4 rows in the Name column: row0='Brett Kenny', row1='Andrew Johns', row2='Wally Lewis', row3='No award given'."
+    }
+  },
+  {
+    "question_id": 536,
+    "result": {
+      "expected_answer": "A list of all ISBNs from the Book table along with the count of orders for each book, including books with zero orders.",
+      "sql_description": "Retrieves all ISBNs from the Book table and counts the number of associated orders from Books_Order using a LEFT JOIN and GROUP BY, ensuring books without orders are included with a count of zero.",
+      "reason": "The query correctly returns every ISBN and accurately counts orders per book using LEFT JOIN to include books without orders. COUNT(T2.IdOrder) handles nulls appropriately by returning zero when no orders exist. The question requires all books and their order counts, which is satisfied.",
+      "verdict": true,
+      "evidence": "Result shows ISBNs (e.g., '0853477468299') with order counts including zero, and others with positive counts (e.g., '8233771378567' with 4 orders), covering all books."
+    }
+  },
+  {
+    "question_id": 860,
+    "result": {
+      "expected_answer": "Distinct names of sailors who reserved at least two distinct boats (counting unique boat IDs).",
+      "sql_description": "Selects sailor names by joining Sailors and Reserves tables, grouping by sailor ID, and filtering for sailors with two or more reservations (without distinct boat counting).",
+      "reason": "The question requires counting distinct boats reserved per sailor (implied by 'two or more boats'), but the SQL uses COUNT(*) which counts reservations regardless of boat uniqueness. This may incorrectly include sailors who reserved the same boat multiple times.",
+      "verdict": false,
+      "evidence": ""
+    }
+  },
+  {
+    "question_id": 939,
+    "result": {
+      "expected_answer": "List of earpad types that are exclusively used in headphones with non-plastic construction (i.e., no headphone using these earpads has plastic construction).",
+      "sql_description": "Retrieves distinct earpad types from headphones where the construction material is not plastic.",
+      "reason": "The SQL fails to enforce the 'never' requirement by only filtering individual non-plastic headphones. It returns earpads used in any non-plastic headphone but does not exclude earpads that also appear in plastic headphones. Required anchor: exclusion of earpads associated with plastic construction.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 597,
+    "result": {
+      "expected_answer": "For each book, report the maximum and minimum number of chapters. Since each book has a single chapters value (Book_ID is primary key), both values should be identical per book.",
+      "sql_description": "Groups books by Book_ID and calculates the maximum and minimum chapters value for each book.",
+      "reason": "The SQL correctly computes per-book chapter statistics. Given Book_ID is the primary key, each group contains one row, making max/min chapters identical. This satisfies the question's requirement to report max/min chapters for each book.",
+      "verdict": true,
+      "evidence": "Result shows per Book_ID: max(chapters) equals min(chapters) (e.g., Book_ID 1: 73/73, Book_ID 2: 70/70, Book_ID 3: 82/82, etc.)"
+    }
+  },
+  {
+    "question_id": 698,
+    "result": {
+      "expected_answer": "The document object IDs that are related to any document owned by Ransom. Specifically, the Related_Document_Object_ID values linked to Document_Object_ID entries where Owner is 'Ransom' in Document_Subset_Members.",
+      "sql_description": "Retrieves Related_Document_Object_ID values from Document_Subset_Members where the associated Document_Object_ID has Owner 'Ransom'.",
+      "reason": "The SQL correctly anchors on documents owned by Ransom via T2.Owner='Ransom' and fetches their related document IDs through Document_Subset_Members. The schema confirms Document_Subset_Members defines the relationship between Document_Object_ID and Related_Document_Object_ID, aligning with the natural interpretation of 'related to'.",
+      "verdict": true,
+      "evidence": "Result shows Related_Document_Object_ID values: [5, 8, 9]."
+    }
+  },
+  {
+    "question_id": 962,
+    "result": {
+      "expected_answer": "Neighborhoods where no headphones are in stock at any store within them (i.e., every store in the neighborhood has zero headphones).",
+      "sql_description": "Returns neighborhoods of stores that individually have no stock records, without verifying if the entire neighborhood has no headphones.",
+      "reason": "The question requires neighborhoods with no headphones in stock, meaning no store in the neighborhood has headphones. The predicted SQL only finds neighborhoods with at least one store lacking headphones, which does not ensure the entire neighborhood meets the condition. This violates the anchor requirement of zero headphones across the entire neighborhood.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 655,
+    "result": {
+      "expected_answer": "List of names of club leaders (from the member table) who joined their club (as recorded in club_leader table) before 2018.",
+      "sql_description": "Retrieves names from member table for club leaders with year_join before 2018 by joining club_leader and member tables.",
+      "reason": "SQL correctly identifies club leaders via club_leader table, applies 'before 2018' constraint (year_join < '2018' works for TEXT years in 'YYYY' format), and returns names. The result includes 'No award given' as a valid name since evidence doesn't exclude it.",
+      "verdict": true,
+      "evidence": "Names: Wally Lewis (row 0), Brett Kenny (row 1), No award given (row 2)"
+    }
+  },
+  {
+    "question_id": 717,
+    "result": {
+      "expected_answer": "A list of document subset names and the associated document id for every document id (from either Document_Object_ID or Related_Document_Object_ID in Document_Subset_Members) that is part of a document subset.",
+      "sql_description": "Joins Document_Subset_Members and Document_Subsets to return the subset name and Document_Object_ID for each row in Document_Subset_Members.",
+      "reason": "The question requires listing all document ids involved in subsets, but the predicted SQL only returns Document_Object_ID, missing document ids from Related_Document_Object_ID. The schema confirms both columns represent document ids in subset relationships, and the question's 'each document id' implies comprehensive coverage.",
+      "verdict": false,
+      "evidence": null
+    }
+  },
+  {
+    "question_id": 718,
+    "result": {
+      "expected_answer": "For each base document ID (the document we are relating from), list the document subset names and the ID of the actual document (either the base or related document ID) involved in the relation. The base document ID must appear in the results.",
+      "sql_description": "Retrieves document subset names and related document object IDs by joining document_subsets and document_subset_members tables.",
+      "reason": "The question requires listing subsets 'related to each document id' (implying a base document ID), but the predicted SQL omits the base document ID (Document_Object_ID) entirely. Without this anchor, the results cannot show which document the subsets are related to.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1006,
+    "result": {
+      "expected_answer": "The id and citation count of the paper with the highest number of citations. Since the question uses 'the most cited paper', it expects one row (even if multiple papers share the maximum count, returning one arbitrarily is acceptable).",
+      "sql_description": "Groups citations by cited_paper_id, counts citations per paper, orders by citation count descending, and returns the top row.",
+      "reason": "The SQL correctly computes citation counts and retrieves the paper with the highest count. The question does not specify tie-breaking, so LIMIT 1 is acceptable. No missing anchors.",
+      "verdict": true,
+      "evidence": "Returned row: cited_paper_id='P02-1040' with citation_count=1064."
+    }
+  },
+  {
+    "question_id": 789,
+    "result": {
+      "expected_answer": "A single number representing the count of students residing in China, determined by linking student city codes to cities in China.",
+      "sql_description": "Counts all student records joined with city records where the city's country is 'China'.",
+      "reason": "The SQL correctly joins Student and City tables via city_code and filters for 'China' in the country column. This satisfies the explicit anchor (country constraint) and aligns with the question's intent to count students in China. The result of 0 is logically possible and doesn't indicate an error.",
+      "verdict": true,
+      "evidence": "Result shows count(*) = 0 (column: count(*), row index: 0)."
+    }
+  },
+  {
+    "question_id": 704,
+    "result": {
+      "expected_answer": "The document_object_id associated with the smallest count of collections (interpreted as 'documents' due to schema context).",
+      "sql_description": "Groups records by document_object_id, orders groups by ascending row count (smallest first), and returns the top document_object_id.",
+      "reason": "The question ambiguously refers to 'least number of documents' without clarifying what constitutes a 'document'. Given the schema, the only countable entity per document_object_id is the number of collections (via the Documents_in_Collections table). The SQL correctly computes the document_object_id with the minimum collection count. No anchors are missing or violated.",
+      "verdict": true,
+      "evidence": "Result shows Document_Object_ID=5 (row 0)."
+    }
+  },
+  {
+    "question_id": 1019,
+    "result": {
+      "expected_answer": "Distinct pairs of venue names and years for papers associated with Columbia University through at least one author affiliation.",
+      "sql_description": "Retrieves distinct venue-year pairs from papers where at least one author is affiliated with Columbia University by joining Affiliation, Author_list, and Paper tables.",
+      "reason": "The SQL correctly anchors to 'Columbia University' via affiliation name, joins through Author_list to Paper, and selects distinct venue-year pairs. This satisfies the question's requirements without extraneous constraints. The DISTINCT ensures uniqueness of pairs, which aligns with the question's phrasing about venues/years rather than individual papers.",
+      "verdict": true,
+      "evidence": "Result shows distinct venue-year pairs including NAACL 2000, ANLP 1988, etc. (20 rows total). Columns: venue (e.g., 'NAACL', 'ANLP'), year (e.g., 2000, 1988)."
+    }
+  },
+  {
+    "question_id": 727,
+    "result": {
+      "expected_answer": "The collection with the highest number of documents, returning collection name, ID, and the exact document count. Since the question does not specify tie handling, returning one row is acceptable.",
+      "sql_description": "Joins Collections and Documents_in_Collections tables to count documents per collection, groups by Collection_ID, orders by document count descending, and returns the top row with collection name, ID, and count.",
+      "reason": "The SQL correctly calculates document counts per collection using the join relationship and returns the collection with the highest count. The schema confirms Documents_in_Collections links documents to collections (one row per document-collection pair), making COUNT(*) appropriate. The question's singular phrasing ('which collection') and lack of tie-handling evidence justify LIMIT 1. All required anchors (collection attributes and count) are included.",
+      "verdict": true,
+      "evidence": "Result row: Collection_Name='Nice', Collection_ID=7, Document_Count=3"
+    }
+  },
+  {
+    "question_id": 827,
+    "result": {
+      "expected_answer": "The name of the city with the smallest Euclidean distance to Chicago's coordinates (41.8781, -87.6298), including Chicago itself as a valid interpretation since the question does not specify exclusion.",
+      "sql_description": "Selects city names ordered by ascending squared Euclidean distance to Chicago's coordinates and returns the top result.",
+      "reason": "The SQL correctly computes Euclidean distance (via monotonic squared terms) to Chicago's coordinates. The question allows inclusion of Chicago itself as 'closest' since no exclusion is specified. Hard-coded coordinates align with Chicago's row in the result.",
+      "verdict": true,
+      "evidence": "Result shows city_name = 'Chicago' (row 0), confirming Chicago has minimal distance to itself."
+    }
+  },
+  {
+    "question_id": 719,
+    "result": {
+      "expected_answer": "List collection names associated with documents owned by the exact string 'Ransom ' (including trailing space).",
+      "sql_description": "Retrieves collection names by joining collections, documents_in_collections, and document_objects tables where the document owner is 'Ransom' (without trailing space).",
+      "reason": "The question specifies owner 'Ransom ' (with trailing space), but the SQL uses 'Ransom' (without trailing space). This violates the exact string anchor requirement, potentially returning incorrect collections if owner values distinguish trailing spaces.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 774,
+    "result": {
+      "expected_answer": "A single number representing the count of cities located in Canada.",
+      "sql_description": "Counts all rows in the City table where the country column equals 'Canada'.",
+      "reason": "The SQL correctly implements the required constraint (country='Canada') and returns a count of cities. The result being zero is valid and aligns with the question's intent.",
+      "verdict": true,
+      "evidence": "Result shows count(*) = 0 in row 0"
+    }
+  },
+  {
+    "question_id": 790,
+    "result": {
+      "expected_answer": "The count of students whose associated city's country is 'China'.",
+      "sql_description": "Counts all student records that are linked to a city with country 'China' via city_code.",
+      "reason": "The SQL correctly joins Student and City tables to enforce the 'living in China' constraint through country='China'. It counts student records (not distinct IDs) which aligns with the question's phrasing. No anchors are missing or contradicted.",
+      "verdict": true,
+      "evidence": "count(*) = 0"
+    }
+  },
+  {
+    "question_id": 1047,
+    "result": {
+      "expected_answer": "The count of authors who have not authored any paper with over 50 citations. This includes authors with no published papers.",
+      "sql_description": "Identifies papers cited over 50 times, finds authors of those papers, computes authors not in that group via set difference, and counts them.",
+      "reason": "The SQL correctly implements the requirement: CitedPapers identifies highly cited papers (>50 citations), AuthorsOfCitedPapers gets distinct authors of those papers, and EXCEPT removes them from all authors. Authors with no papers are included via Author table. No anchors missing.",
+      "verdict": true,
+      "evidence": "Result shows author_count=21019 in column 'author_count' (row 0)"
+    }
+  },
+  {
+    "question_id": 1095,
+    "result": {
+      "expected_answer": "The name and location of institutions that had zero staff participating in any conference held in 2004.",
+      "sql_description": "Selects institutions whose ID is absent from the list of institutions with staff participating in conferences during 2004.",
+      "reason": "The SQL correctly excludes institutions with any 2004 conference participation by staff. It anchors the year constraint properly and handles institution-staff-conference relationships appropriately. Duplicate institution IDs in the subquery are irrelevant for NOT IN exclusion.",
+      "verdict": true,
+      "evidence": "Result shows 8 institutions (rows 0-7) with Institution_Name and Location columns, including 'Illinois State University' (row 0) and 'Bradley University' (row 1)."
+    }
+  },
+  {
+    "question_id": 832,
+    "result": {
+      "expected_answer": "For each city that appears in the Direct_distance table, the city code and the sum of distances where the city is either the starting point (city1_code) or ending point (city2_code), interpreted as total incident distance per city (undirected interpretation).",
+      "sql_description": "Combines city1_code and city2_code into a single city_code column with their distances, then sums distances grouped by city_code.",
+      "reason": "The question's 'sum of distances from each' admits ambiguity without evidence: directional (only city1_code) or undirected (both endpoints). The predicted SQL adopts the undirected interpretation, which is reasonable given no schema contradiction. Required anchors (city coverage) are satisfied.",
+      "verdict": true,
+      "evidence": "Result shows 20 rows (index 0-19) with columns 'city_code' and 'total_distance'. Examples: ATL=2482, BAL=149332, BKK=19262, etc., indicating summed incident distances per city."
+    }
+  },
+  {
+    "question_id": 940,
+    "result": {
+      "expected_answer": "A list of earpad types (possibly with duplicates) from headphones that have non-plastic construction. Since the schema lacks a dedicated earpad construction attribute, the headphone's Construction column is used as a proxy for earpad material.",
+      "sql_description": "Retrieves all Earpads values from the headphone table where Construction is not 'Plastic'.",
+      "reason": "The question ambiguously links earpad construction to headphone construction due to schema limitations. The predicted SQL reasonably interprets 'earpads that do not use plastic construction' as earpads from headphones with non-plastic construction. All required anchors (non-plastic construction filter and earpads retrieval) are satisfied. Duplicates are acceptable as the question does not specify distinct results.",
+      "verdict": true,
+      "evidence": "Result shows Earpads values: 'Bowls' (rows 0,1,2,4) and 'Circumaural Bowls' (rows 3,5), indicating these earpad types appear in non-plastic headphones."
+    }
+  },
+  {
+    "question_id": 833,
+    "result": {
+      "expected_answer": "For each distinct city, show the city name and the average distance to every other city for which a distance record exists. Since city names may not be unique, the grouping must ensure distinct cities are not merged.",
+      "sql_description": "Groups cities by name and computes the average distance from each city to other cities where the city is the origin (city1_code), using a left join to include cities with no distances.",
+      "reason": "The SQL groups by city_name, which may incorrectly aggregate distinct cities with the same name into a single row. The City table schema allows duplicate city names (city_code is primary key, city_name is not unique), so grouping must use city_code to preserve distinct cities.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 952,
+    "result": {
+      "expected_answer": "List of stores that have any headphones in stock, showing store name and total quantity of all headphones in that store.",
+      "sql_description": "Retrieves store names and sums the quantity of all headphones per store by joining store and stock tables.",
+      "reason": "The SQL correctly identifies stores with headphones in stock (via JOIN) and computes total quantity per store. The question's 'the headphones' is ambiguous but evidence doesn't specify a particular model, so interpreting as 'any headphones' is reasonable. All required anchors (store name, quantity summation, in-stock requirement via JOIN) are satisfied.",
+      "verdict": true,
+      "evidence": "Result shows store names (e.g., Laurel Canyon, Woodman) with Total_Quantity values (100, 470, etc.), confirming stores have headphones in stock."
+    }
+  },
+  {
+    "question_id": 980,
+    "result": {
+      "expected_answer": "List of paper titles and paper ids for papers authored by someone named 'Mckeown'.",
+      "sql_description": "Retrieves paper titles and ids by joining Paper, Author_list, and Author tables, filtering for author name 'Mckeown'.",
+      "reason": "The query correctly links papers to authors through normalized relationships and enforces the explicit anchor of author name='Mckeown'. No DISTINCT is required since duplicates aren't implied, and NULL handling isn't needed. The empty result is acceptable as it reflects database state.",
+      "verdict": true,
+      "evidence": "Empty result set (0 rows in columns: title, paper_id) indicating no papers authored by 'Mckeown'."
+    }
+  },
+  {
+    "question_id": 976,
+    "result": {
+      "expected_answer": "A list of distinct venue names from papers, sorted in chronological order (by year). Since the question does not specify how to handle venues with multiple years (e.g., min/max year), any ordering using the year column is acceptable.",
+      "sql_description": "Selects distinct venue names from the Paper table and orders them by the year column (using an arbitrary year per venue due to lack of aggregation).",
+      "reason": "The query returns distinct venues and orders by year, satisfying the core requirements. The ambiguity in selecting a representative year per venue (min, max, etc.) is not resolved by the question or evidence, so the predicted SQL's approach is acceptable.",
+      "verdict": true,
+      "evidence": "Result shows 20 distinct venues ordered by year (though years not displayed), including: row 0: 'TINLP', row 1: 'AJCL', row 2: 'ANLP', etc."
+    }
+  },
+  {
+    "question_id": 1256,
+    "result": {
+      "expected_answer": "Distinct painting IDs where the painting's year is less than at least one painting located at 'Gallery 240'. This requires comparing against the maximum year at Gallery 240 (not the minimum).",
+      "sql_description": "Selects distinct painting IDs where the year is earlier than the earliest year among paintings at Gallery 240.",
+      "reason": "The question requires paintings older than *some* (at least one) painting at Gallery 240, meaning their year must be less than the maximum year at that location. The SQL incorrectly uses MIN(year), which imposes a stricter condition of being older than *all* paintings at Gallery 240. This fails to include paintings older than newer Gallery 240 paintings but not older than the oldest one.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 997,
+    "result": {
+      "expected_answer": "The venue and year combination with the highest count of publications. Since the question does not specify tie-breaking, returning one row (even if ties exist) is acceptable.",
+      "sql_description": "Groups papers by venue and year, counts publications per group, orders by count descending, and returns the top row with venue, year, and publication count.",
+      "reason": "The SQL correctly identifies the venue-year pair with maximum publications by counting per group and ordering. No constraints are specified in the question/evidence, and tie-breaking ambiguity is resolved per leniency principles since no method was required.",
+      "verdict": true,
+      "evidence": "Result row: venue='LREC' (column 0), year=2008 (column 1), count=620 publications."
+    }
+  },
+  {
+    "question_id": 1281,
+    "result": {
+      "expected_answer": "A list of locations (possibly with duplicates) that have paintings with mediumOn either 'panel' or 'canvas', including the string 'None' if present in data.",
+      "sql_description": "Retrieves all location values from Paintings where mediumOn is 'panel' or 'canvas'.",
+      "reason": "The question asks for locations with paintings in specified mediums without requiring DISTINCT or NULL exclusion. The SQL correctly filters by mediumOn values and returns locations, including duplicates and 'None' as a valid location string per the result.",
+      "verdict": true,
+      "evidence": "Result shows locations: Gallery 240 (rows 0-1), Rice Building Special Exhibition Galleries (rows 2-3), Gallery 241 (rows 4-7), Gallery 273 (rows 8-9), None (row 10), Gallery 226 (row 11)."
+    }
+  },
+  {
+    "question_id": 987,
+    "result": {
+      "expected_answer": "Distinct paper titles and paper IDs for papers that have at least one author named either 'McKeown, Kathleen' or 'Rambow, Owen'.",
+      "sql_description": "Retrieves title and paper_id from Paper for papers linked to authors named 'McKeown, Kathleen' or 'Rambow, Owen' without ensuring distinct papers.",
+      "reason": "The SQL lacks DISTINCT or GROUP BY to prevent duplicate papers when both authors co-occur. The question requires distinct papers (implicit in 'papers' as entities), making duplicates invalid.",
+      "verdict": false,
+      "evidence": ""
+    }
+  },
+  {
+    "question_id": 1015,
+    "result": {
+      "expected_answer": "The name and total citation count (number of times the author's papers are cited) for the author with the highest citation count.",
+      "sql_description": "Retrieves author names and counts citations made by the author's papers (i.e., papers the author cited), then returns the author with the highest count.",
+      "reason": "The SQL incorrectly counts citations made by the author (via T2.paper_id = T3.paper_id) instead of citations received by the author (which requires joining on cited_paper_id). The question unambiguously requires counting citations of the author's work.",
+      "verdict": false,
+      "evidence": null
+    }
+  },
+  {
+    "question_id": 986,
+    "result": {
+      "expected_answer": "Titles and paper ids of papers that have at least one author named exactly 'Mckeown' (as spelled in the question) and no author named 'Rambow'.",
+      "sql_description": "Selects titles and paper ids for papers with author 'McKeown' (with uppercase K) and subtracts papers with author 'Rambow'.",
+      "reason": "The SQL violates the anchor requirement for the author name: it uses 'McKeown' instead of the question's explicit spelling 'Mckeown'. Evidence does not justify alternative spellings.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1010,
+    "result": {
+      "expected_answer": "A list of 10 distinct papers (identified by title) with the highest citation counts, showing each paper's title and citation count. Citations must be counted per paper using the cited_paper_id.",
+      "sql_description": "Retrieves paper titles and counts citation records grouped by title, then returns the top 10 titles by citation count.",
+      "reason": "The SQL groups by title alone, which violates the requirement to count citations per distinct paper. Since paper titles may not be unique (paper_id is the primary key), grouping solely by title risks merging citations from different papers. This could produce incorrect counts even if current results show unique titles.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1090,
+    "result": {
+      "expected_answer": "For every conference id in the conference table, return conference_id, conference_name, year, and the count of participants (including conferences with zero participants).",
+      "sql_description": "Returns conference_id, name, year, and participant count for conferences with at least one participant by inner joining conference and conference_participation tables and grouping by conference_id.",
+      "reason": "The question requires every conference id regardless of participation status. The predicted SQL uses an INNER JOIN, excluding conferences with zero participants. This violates the 'for each conference id' requirement as conferences without participants are missing.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1009,
+    "result": {
+      "expected_answer": "A list of 10 papers with titles and citation counts, ordered by highest citation count descending.",
+      "sql_description": "Retrieves paper titles and counts citations per paper by joining Citation and Paper tables on cited_paper_id, groups by cited papers, orders by citation count descending, and limits to 10 rows.",
+      "reason": "The query correctly identifies cited papers, counts citations per paper, orders by citation count descending, and limits to 10 results. Grouping by cited_paper_id ensures each paper's citations are counted, and joining on Paper.paper_id retrieves titles. The schema confirms cited_paper_id references Paper.paper_id, validating the relationship. Ambiguity in tie-breaking is acceptable as not specified.",
+      "verdict": true,
+      "evidence": "Result shows 10 rows with titles and citation counts (e.g., row0: title='Bleu: A Method...' with 1064 citations)."
+    }
+  },
+  {
+    "question_id": 1290,
+    "result": {
+      "expected_answer": "The average height and width (in mm) for each painter, grouped by painter and ordered by the painter's name. The painter should be identified by both last and first name (or equivalent).",
+      "sql_description": "Computes average height and width from paintings, joins with artists to get painter names, groups by last name and first name, and orders by last name then first name.",
+      "reason": "The SQL groups by painters using last name and first name, which reasonably identifies painters since the question does not specify unique IDs. Ordering by last name then first name aligns with 'ordered by name' ambiguity. All required averages are computed without extraneous filters.",
+      "verdict": true,
+      "evidence": "Result shows avg(height_mm) and avg(width_mm) per painter (e.g., Cassatt Mary: 909.0, 651.0; Degas Edgar: 535.0, 418.0), ordered by lname (Cassatt, Degas, Picasso, Seurat, van Gogh)."
+    }
+  },
+  {
+    "question_id": 1025,
+    "result": {
+      "expected_answer": "Count of distinct papers associated with Columbia University (by at least one author) that were published in or before 2009 (year <= 2009).",
+      "sql_description": "Counts the number of author-paper-affiliation tuples for Columbia University with papers published in or before 2009, without distinct paper de-duplication.",
+      "reason": "The question requires counting distinct papers, but the SQL uses COUNT(*) without DISTINCT on paper_id. This counts duplicate papers if multiple Columbia-affiliated authors exist per paper, violating the unambiguous requirement for distinct paper counts.",
+      "verdict": false,
+      "evidence": null
+    }
+  },
+  {
+    "question_id": 1159,
+    "result": {
+      "expected_answer": "For each plane type, the names of the pilot(s) with the highest age (oldest pilots), including ties where multiple pilots share the maximum age.",
+      "sql_description": "Groups planes by type, finds the maximum age per plane, then retrieves all pilots matching that maximum age for each plane.",
+      "reason": "The SQL correctly identifies the oldest pilots per plane by computing maximum age per plane group and joining back to retrieve qualifying pilots. It handles ties appropriately by returning all pilots achieving the maximum age per plane. No anchors are missing or contradicted.",
+      "verdict": true,
+      "evidence": "Result shows pilots per plane: Higgins for F-14 Fighter and Piper Cub; Wilson for B-1 Bomber and F-17 Fighter; both Higgins and Wilson for B-52 Bomber (indicating ties)."
+    }
+  },
+  {
+    "question_id": 1020,
+    "result": {
+      "expected_answer": "Distinct pairs of venue and year where at least one paper from Columbia University appeared, based on author affiliations.",
+      "sql_description": "Retrieves distinct venue and year combinations from papers where at least one author is affiliated with Columbia University.",
+      "reason": "The SQL correctly joins Paper, Author_list, and Affiliation tables to filter for Columbia University. It returns distinct venue-year pairs, satisfying the question's requirements without extraneous constraints. The interpretation that a paper 'has' Columbia University if any author is affiliated is reasonable and aligns with the schema.",
+      "verdict": true,
+      "evidence": "Result shows 19 distinct venue-year pairs including row0: venue='NAACL', year=2000; row1: venue='ANLP', year=1988; row4: venue='COLING', year=2000; row18: venue='Workshop On Speech And Natural Language', year=1990."
+    }
+  },
+  {
+    "question_id": 1074,
+    "result": {
+      "expected_answer": "For each institution founded after 1800, return the institution ID, the total number of staff members (counting all staff regardless of name availability), and the names of those staff members. Institutions with no staff should be included with a count of 0 and no names.",
+      "sql_description": "Returns institution IDs founded after 1800 that have at least one staff member, along with the count of non-null staff names and a concatenated string of non-null staff names for each institution.",
+      "reason": "The SQL uses an INNER JOIN, excluding institutions with no staff. It also uses COUNT(T2.name) which would not count staff members with NULL names. The question requires every institution founded after 1800 and counts of all staff members regardless of name availability.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1183,
+    "result": {
+      "expected_answer": "The total population of the three districts with the largest area (top 3 by area_km, with arbitrary tie-breaking if multiple districts share the same area).",
+      "sql_description": "Sums the population of the three districts with the largest area_km values.",
+      "reason": "The SQL correctly identifies the top 3 districts by area using ORDER BY area_km DESC LIMIT 3, then sums their populations. The question does not specify tie-breaking methods, so arbitrary selection of three districts is acceptable. All required anchors (top 3 by area, population summation) are satisfied.",
+      "verdict": true,
+      "evidence": "Result shows total population (19607.0) in column 'sum(d.population)' at row 0."
+    }
+  },
+  {
+    "question_id": 1138,
+    "result": {
+      "expected_answer": "A list of distinct plane names from the Hangar table, ordered alphabetically in ascending order.",
+      "sql_description": "Retrieves distinct plane names from the Hangar table and sorts them alphabetically.",
+      "reason": "The SQL satisfies all requirements: it returns distinct plane names (explicitly using DISTINCT) and orders them alphabetically. No constraints are needed as the question specifies no filters. Primary key uniqueness doesn't invalidate DISTINCT usage.",
+      "verdict": true,
+      "evidence": "Column 'plane_name' with 4 rows: ['B-1 Bomber', 'B-52 Bomber', 'F-14 Fighter', 'Piper Cub'] in ascending order."
+    }
+  },
+  {
+    "question_id": 1388,
+    "result": {
+      "expected_answer": "List of official languages, each with its average overall score across countries that speak them, sorted by average overall score descending.",
+      "sql_description": "Retrieves language names and computes the average overall score of countries associated with each official language, grouped by language name and sorted descending by average score.",
+      "reason": "The SQL correctly joins languages, official_languages, and countries to compute the per-language average of countries.overall_score. Grouping by language name aligns with the question's request for languages, and sorting by average score descending satisfies the ordering requirement. No anchors are missing or violated.",
+      "verdict": true,
+      "evidence": "Result shows languages (e.g., Icelandic, Swedish) and their average overall scores (e.g., 100.0, 99.2) in descending order by avg_overall_score."
+    }
+  },
+  {
+    "question_id": 1059,
+    "result": {
+      "expected_answer": "For every conference in the conference table, the conference name and the count of participations (including zero if applicable).",
+      "sql_description": "Retrieves conference names and counts participation records for conferences with at least one participation, grouped by conference ID.",
+      "reason": "The question requires showing all conferences regardless of participation. The predicted SQL uses an INNER JOIN, excluding conferences without participations. The evidence does not override the requirement for 'all' conferences.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1129,
+    "result": {
+      "expected_answer": "The count of distinct planes controlled by pilots older than 40, where 'controlled' means planes associated with pilots in the PilotSkills table.",
+      "sql_description": "Counts distinct plane names from the PilotSkills table where the pilot's age exceeds 40.",
+      "reason": "The question requires counting distinct planes linked to pilots over 40. The predicted SQL correctly applies the age constraint and uses DISTINCT to count unique planes, aligning with the schema's many-to-many relationship (each row links one pilot to one plane). No anchors are missing or contradicted.",
+      "verdict": true,
+      "evidence": "Result shows 2 distinct planes (row 0, column 'count(DISTINCT plane_name)')."
+    }
+  },
+  {
+    "question_id": 1237,
+    "result": {
+      "expected_answer": "Distinct full names of artists who have created at least one painting AND at least one sculpture.",
+      "sql_description": "Selects distinct concatenated full names from Artists by joining Paintings (on painterID) and Sculptures (on sculptorID), ensuring artists appear in both tables.",
+      "reason": "The SQL correctly implements the requirement by joining Artists to both Paintings and Sculptures via artistID, ensuring artists have created both types of artwork. DISTINCT prevents duplicates and full name construction matches expectations. No additional constraints are required by the question.",
+      "verdict": true,
+      "evidence": "Result shows artists Pablo Picasso (row 0) and Edgar Degas (row 1)."
+    }
+  },
+  {
+    "question_id": 1158,
+    "result": {
+      "expected_answer": "A list of distinct plane names from the Hangar table, each paired with the name of the oldest pilot (by age) for that plane from the PilotSkills table (if any, otherwise NULL). The list must be ordered by plane name in ascending order.",
+      "sql_description": "Returns each plane name from Hangar and a pilot name from PilotSkills via LEFT JOIN, grouping by plane name. Orders results by the maximum age per plane descending and then plane name ascending, but selects an arbitrary pilot name per group.",
+      "reason": "The query fails to ensure the pilot_name corresponds to the oldest pilot per plane due to arbitrary selection of non-aggregated column in GROUP BY. Additionally, primary ordering by MAX(age) DESC violates the requirement to order solely by plane name.",
+      "verdict": false,
+      "evidence": null
+    }
+  },
+  {
+    "question_id": 1417,
+    "result": {
+      "expected_answer": "A list of cities where at least one property has a swimming pool, identified by the presence of a 'Swimming Pool' feature record. Duplicate city names are acceptable as the question does not require distinct results.",
+      "sql_description": "Retrieves town_city from addresses linked to properties that have a 'Swimming Pool' feature via nested subqueries across property_features and features tables.",
+      "reason": "The SQL correctly maps the requirement by filtering properties with 'Swimming Pool' features and retrieving their associated cities. All anchors are satisfied: (1) swimming pool presence is validated through feature_name, (2) cities are derived from property addresses. The absence of DISTINCT aligns with the question's lack of explicit distinct requirement. The empty result is logically acceptable if no such properties exist.",
+      "verdict": true,
+      "evidence": "Result column [town_city] contains 0 rows (empty), indicating no cities meet the criteria."
+    }
+  },
+  {
+    "question_id": 1443,
+    "result": {
+      "expected_answer": "A list of records showing first_name, middle_name, last_name, and login_name for every user marked as a seller in the database",
+      "sql_description": "Selects first_name, middle_name, last_name, and login_name from users where is_seller equals the string 'Yes'",
+      "reason": "The condition `is_seller = \"Yes\"` is invalid because the column `is_seller` is VARCHAR(1) and cannot store a 3-character string. This flaw prevents identification of sellers, violating the required anchor for seller status",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1254,
+    "result": {
+      "expected_answer": "Distinct titles of paintings taller than at least one painting on canvas (existential comparison against any canvas painting)",
+      "sql_description": "Selects distinct painting titles where height exceeds one arbitrarily chosen canvas painting's height (via LIMIT 1 without ordering)",
+      "reason": "The SQL incorrectly uses a single arbitrary canvas painting height for comparison, failing to check against all canvas paintings. The question requires existential quantification ('taller than some painting on canvas'), necessitating comparison with ANY canvas painting height.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1244,
+    "result": {
+      "expected_answer": "Counts of works (paintings and sculptures) grouped by medium type, without additional constraints.",
+      "sql_description": "Combines medium values from Paintings and Sculptures tables using UNION ALL, then groups by medium and counts the number of rows per group.",
+      "reason": "The question requires counting works per medium type across both paintings and sculptures. The SQL correctly aggregates both tables under 'works' interpretation. UNION ALL appropriately preserves duplicate mediums within tables while combining datasets. No anchors are missing, and NULL/distinct handling aligns with question requirements.",
+      "verdict": true,
+      "evidence": "Result columns: medium and COUNT(*). Rows: bronze (4), conte crayon (1), lithograph (1), oil (12)."
+    }
+  },
+  {
+    "question_id": 1245,
+    "result": {
+      "expected_answer": "A list of mediums and the count of works (paintings and sculptures) in each medium, without any constraints.",
+      "sql_description": "Combines mediums from Paintings and Sculptures tables using UNION ALL, then groups by medium and counts all rows.",
+      "reason": "The question unambiguously requires counting works per medium across both paintings and sculptures. The SQL correctly aggregates all works from both tables without extraneous constraints. UNION ALL appropriately preserves duplicate works (each row represents one work), and grouping by medium yields the required counts.",
+      "verdict": true,
+      "evidence": "Execution result shows mediums (bronze, conte crayon, lithograph, oil) with corresponding work counts (4, 1, 1, 12)."
+    }
+  },
+  {
+    "question_id": 1773,
+    "result": {
+      "expected_answer": "List of home conferences where the average enrollment of universities in each conference exceeds 2000.",
+      "sql_description": "Calculates average enrollment per home conference and returns conferences with averages above 2000, including the average value.",
+      "reason": "The SQL correctly groups universities by home_conference, computes average enrollment, and filters for averages > 2000. The question requires conference names meeting the condition, and returning additional average values is acceptable. No anchors are missing or violated.",
+      "verdict": true,
+      "evidence": "Result includes Home_Conference values: CCIW (row0), Northern (row1), SLIAC (row2), all with avg(enrollment) > 2000."
+    }
+  },
+  {
+    "question_id": 1803,
+    "result": {
+      "expected_answer": "Titles of movies with missing rating values (NULL)",
+      "sql_description": "Selects movie titles where the rating column contains NULL",
+      "reason": "The question unambiguously requires movies without ratings, which directly maps to NULL values in the rating column. The SQL correctly implements this constraint without extraneous filters.",
+      "verdict": true,
+      "evidence": "Returned titles: 'The Quiet Man' (row 0), 'North by Northwest' (row 1), 'A Night at the Opera' (row 2)"
+    }
+  },
+  {
+    "question_id": 1257,
+    "result": {
+      "expected_answer": "Distinct painting IDs that have a creation year less than at least one painting in gallery 240 (i.e., less than the maximum year of paintings in gallery 240).",
+      "sql_description": "Selects distinct painting IDs that have a creation year less than the minimum year of paintings in gallery 240 (i.e., older than the oldest painting in gallery 240).",
+      "reason": "The predicted SQL incorrectly uses the minimum year of gallery 240 paintings as the threshold, which only returns paintings older than every painting in gallery 240. The question requires paintings older than at least one painting in gallery 240, necessitating comparison to the maximum year (or an existential condition). This condition is too restrictive and misses valid paintings.",
+      "verdict": false,
+      "evidence": null
+    }
+  },
+  {
+    "question_id": 1387,
+    "result": {
+      "expected_answer": "The names of the three official languages with the highest number of associated countries in the official_languages table, ordered by descending country count and limited to three results (with arbitrary tie-breaking for third place).",
+      "sql_description": "Retrieves language names by joining languages and official_languages tables, groups by language name to count associated countries, orders by country count descending, and returns the top three language names.",
+      "reason": "The SQL correctly anchors to official languages via the official_languages table, counts countries per language (interpreting 'spoken in the most countries' as highest country count), and returns exactly three languages. Grouping by language name is acceptable given no evidence of duplicate names in the schema. The LIMIT 3 satisfies the 'three' requirement despite potential ties.",
+      "verdict": true,
+      "evidence": "Result shows three languages: English (row0), Swedish (row1), Romansh (row2)"
+    }
+  },
+  {
+    "question_id": 1282,
+    "result": {
+      "expected_answer": "Distinct locations that have at least one painting created before 1885 AND at least one painting created after 1930. The condition requires both time periods to be satisfied per location.",
+      "sql_description": "Retrieves locations of paintings created either before 1885 OR after 1930, without requiring both conditions for the same location.",
+      "reason": "The question requires locations satisfying both conditions (before 1885 AND after 1930), but the SQL uses OR instead of enforcing both. This returns locations meeting either condition individually, failing to anchor the joint requirement.",
+      "verdict": false,
+      "evidence": null
+    }
+  },
+  {
+    "question_id": 1851,
+    "result": {
+      "expected_answer": "All columns (Code, Title, Rating) for movies lacking a rating. Given ambiguity in 'unrated' meaning (NULL vs specific string like 'None'), either interpretation is acceptable. Predicted SQL adopts NULL interpretation.",
+      "sql_description": "Selects all columns from movies where the rating column is NULL.",
+      "reason": "The SQL commits to interpreting 'unrated' as NULL in the Rating column, which is reasonable given schema ambiguity. It correctly retrieves all columns and applies the NULL filter. Execution result shows 3 movies with Rating='None'—consistent with NULL representation in output.",
+      "verdict": true,
+      "evidence": "Result shows 3 rows (positions 0-2) with columns Code, Title, Rating. Rating displays as 'None' (interpreted as NULL)."
+    }
+  },
+  {
+    "question_id": 1283,
+    "result": {
+      "expected_answer": "A list of locations that have at least one work created before 1885 and at least one work created after 1930. Due to ambiguity in 'painted' (which literally applies only to paintings) and lack of evidence, reasonable interpretations include: (A) only paintings, requiring locations with paintings meeting both conditions; or (B) both paintings and sculptures, requiring locations with any work type meeting each condition. The critical anchor is the AND condition (same location must satisfy both time periods).",
+      "sql_description": "Returns distinct locations from Paintings with paintings created before 1885 OR distinct locations from Sculptures with sculptures created after 1930, using UNION (OR logic).",
+      "reason": "The SQL fails to enforce the required AND condition (same location must have both pre-1885 and post-1930 works). It uses UNION (OR) instead of requiring both conditions per location. Additionally, including sculptures conflicts with the literal 'painted' requirement, but the primary failure is the missing AND anchor. Ambiguity in work type does not excuse this logical gap.",
+      "verdict": false,
+      "evidence": null
+    }
+  },
+  {
+    "question_id": 1409,
+    "result": {
+      "expected_answer": "Count of properties that have exactly 1 parking lot or have a garage (interpreted as garage_yn='yes' due to column being a yes/no flag).",
+      "sql_description": "Counts properties where parking_lots equals integer 1 OR garage_yn equals 'yes'.",
+      "reason": "The question requires counting properties with either 1 parking lot or 1 garage. The garage condition is reasonably interpreted as garage_yn='yes' since the column is a yes/no flag. For parking_lots, using integer comparison is acceptable due to ambiguity in VARCHAR representation. The OR condition correctly combines both criteria. No anchors are missing or contradicted.",
+      "verdict": true,
+      "evidence": "Result shows 9 properties meet the condition (column: count(*), row 0)."
+    }
+  },
+  {
+    "question_id": 1855,
+    "result": {
+      "expected_answer": "The recipient (as an account number) of the package with the highest weight. If multiple packages share the highest weight, returning any one recipient is acceptable due to ambiguity.",
+      "sql_description": "Retrieves the recipient account number of the package with the highest weight, arbitrarily selecting one if multiple packages have the same maximum weight.",
+      "reason": "The SQL correctly anchors the requirement to find the heaviest package via ORDER BY Weight DESC LIMIT 1. The recipient is returned as an account number (foreign key to Client), which aligns with the schema representation. The question's singular phrasing ('who') and lack of tie-breaking evidence make returning one recipient acceptable.",
+      "verdict": true,
+      "evidence": "Result shows Recipient=1 (account number) in row 0."
+    }
+  },
+  {
+    "question_id": 1386,
+    "result": {
+      "expected_answer": "The three official languages that are official in the highest number of countries, since the schema lacks speaker count data and 'most commonly spoken' must be interpreted via country coverage.",
+      "sql_description": "Retrieves language names grouped by name, ordered by the count of associated countries in official_languages (indicating frequency of official status), and limits to the top three.",
+      "reason": "The question requires official languages by commonness of speaking. Given the schema only tracks official status per country (not speaker counts), counting countries per language is the only feasible interpretation. The SQL correctly groups by language, counts country occurrences via JOIN, orders descending, and limits to three results.",
+      "verdict": true,
+      "evidence": "Result shows 'name' column with three languages: English (row 0), Swedish (row 1), Romansh (row 2), ordered by descending frequency."
+    }
+  },
+  {
+    "question_id": 1389,
+    "result": {
+      "expected_answer": "The names of official languages, each paired with the average overall_score of the countries where the language is official, sorted descending by that average.",
+      "sql_description": "Retrieves language names and computes the average overall_score of countries associated with each language via the official_languages junction table, grouping by language name and sorting the results descending by the computed average.",
+      "reason": "The SQL correctly calculates the average overall_score per official language by joining languages, official_languages, and countries tables. It groups by language name and sorts descending as required. No explicit constraints or ambiguities exist in the question or evidence that contradict this approach. The execution result confirms language names with descending average scores.",
+      "verdict": true,
+      "evidence": "Result shows language names and avg_overall_score sorted descending (e.g., Icelandic:100.0, Swedish:99.2, Danish:95.3, etc.)"
+    }
+  },
+  {
+    "question_id": 1878,
+    "result": {
+      "expected_answer": "The package number and weight of the heaviest package sent by a client whose name starts with 'John' (case-insensitive). If multiple packages share the maximum weight, returning any one is acceptable.",
+      "sql_description": "Retrieves the package number and weight for packages sent by clients with names starting with 'John' (case-insensitive), ordered by weight descending, returning the top result.",
+      "reason": "The query satisfies all anchors: filters for clients named similarly to John (interpreted as starting with 'John'), retrieves the heaviest package via ORDER BY/LIMIT, and handles case insensitivity. Tie-breaking is acceptable since the question doesn't specify how to handle multiple heaviest packages.",
+      "verdict": true,
+      "evidence": "Result shows PackageNumber=2 and Weight=2.0 (row 0)"
+    }
+  },
+  {
+    "question_id": 1408,
+    "result": {
+      "expected_answer": "Count of properties that have either exactly 1 parking lot or at least one garage (since garage count isn't stored, '1 garage' reasonably maps to garage_yn='Yes')",
+      "sql_description": "Counts properties where parking_lots equals '1' or garage_yn equals 'Yes'.",
+      "reason": "The question requires counting properties meeting either condition. Garage presence is reasonably interpreted as garage_yn='Yes' since no numeric garage column exists. Both conditions are correctly implemented with OR logic.",
+      "verdict": true,
+      "evidence": "Result column: count(*), value: 9"
+    }
+  },
+  {
+    "question_id": 1424,
+    "result": {
+      "expected_answer": "List of user IDs and all their search strings for users who have performed at least two searches.",
+      "sql_description": "Groups searches by user_id and returns one arbitrary search_string per user for users with at least two total searches.",
+      "reason": "The question requires showing all search strings for each qualifying user (implied by plural 'searches'), but the predicted SQL returns only one arbitrary search string per user due to unaggregated search_string in GROUP BY. This fails to show all searches performed by these users.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1446,
+    "result": {
+      "expected_answer": "The count of distinct properties that have at least 2 features associated with them. Features are interpreted as non-null feature records (rows) per property.",
+      "sql_description": "Counts properties by grouping property_features on property_id and filtering groups with at least two feature_id entries, then returns the total count of such properties.",
+      "reason": "The SQL correctly identifies properties with ≥2 features by counting non-null feature records per property. The interpretation of counting rows (not distinct features) is acceptable since the question doesn't specify distinct features. All anchors are satisfied with no extraneous constraints.",
+      "verdict": true,
+      "evidence": "Result shows column 'count(*)' with value 4 in row 0, indicating 4 properties meet the condition."
+    }
+  },
+  {
+    "question_id": 1798,
+    "result": {
+      "expected_answer": "The total enrollment sum for universities ranked 5 or lower (rank <= 5).",
+      "sql_description": "Sums enrollment values from universities where the university_id exists in overall_ranking with rank <= 5.",
+      "reason": "The SQL correctly identifies universities with rank <= 5 via subquery and sums their enrollments. The question's anchor (rank <= 5) is enforced, and aggregation aligns with the request for total enrollment.",
+      "verdict": true,
+      "evidence": "Column 'sum(enrollment)' in row 0 shows total enrollment: 11989."
+    }
+  },
+  {
+    "question_id": 1978,
+    "result": {
+      "expected_answer": "For each press, the average and maximum of its yearly profit values (from Year_Profits_billion column). Since the table has one row per press, the average and maximum per press will equal its single Year_Profits_billion value.",
+      "sql_description": "Groups press records by Name and calculates the average and maximum of Year_Profits_billion for each group.",
+      "reason": "The query correctly computes average and maximum yearly profit per press. Grouping by Name is acceptable as the result shows distinct press names aligned with the primary key structure. The single-row-per-press table structure makes AVG/MAX return the press's sole Year_Profits_billion value, satisfying the question's requirements.",
+      "verdict": true,
+      "evidence": "Result shows 10 distinct press names (e.g., Accor, Air Liquide) with Average_Yearly_Profit and Maximum_Yearly_Profit columns. Each row has identical average and maximum values (e.g., Accor: 6.02, 6.02), confirming one data point per press."
+    }
+  },
+  {
+    "question_id": 1465,
+    "result": {
+      "expected_answer": "The full names (concatenated first, middle, and last names) of users who own at least one property and reside at that property's address. Duplicates are acceptable if a user owns multiple properties at their residence address.",
+      "sql_description": "Selects concatenated full names from Users by joining Properties on ownership (user_id = owner_user_id) and filtering for matching user and property addresses (user_address_id = property_address_id).",
+      "reason": "The SQL correctly enforces both ownership (via JOIN condition) and residency (via WHERE clause) as required. Concatenating first/middle/last names reasonably interprets 'full name'. Duplicates are acceptable since the question doesn't specify distinct results.",
+      "verdict": true,
+      "evidence": "Column: full_name. Row 0: 'Reggie Eulah Ernser'."
+    }
+  },
+  {
+    "question_id": 1844,
+    "result": {
+      "expected_answer": "The names of cinemas that are not showing any movies, interpreted as having NULL in the Movie column.",
+      "sql_description": "Selects cinema names where the Movie column is NULL.",
+      "reason": "The schema indicates each cinema (by primary key Code) can show at most one movie. A NULL Movie value directly indicates no movie is shown. The predicted SQL correctly implements this interpretation.",
+      "verdict": true,
+      "evidence": "Result column 'Name' contains: row 0: 'Majestic', row 1: 'Nickelodeon'."
+    }
+  },
+  {
+    "question_id": 1550,
+    "result": {
+      "expected_answer": "The ids of goods where the Food is either Cookies (plural) or Cakes (plural), with Price between 3 and 7 dollars inclusive. Ambiguity note: 'Cookies or Cakes' may be interpreted as substring matching (e.g., 'Chocolate Cookies' or 'Cheesecake'), and price range is inclusive.",
+      "sql_description": "Selects Id from goods where Food contains 'Cookies' OR contains 'Cake' and Price is between 3 and 7.",
+      "reason": "The SQL commits to substring interpretation for Food (matching 'Cookies' for cookies and 'Cake' for cakes, which reasonably covers plural forms). All anchors are satisfied: explicit price range (inclusive) and category filter. Empty result is acceptable if no matching goods exist.",
+      "verdict": true,
+      "evidence": "Result contained 0 rows in column [Id], indicating no goods matched the criteria."
+    }
+  },
+  {
+    "question_id": 1537,
+    "result": {
+      "expected_answer": "The Id(s) of the good(s) containing '70' and their corresponding price(s)",
+      "sql_description": "Retrieves the price of goods where the Id contains the substring '70'",
+      "reason": "The predicted SQL fails to select the good's Id, which is explicitly required to answer 'which good'. Without the Id, the results cannot identify which good(s) have '70' in their id despite returning prices.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 2078,
+    "result": {
+      "expected_answer": "List the client ideas (interpreted as invoice_details) and client details for clients with sic_code 'Bad'. Each row represents an invoice for a client, allowing duplicates if multiple invoices exist.",
+      "sql_description": "Retrieves invoice_details and client_details by joining Clients and Invoices tables for clients with sic_code 'Bad', returning one row per invoice.",
+      "reason": "Ambiguous term 'client ideas' reasonably interpreted as invoice_details since no 'ideas' column exists. Query correctly anchors sic_code='Bad' and returns both requested elements. Duplicate client_details are acceptable as the question doesn't specify distinct results.",
+      "verdict": true,
+      "evidence": "Result shows 7 rows: invoice_details all 'excellent'; client_details include Lucie (row0), Maximo (row1), Philip (rows 2,6,7), Mac (row3), Vaughn (row4), Taurean (row5)."
+    }
+  },
+  {
+    "question_id": 1804,
+    "result": {
+      "expected_answer": "The names of movies with no ratings, interpreted as having a NULL value in the Rating column.",
+      "sql_description": "Retrieves movie titles where the Rating column is NULL.",
+      "reason": "The question is ambiguous regarding how 'no ratings' is represented (NULL vs. empty string). The predicted SQL adopts the interpretation that NULL signifies missing ratings, which is reasonable and aligns with common database practices. The result returns movie titles satisfying this condition.",
+      "verdict": true,
+      "evidence": "Returned 3 movies: 'The Quiet Man' (row 0), 'North by Northwest' (row 1), and 'A Night at the Opera' (row 2) with NULL ratings."
+    }
+  },
+  {
+    "question_id": 1854,
+    "result": {
+      "expected_answer": "The names of movies that are not referenced in the MovieTheaters table (with non-NULL Movie values), as NULL theater entries do not represent any movie being shown.",
+      "sql_description": "Selects movie titles where the movie code is absent from the MovieTheaters table without filtering NULL movie references.",
+      "reason": "The SQL fails to exclude NULL values in MovieTheaters.Movie. If present, these NULLs would cause the NOT IN condition to incorrectly return no movies, violating the requirement to identify movies not shown in theaters. The schema does not enforce NOT NULL on MovieTheaters.Movie.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1797,
+    "result": {
+      "expected_answer": "The total enrollment (sum of Enrollment) for universities with an overall rank of 5 or better (i.e., rank <= 5, assuming rank 1 is best).",
+      "sql_description": "Sums the Enrollment column from the university table after joining with overall_ranking where rank is <= 5.",
+      "reason": "The SQL correctly implements the requirement to sum enrollment for universities with rank <=5. No anchors are missing: it filters by rank constraint and aggregates enrollment. The join uses primary/foreign keys ensuring no duplication.",
+      "verdict": true,
+      "evidence": "Result shows total enrollment of 11989 (from SUM(T1.Enrollment) column at row 0)."
+    }
+  },
+  {
+    "question_id": 1840,
+    "result": {
+      "expected_answer": "A single number representing the count of movies where the rating column contains non-null values.",
+      "sql_description": "Counts all rows in the movies table where the rating column is not null.",
+      "reason": "The SQL correctly implements the requirement to count movies with non-null ratings. No anchors are missing (explicitly filters non-null ratings), and the result format matches the question's expectation of a count.",
+      "verdict": true,
+      "evidence": "Result shows 5 in column 'count(*)' (row 0), indicating 5 movies meet the condition."
+    }
+  },
+  {
+    "question_id": 1877,
+    "result": {
+      "expected_answer": "The package number and weight of the heaviest package sent by clients with 'John' in their name. Since the question uses singular phrasing ('the heaviest'), returning one row is acceptable even if multiple packages share the maximum weight.",
+      "sql_description": "Retrieves package number and weight by joining Package and Client tables, filters for clients with names containing 'John', orders packages by weight descending, and returns the top result.",
+      "reason": "SQL correctly implements all anchors: filters for clients with 'John' in name via LIKE '%John%', identifies the heaviest package via ORDER BY Weight DESC LIMIT 1, and returns requested columns. Ambiguity in tie-breaking is resolved leniently as evidence doesn't specify handling.",
+      "verdict": true,
+      "evidence": "Result shows PackageNumber=2 with Weight=2.0 in row 0."
+    }
+  },
+  {
+    "question_id": 2141,
+    "result": {
+      "expected_answer": "List of distinct staff IDs and details for staff who attended at least one meeting and have 's' in their staff_details.",
+      "sql_description": "Selects staff_id and staff_details from Staff joined with Staff_in_Meetings (to ensure meeting attendance) where staff_details contain 's'. Does not remove duplicates.",
+      "reason": "The SQL may return duplicate staff rows if they attended multiple meetings. The question requires distinct staff members, and duplicates are extraneous content not permitted by the 'No extraneous content' principle.",
+      "verdict": false,
+      "evidence": null
+    }
+  },
+  {
+    "question_id": 1900,
+    "result": {
+      "expected_answer": "List of shipment IDs for shipments located on the planet Mars and managed by employee Turanga Leela.",
+      "sql_description": "Retrieves shipment IDs by joining Shipment with Employee (on manager) and Planet (on planet), filtering for employee name 'Turanga Leela' and planet name 'Mars'.",
+      "reason": "The SQL correctly anchors both explicit constraints: planet name 'Mars' and manager name 'Turanga Leela'. The joins align with schema relationships (Shipment.Manager → Employee.EmployeeID, Shipment.Planet → Planet.PlanetID). Result returns shipment IDs as required.",
+      "verdict": true,
+      "evidence": "Result shows ShipmentID: [3] (row 0)."
+    }
+  },
+  {
+    "question_id": 1821,
+    "result": {
+      "expected_answer": "Names of cinemas playing at least one movie rated 'G' or 'PG'. The result may include duplicates if a cinema plays multiple qualifying movies and may include NULLs if cinema names are missing.",
+      "sql_description": "Retrieves cinema names by joining Movies and MovieTheaters tables where movie ratings are 'G' or 'PG'.",
+      "reason": "The SQL correctly identifies cinemas playing movies with the specified ratings. While duplicates or NULLs are possible, the question does not explicitly require DISTINCT or non-NULL cinema names. The join condition and rating filters align with the question's intent.",
+      "verdict": true,
+      "evidence": "Execution result shows cinema names: 'Imperial' (row 0) and 'Paraiso' (row 1), indicating theaters playing qualifying movies."
+    }
+  },
+  {
+    "question_id": 1852,
+    "result": {
+      "expected_answer": "All columns (Code, Title, Rating) for movies without a rating, interpreted as Rating being NULL.",
+      "sql_description": "Selects all columns from movies where the Rating column is NULL.",
+      "reason": "The question asks for unrated movies. Without evidence defining 'unrated', interpreting it as NULL in the Rating column is reasonable. The SQL correctly filters for NULL ratings. The execution result shows movies with Rating displayed as 'None', consistent with NULL representation in the output.",
+      "verdict": true,
+      "evidence": "Result shows 3 movies: The Quiet Man (Code 4), North by Northwest (Code 5), A Night at the Opera (Code 8), all with Rating NULL (displayed as 'None')."
+    }
+  },
+  {
+    "question_id": 1968,
+    "result": {
+      "expected_answer": "Distinct game titles played by players from college 'Oklahoma' or college 'Auburn'.",
+      "sql_description": "Retrieves distinct game titles by joining game, game_player, and player tables, filtering for players from Oklahoma or Auburn colleges.",
+      "reason": "The SQL correctly implements all anchors: joins link games to players, WHERE clause filters for specified colleges, and DISTINCT ensures unique titles. No extraneous constraints were added, and ambiguity isn't present.",
+      "verdict": true,
+      "evidence": "Result shows 4 distinct titles: Pokémon Red / Green / Blue Version (row 0), Pokémon Gold / Silver Version (row 1), Pokémon Yellow: Special Pikachu Edition (row 2), Super Mario World (row 3)."
+    }
+  },
+  {
+    "question_id": 1583,
+    "result": {
+      "expected_answer": "The three goods (identified by their Id) with the highest popularity, where popularity is measured by the count of occurrences in the items table (representing units sold).",
+      "sql_description": "Returns the top 3 goods by counting the number of times each good appears in the items table, joined with goods to ensure valid goods, ordered by descending count.",
+      "reason": "The SQL correctly interprets popularity as frequency of sales (units sold) without extraneous constraints. The join ensures only valid goods are considered, aligning with the schema. Ambiguity in popularity measurement (units vs transactions) is resolved by the evidence-free context, making units sold acceptable.",
+      "verdict": true,
+      "evidence": "Result shows top 3 goods: '90-APP-11' (row 0, Popularity=25), '90-APR-PF' (row 1, Popularity=22), '90-BLK-PF' (row 2, Popularity=20)."
+    }
+  },
+  {
+    "question_id": 1843,
+    "result": {
+      "expected_answer": "Names of movie theaters where the Movie column is NULL (indicating no movie is being shown).",
+      "sql_description": "Retrieves theater names where the Movie foreign key is NULL.",
+      "reason": "The SQL correctly interprets 'not showing a movie' as NULL in the Movie column, aligning with the schema's foreign key relationship. No anchors are missing or contradicted.",
+      "verdict": true,
+      "evidence": "Result shows theaters: Majestic (row 0) and Nickelodeon (row 1)."
+    }
+  },
+  {
+    "question_id": 1868,
+    "result": {
+      "expected_answer": "A single number representing the total count of packages sent by any client named 'Leo Wong'.",
+      "sql_description": "Counts all package records where the sender's name is 'Leo Wong' by joining Client and Package tables on AccountNumber=Sender.",
+      "reason": "The question unambiguously requires counting packages sent by Leo Wong. The SQL correctly joins tables and filters by name. While name uniqueness isn't enforced, the question doesn't specify disambiguation, so counting packages from any client named Leo Wong is acceptable.",
+      "verdict": true,
+      "evidence": "Result shows COUNT(*) = 2 in row 0, indicating two packages meet the criteria."
+    }
+  },
+  {
+    "question_id": 1993,
+    "result": {
+      "expected_answer": "The titles and publish dates of the top 5 books with the highest sales amounts.",
+      "sql_description": "Retrieves book titles and release dates, ordered by Sale_Amount (cast to numeric) descending, returning the top 5 rows.",
+      "reason": "The query correctly interprets 'best sale' as highest Sale_Amount and returns exactly 5 results. No anchors are missing, and casting TEXT to REAL handles numeric ordering appropriately. Ambiguity in 'publish dates' is resolved by Release_date mapping.",
+      "verdict": true,
+      "evidence": "Result shows Title and Release_date columns with 5 rows (e.g., row0: 'Daffy Doodles' on 2016-04-06, row1: 'Hush My Mouse' on 2016-05-04)."
+    }
+  },
+  {
+    "question_id": 1853,
+    "result": {
+      "expected_answer": "List of movie titles that are not associated with any theater in the MovieTheaters table (i.e., movies without a corresponding entry in MovieTheaters.Movie, ignoring NULL theater-movie associations).",
+      "sql_description": "Selects movie titles from Movies where the movie code is not found in the Movie column of MovieTheaters.",
+      "reason": "The SQL fails to handle potential NULL values in MovieTheaters.Movie. If any NULL exists, the NOT IN condition would incorrectly return no results due to NULL comparison semantics, violating the requirement to list movies not being shown. The question implies excluding only non-NULL theater-movie associations.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 2066,
+    "result": {
+      "expected_answer": "A list of all agencies with their respective client counts, including agencies with zero clients.",
+      "sql_description": "Retrieves agency IDs and counts client IDs per agency using a LEFT JOIN to include agencies without clients.",
+      "reason": "The SQL correctly includes all agencies (via LEFT JOIN) and counts non-null client IDs per agency. Agencies without clients show zero counts, satisfying 'each agency' requirement. No anchors are missing or violated.",
+      "verdict": true,
+      "evidence": "Result shows agency_id and client counts, including zeros (e.g., agency_id 2,4,6,10,12,13,15 have 0 clients)."
+    }
+  },
+  {
+    "question_id": 1718,
+    "result": {
+      "expected_answer": "locations of warehouses that have at least one box containing 'Rocks' and at least one box containing 'Scissors' (both conditions must be satisfied)",
+      "sql_description": "retrieves locations of warehouses that have boxes containing either 'Rocks' or 'Scissors' (satisfying at least one condition)",
+      "reason": "The question requires warehouses to contain both Rocks and Scissors boxes (logical AND). The predicted SQL uses OR logic (IN clause), which fails to enforce the required anchor of both items being present. This omission violates explicit constraints implied by the question.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1881,
+    "result": {
+      "expected_answer": "The client name and the number of packages they sent for the client with the highest package count. The count must be per distinct client (identified by AccountNumber), not aggregated by name alone.",
+      "sql_description": "Groups packages by client name, counts packages per name, orders by count descending, and returns the top name and count.",
+      "reason": "Grouping solely by Name may incorrectly aggregate packages from different clients sharing the same name. The question requires counting per distinct client entity (tied to AccountNumber), which isn't guaranteed without grouping by AccountNumber or ensuring name uniqueness. The schema shows Name isn't marked unique, making this grouping ambiguous.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1869,
+    "result": {
+      "expected_answer": "List all package numbers from the Package table where the recipient is Leo Wong, identified by joining Package.Recipient to Client.AccountNumber and filtering by Client.Name.",
+      "sql_description": "Retrieves package numbers by joining Package and Client tables on Package.Recipient matching Client.AccountNumber, filtered for Client.Name = 'Leo Wong'.",
+      "reason": "The SQL correctly maps recipient to Leo Wong via foreign key relationships without missing anchors. It returns package numbers directly as required, handling the unambiguous join and filter.",
+      "verdict": true,
+      "evidence": "Result shows PackageNumber=1 (row 0), confirming at least one package received by Leo Wong."
+    }
+  },
+  {
+    "question_id": 2134,
+    "result": {
+      "expected_answer": "The staff id of a staff member who has attended at least one meeting and has the minimum number of meetings attended (with arbitrary tie-breaking if multiple staff have the same minimum count).",
+      "sql_description": "Groups meeting attendance by staff_id, filters for staff with at least one meeting, orders by meeting count ascending, and returns the staff_id with the smallest count.",
+      "reason": "The SQL correctly implements the requirements: (1) HAVING count(*) > 0 ensures attendance in at least one meeting; (2) ORDER BY count(*) ASC with LIMIT 1 retrieves the staff with the minimum meeting count. The question does not specify tie-breaking, so returning one row is acceptable.",
+      "verdict": true,
+      "evidence": "Result shows one row: staff_id=1."
+    }
+  },
+  {
+    "question_id": 1885,
+    "result": {
+      "expected_answer": "List the names of clients who have sent more than one package, based on package records linked to their account number.",
+      "sql_description": "Retrieves client names by joining Client and Package tables on the sender's account number, grouping by account number, and filtering for groups with package counts exceeding one.",
+      "reason": "The SQL correctly identifies clients with multiple packages by counting package records per sender. The COUNT(*) > 1 condition satisfies the 'more than one' requirement without introducing extraneous constraints. Grouping by AccountNumber ensures distinct client identification.",
+      "verdict": true,
+      "evidence": "Result shows 3 client names: Zapp Brannigan (row 0), Al Gore's Head (row 1), Leo Wong (row 2)."
+    }
+  },
+  {
+    "question_id": 1580,
+    "result": {
+      "expected_answer": "List of distinct items (identified by id, flavor, and food) with flavor 'Chocolate' and total purchase count ≤ 10, where purchase count is based on occurrences in items table.",
+      "sql_description": "Selects chocolate-flavored goods, groups them by id/flavor/food, counts their occurrences in items table, and filters for groups with count ≤ 10.",
+      "reason": "SQL satisfies all anchors: flavor constraint (WHERE), purchase count constraint (HAVING COUNT(*) ≤ 10), and distinct items (GROUP BY id). COUNT(*) correctly interprets 'purchased times' as record occurrences. Result shows valid chocolate item with count=6 ≤ 10.",
+      "verdict": true,
+      "evidence": "Result row 0: Flavor='Chocolate', Id='50-CH', Food='Croissant', purchase_count=6"
+    }
+  },
+  {
+    "question_id": 2113,
+    "result": {
+      "expected_answer": "A list of all invoice IDs along with the count of payments associated with each invoice, including invoices with zero payments.",
+      "sql_description": "Retrieves all invoice IDs from the Invoices table and counts the number of payments linked to each invoice via a LEFT JOIN with the Payments table.",
+      "reason": "The SQL correctly uses a LEFT JOIN to include all invoices and COUNT(Payments.invoice_id) to count payments per invoice (returning 0 when no payments exist). The query satisfies the requirement to show all invoices and their payment counts without extraneous constraints.",
+      "verdict": true,
+      "evidence": "Result shows invoice IDs (e.g., 1, 2, 3) with payment counts (e.g., 0, 2, 2), including invoices with zero payments (rows 0, 3, 6, etc.)."
+    }
+  },
+  {
+    "question_id": 1671,
+    "result": {
+      "expected_answer": "List of years (as stored in Founded column) where more than one institution was founded in that year",
+      "sql_description": "Groups institutions by founding year and returns years with institution count exceeding one",
+      "reason": "Correctly implements grouping by Founded year and filters for counts > 1. No additional constraints are required by the question. REAL data type for years is acceptable given schema.",
+      "verdict": true,
+      "evidence": "Result shows Founded=1908.0 (row 0), indicating at least one year meeting the criterion"
+    }
+  },
+  {
+    "question_id": 2028,
+    "result": {
+      "expected_answer": "All author names and the count of documents each author has, including authors with zero documents.",
+      "sql_description": "Retrieves all authors and counts the number of documents associated with each author using a LEFT JOIN, ensuring authors without documents are included with a count of 0.",
+      "reason": "The SQL correctly returns every author and their document count. The LEFT JOIN preserves all authors, COUNT() handles nulls by returning 0 for authors without documents, and no extraneous constraints are added. The result aligns with the question's requirement for 'all' authors and their counts.",
+      "verdict": true,
+      "evidence": "Result shows all authors (e.g., row 5: 'Dr. Dario Hermiston' with 0, row 4: 'Bianka Cummings' with 2) and their document counts."
+    }
+  },
+  {
+    "question_id": 1553,
+    "result": {
+      "expected_answer": "The average price of goods with flavor 'blackberry' or 'blueberry', which may be NULL if no such goods exist or all prices are NULL.",
+      "sql_description": "Computes the average price of goods where flavor is either 'blackberry' or 'blueberry'.",
+      "reason": "The SQL correctly filters for the required flavors and computes the average price. The NULL result is acceptable as it accurately reflects no matching goods or NULL prices.",
+      "verdict": true,
+      "evidence": "Result: average price is NULL (column: avg(Price), row 0)."
+    }
+  },
+  {
+    "question_id": 1717,
+    "result": {
+      "expected_answer": "List of locations for warehouses that contain both Rocks and Scissors in their boxes (both items must be present).",
+      "sql_description": "Retrieves locations of warehouses that have any box containing either Rocks or Scissors (does not require both items).",
+      "reason": "The question requires warehouses storing both Rocks and Scissors, but the SQL returns warehouses storing either item. Missing anchor: simultaneous presence of both contents. Ambiguity does not apply since 'and' implies conjunction.",
+      "verdict": false
+    }
+  },
+  {
+    "question_id": 1563,
+    "result": {
+      "expected_answer": "The customer (identified by name) with the highest frequency of shopping events and the corresponding count of events. Shopping events are measured by receipts.",
+      "sql_description": "Retrieves customer names and counts their receipt records, orders by count descending, and returns the top result.",
+      "reason": "Correctly interprets 'shopped most often' as counting receipts per customer. Groups by customer ID (ensuring distinct customers), counts non-null receipt numbers (valid aggregation), and returns singular maximum with LIMIT 1. No constraints are specified in the question/evidence.",
+      "verdict": true,
+      "evidence": "Row 0: LastName='HELING', FirstName='RUPERT', shop_count=18"
+    }
+  },
+  {
+    "question_id": 2119,
+    "result": {
+      "expected_answer": "List of agency IDs and the corresponding count of staff members for each agency, including agencies with zero staff.",
+      "sql_description": "Retrieves all agency IDs and counts staff members per agency using a LEFT JOIN to include agencies without staff, returning zero counts where applicable.",
+      "reason": "The question requires showing every agency's ID and staff count. The SQL correctly includes all agencies (via LEFT JOIN) and counts staff per agency. The interpretation of 'each agent' as 'each agency' is reasonable given context, and the result includes agencies with zero staff (e.g., agency_id 1, 3, 4, 9, 12, 13) as required for completeness.",
+      "verdict": true,
+      "evidence": "Result shows agency_id column (e.g., 1-15) with COUNT(Staff.staff_id) values (e.g., 0 for agency_id 1,3,4,9,12,13; 1 for agency_id 5,6,8,11; 2 for agency_id 2,7,10,15; 3 for agency_id 14)."
+    }
+  },
+  {
+    "question_id": 1704,
+    "result": {
+      "expected_answer": "A list of distinct warehouse locations.",
+      "sql_description": "Retrieves distinct values from the 'location' column in the 'warehouses' table.",
+      "reason": "The question explicitly asks for 'different locations', requiring distinct values. The SQL correctly selects distinct locations without introducing extraneous constraints or missing anchors. The schema directly maps 'location' to warehouse locations.",
+      "verdict": true,
+      "evidence": "Result shows distinct locations: Chicago (row 0), New York (row 1), Los Angeles (row 2), San Francisco (row 3)."
+    }
+  },
+  {
+    "question_id": 1727,
+    "result": {
+      "expected_answer": "The codes of all boxes with a value greater than the maximum value of any box containing 'Rocks'. The result may be empty if no such boxes exist.",
+      "sql_description": "Selects box codes where the value exceeds the maximum value among boxes containing 'Rocks'.",
+      "reason": "The SQL correctly implements the requirement by comparing each box's value to the maximum value of Rocks-containing boxes. The interpretation of 'higher than any' as 'greater than the maximum' is reasonable and aligns with common usage. All required anchors (Contents='Rocks' and value comparison) are present.",
+      "verdict": true,
+      "evidence": "Columns: [Code]. Result set is empty (0 rows), indicating no boxes meet the condition."
+    }
+  },
+  {
+    "question_id": 1574,
+    "result": {
+      "expected_answer": "List of goods Ids where the price exceeds twice the average price of all goods",
+      "sql_description": "Selects Id from goods where Price is greater than twice the average Price of all goods",
+      "reason": "The SQL correctly computes the overall average price and filters goods exceeding twice that value. No anchors are missing, and the interpretation aligns unambiguously with the question's requirement.",
+      "verdict": true,
+      "evidence": "Result shows 7 rows of Ids (column 'Id')"
+    }
+  },
+  {
+    "question_id": 1602,
+    "result": {
+      "expected_answer": "The make(s) that have more than one distinct team (based on Team_ID).",
+      "sql_description": "Groups teams by make and returns makes with more than one team (count of rows > 1).",
+      "reason": "The SQL correctly groups by make and filters for counts > 1, matching the question's requirement without extraneous constraints. The primary key (Team_ID) ensures each row represents a distinct team, making COUNT(*) valid.",
+      "verdict": true,
+      "evidence": "Result shows 4 makes: Buick Regal (row 0), Chevrolet Monte Carlo (row 1), Ford Thunderbird (row 2), Pontiac Grand Prix (row 3)."
+    }
+  },
+  {
+    "question_id": 1709,
+    "result": {
+      "expected_answer": "A list of contents present in warehouses located in either Chicago or New York, with duplicates allowed since the question does not specify distinct.",
+      "sql_description": "Retrieves the Contents from Boxes joined with Warehouses where the warehouse location is either 'Chicago' or 'New York'.",
+      "reason": "The question requires all contents from warehouses in Chicago or New York without specifying distinct. The predicted SQL correctly filters by location using OR to cover both cities and returns contents with duplicates, which aligns with the ambiguous interpretation of 'all contents' as non-distinct instances.",
+      "verdict": true,
+      "evidence": "Contents include Rocks (rows 0-2), Papers (rows 3-5), and Scissors (rows 6-7)."
+    }
+  },
+  {
+    "question_id": 760,
+    "result": {
+      "expected_answer": "List distinct original artists associated with songs that have a rhythm tempo above 5, ordered in descending order of voice sound quality. Attributes are sourced from performance records due to schema constraints.",
+      "sql_description": "Retrieves distinct original artists by joining songs with performance_score where rhythm_tempo exceeds 5, ordered by voice_sound_quality descending.",
+      "reason": "The question ambiguously requires song attributes stored only in performance_score. The query correctly interprets rhythm_tempo and voice_sound_quality from performances. DISTINCT handles artist uniqueness. Ordering uses voice_sound_quality directly despite potential multi-performance ambiguity, which is acceptable given unstated aggregation requirements.",
+      "verdict": true,
+      "evidence": "Result shows 7 distinct artists in column 'original_artist', ordered descending by voice_sound_quality (e.g., rows: 0='Nelly Ciobanu', 1='Elena', 2='Hadise', ...). Voice_sound_quality values not displayed but used for ordering."
+    }
+  },
+  {
+    "question_id": 1732,
+    "result": {
+      "expected_answer": "The total value of boxes in the warehouse(s) with the highest capacity. Must include all warehouses tied for maximum capacity.",
+      "sql_description": "Sums the Value column from Boxes for all boxes located in warehouses whose Capacity equals the maximum capacity across all warehouses.",
+      "reason": "The SQL correctly identifies warehouses with maximum capacity (handling ties) and sums box values. No anchors are missing or violated.",
+      "verdict": true,
+      "evidence": "Result shows one column [TotalValue] with one row (90.0), indicating the computed sum."
+    }
+  },
+  {
+    "question_id": 729,
+    "result": {
+      "expected_answer": "List document IDs (Document_Object_ID) that belong to both the document subset named 'Best for 2000' and the collection named 'Best'. Duplicates are acceptable since distinct is not specified.",
+      "sql_description": "Retrieves Document_Object_ID by joining Document_Subsets (filtered for 'Best for 2000'), Document_Subset_Members, Documents_in_Collections, and Collections (filtered for 'Best').",
+      "reason": "The SQL correctly anchors both required conditions: subset name 'Best for 2000' and collection name 'Best'. Duplicate Document_Object_ID values are acceptable as the question does not specify distinct results.",
+      "verdict": true,
+      "evidence": "Result shows Document_Object_ID=9 in rows 0 and 1, confirming at least one document exists in both the subset and collection."
+    }
+  }
+]

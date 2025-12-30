@@ -14,20 +14,8 @@ def _load_eval_results(eval_dir: str) -> list:
 		return json.load(f)
 
 
-def analyze_results_for_dir(eval_dir: str, mode: str, name: str = None, skip: bool = False):
+def analyze_results_for_dir(eval_dir: str, mode: str, name: str = None):
 	data = _load_eval_results(eval_dir)
-	if skip and "test" in eval_dir:
-		test_dir = eval_dir
-		while not test_dir.endswith("test"):
-			test_dir = os.path.dirname(test_dir)
-		problem_file = os.path.join(test_dir, "problem_question_ids.json")
-		if os.path.exists(problem_file):
-			try:
-				with open(problem_file, 'r', encoding='utf-8') as pf:
-					problem_ids = set(str(x) for x in json.load(pf))
-				data = [item for item in data if str(item.get("question_id")) not in problem_ids]
-			except Exception:
-				pass
 	name = name or os.path.basename(eval_dir)
 	
 	total_items = len(data)
@@ -217,7 +205,7 @@ def _has_nested_structure(method_dir: str) -> bool:
 	return False
 
 
-def analyze_method(method_dir: str, mode: str, skip: bool = False) -> dict:
+def analyze_method(method_dir: str, mode: str) -> dict:
 	result = {}
 	if not os.path.isdir(method_dir):
 		return result
@@ -231,7 +219,7 @@ def analyze_method(method_dir: str, mode: str, skip: bool = False) -> dict:
 			for var in variants:
 				eval_dir = os.path.join(subdir_path, var)
 				try:
-					res = analyze_results_for_dir(eval_dir, mode, name=var, skip=skip)
+					res = analyze_results_for_dir(eval_dir, mode, name=var)
 					subdir_result[var] = res
 				except Exception:
 					continue
@@ -242,14 +230,14 @@ def analyze_method(method_dir: str, mode: str, skip: bool = False) -> dict:
 		for var in variants:
 			eval_dir = os.path.join(method_dir, var)
 			try:
-				res = analyze_results_for_dir(eval_dir, mode, name=var, skip=skip)
+				res = analyze_results_for_dir(eval_dir, mode, name=var)
 				result[var] = res
 			except Exception:
 				continue
 	return result
 
 
-def analyze_results_all(mode: str, skip: bool = False):
+def analyze_results_all(mode: str):
 	out_root = "output"
 	results = {}
 	if not os.path.isdir(out_root):
@@ -259,7 +247,7 @@ def analyze_results_all(mode: str, skip: bool = False):
 		method_dir = os.path.join(out_root, method)
 		if not os.path.isdir(method_dir):
 			continue
-		results[method] = analyze_method(method_dir, mode, skip=skip)
+		results[method] = analyze_method(method_dir, mode)
 	out_file = os.path.join(out_root, f"statistics_by_{'difficulty' if mode=='d' else 'label'}.json")
 	with open(out_file, 'w', encoding='utf-8') as f:
 		json.dump(results, f, ensure_ascii=False, indent=2)
@@ -289,27 +277,50 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("mode", type=str, choices=["l", "d", "t"], help="l: by label, d: by difficulty, t: type summary")
     parser.add_argument("method", nargs='?', type=str, default=None)
-    parser.add_argument("--skip", action="store_true")
     args = parser.parse_args()
     if args.mode == "l":
-        if args.method is not None:
-            raise SystemExit("Label mode does not take a method argument. Use: python analyze.py l")
-        method_dir = os.path.join("output", "test")
-        res = analyze_method(method_dir, mode=args.mode, skip=args.skip)
-        os.makedirs(method_dir, exist_ok=True)
-        out_file = os.path.join(method_dir, "statistics_by_label.json")
-        with open(out_file, 'w', encoding='utf-8') as f:
-            json.dump(res, f, ensure_ascii=False, indent=2)
+        if args.method:
+            # 指定数据集：分析该数据集下所有方法和变体
+            method_dir = os.path.join("output", "rose-vec", args.method)
+            if not os.path.isdir(method_dir):
+                raise SystemExit(f"Directory not found: {method_dir}")
+            res = analyze_method(method_dir, mode=args.mode)
+            os.makedirs(method_dir, exist_ok=True)
+            out_file = os.path.join(method_dir, "statistics_by_label.json")
+            with open(out_file, 'w', encoding='utf-8') as f:
+                json.dump(res, f, ensure_ascii=False, indent=2)
+        else:
+            # 不指定：分析所有 rose-vec 数据集
+            rose_vec_dir = os.path.join("output", "rose-vec")
+            if not os.path.isdir(rose_vec_dir):
+                raise SystemExit(f"Directory not found: {rose_vec_dir}")
+            results = {}
+            for dataset in os.listdir(rose_vec_dir):
+                dataset_dir = os.path.join(rose_vec_dir, dataset)
+                if not os.path.isdir(dataset_dir):
+                    continue
+                try:
+                    res = analyze_method(dataset_dir, mode=args.mode)
+                    if res:  # 只保存有结果的数据集
+                        results[dataset] = res
+                except Exception as e:
+                    print(f"Warning: Failed to analyze {dataset}: {e}")
+                    continue
+            # 保存到统一的输出文件
+            out_file = os.path.join("output", "rose-vec", "statistics_by_label.json")
+            os.makedirs(os.path.dirname(out_file), exist_ok=True)
+            with open(out_file, 'w', encoding='utf-8') as f:
+                json.dump(results, f, ensure_ascii=False, indent=2)
     elif args.mode == "d":
         if args.method:
             method_dir = os.path.join("output", args.method)
-            res = analyze_method(method_dir, mode=args.mode, skip=args.skip)
+            res = analyze_method(method_dir, mode=args.mode)
             os.makedirs(method_dir, exist_ok=True)
             out_file = os.path.join(method_dir, "statistics_by_difficulty.json")
             with open(out_file, 'w', encoding='utf-8') as f:
                 json.dump(res, f, ensure_ascii=False, indent=2)
         else:
-            analyze_results_all(mode=args.mode, skip=args.skip)
+            analyze_results_all(mode=args.mode)
     else:
         # t mode
         if args.method:

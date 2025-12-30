@@ -363,17 +363,6 @@
     "label": true
   },
   {
-    "question_id": 381,
-    "question": "List down the name of artists for cards in Chinese Simplified.",
-    "evidence": "Chinese Simplified' is the language;",
-    "gold_sql": "SELECT T1.artist FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T2.language = 'Chinese Simplified'",
-    "predicted_sql": "SELECT DISTINCT T1.artist FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T2.language = 'Chinese Simplified'",
-    "score": 1.0,
-    "prover_result": true,
-    "refuter_result": null,
-    "label": true
-  },
-  {
     "question_id": 465,
     "question": "For the set of cards with \"Ancestor's Chosen\" in it, is there a Korean version of it?",
     "evidence": "set of cards with \"Ancestor''s Chosen\" in it refers to name = 'Ancestor''s Chosen'; Korean version refers to language = 'Korean'",
@@ -2387,17 +2376,6 @@
     "label": false
   },
   {
-    "question_id": 27,
-    "question": "What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school names along with the score. Also, list the communication number of the schools if there is any.",
-    "evidence": "Communication number refers to phone number.",
-    "gold_sql": "SELECT T2.School, T1.AvgScrWrite, T2.Phone FROM schools AS T2 LEFT JOIN satscores AS T1 ON T2.CDSCode = T1.cds WHERE strftime('%Y', T2.OpenDate) > '1991' OR strftime('%Y', T2.ClosedDate) < '2000'",
-    "predicted_sql": "SELECT T1.School, T2.AvgScrWrite, T1.Phone FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE STRFTIME('%Y', T1.OpenDate) > '1991' OR STRFTIME('%Y', T1.ClosedDate) < '2000'",
-    "score": 1.0,
-    "prover_result": true,
-    "refuter_result": null,
-    "label": true
-  },
-  {
     "question_id": 1478,
     "question": "Which segment had the least consumption?",
     "evidence": "",
@@ -2436,17 +2414,6 @@
     "evidence": "State Special School means EdOpsCode = 'SSS'",
     "gold_sql": "SELECT T1.`Enrollment (Ages 5-17)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EdOpsCode = 'SSS' AND T2.City = 'Fremont' AND T1.`Academic Year` BETWEEN 2014 AND 2015",
     "predicted_sql": "SELECT SUM(frpm.\"Enrollment (Ages 5-17)\") FROM frpm INNER JOIN schools ON frpm.cdscode = schools.cdscode WHERE frpm.\"Academic Year\" = '2014-2015' AND schools.city = 'Fremont' AND schools.edopscode = 'SSS'",
-    "score": 1.0,
-    "prover_result": true,
-    "refuter_result": null,
-    "label": true
-  },
-  {
-    "question_id": 621,
-    "question": "What are the name of badges that users who have the lowest reputation obtained?",
-    "evidence": "lowest reputation refers to Min(Reputation); user refers to UserId",
-    "gold_sql": "SELECT T2.Name, T1.Reputation FROM users AS T1 INNER JOIN badges AS T2 ON T1.Id = T2.UserId WHERE T1.Reputation = (SELECT MIN(Reputation) FROM users)",
-    "predicted_sql": "SELECT DISTINCT badges.Name FROM badges INNER JOIN users ON badges.UserId = users.Id WHERE users.Reputation = (SELECT MIN(Reputation) FROM users) AND badges.Name IS NOT NULL;",
     "score": 1.0,
     "prover_result": true,
     "refuter_result": null,
@@ -2847,17 +2814,6 @@
     "prover_result": true,
     "refuter_result": null,
     "label": true
-  },
-  {
-    "question_id": 340,
-    "question": "Which are the cards that have incredibly powerful foils.",
-    "evidence": "incredibly poweful foils refers to cardKingdomFoilId is not null AND cardKingdomId is not null",
-    "gold_sql": "SELECT id FROM cards WHERE cardKingdomFoilId IS NOT NULL AND cardKingdomId IS NOT NULL",
-    "predicted_sql": "SELECT cards.name FROM cards WHERE cards.cardKingdomId IS NOT NULL AND cards.cardKingdomFoilId = cards.cardKingdomId;",
-    "score": 0.0,
-    "prover_result": false,
-    "refuter_result": null,
-    "label": false
   },
   {
     "question_id": 1145,

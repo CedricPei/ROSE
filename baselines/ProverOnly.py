@@ -2,7 +2,6 @@ import os
 import sys
 import json
 import argparse
-import re
 from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
 
@@ -40,10 +39,12 @@ def main():
     parser.add_argument("--threads", type=int, default=1, help="Number of threads")
     parser.add_argument("--input", type=str, default="sample.json", help="Input file path")
     args = parser.parse_args()
-    reasoning_model = "google/gemini-2.5-pro"
+    reasoning_model = "deepseek/deepseek-r1-0528"
 
-    input_stem = re.sub(r"(-result)$", "", os.path.splitext(os.path.basename(args.input))[0])
-    output_dir = f"output/{input_stem}/{reasoning_model}-ProverOnly-{input_stem}-eval"
+    input_stem = os.path.splitext(os.path.basename(args.input))[0]
+    reasoning_model_safe = reasoning_model.replace("/", "-")
+    method_root_dir = os.path.join("output", "rose-vec", input_stem)
+    output_dir = os.path.join(method_root_dir, reasoning_model_safe, "ProverOnly")
     os.makedirs(output_dir, exist_ok=True)
 
     prover = Prover(model=reasoning_model, output_dir=output_dir)

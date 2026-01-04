@@ -64,8 +64,8 @@ def analyze_results_for_dir(eval_dir: str, mode: str, name: str = None):
 			"total_items": total_items,
 			"confusion_matrix": {"tp": tp, "tn": tn, "fp": fp, "fn": fn},
 			"performance_metrics": {
-				"accuracy": f"{accuracy * 100:.2f}%",
 				"cohen_kappa": f"{kappa * 100:.2f}%",
+				"accuracy": f"{accuracy * 100:.2f}%",
 				"mcc": f"{mcc * 100:.2f}%",
 				"f1_score": f"{f1_score * 100:.2f}%"
 			}

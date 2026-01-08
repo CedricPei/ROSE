@@ -110,8 +110,8 @@ Ensure SQLite database files are in `dev_databases/` directory.
 ## 📊 ROSE-VEC Dataset
 
 ROSE-VEC (Validation dataset with Expert Consensus) is our expert-aligned validation set containing 585 samples with detailed annotations:
-- **rose-vec-bird**: 3544 samples from BIRD dataset
-- **rose-vec-spider**: 2156 samples from Spider dataset
+- **rose-vec-bird**: 322 samples from BIRD dataset
+- **rose-vec-spider**: 263 samples from Spider dataset
 
 Each sample includes:
 - `question_id`: Unique identifier

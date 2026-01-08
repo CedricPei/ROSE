@@ -18,7 +18,7 @@ On our expert-aligned validation set **ROSE-VEC**, ROSE achieves the best agreem
 ## 🏗️ Repository Structure
 
 ```
-SQLCheck/
+ROSE/
 ├── main.py                      # Main evaluation script using ROSE
 │
 ├── evaluators/                  # Core evaluation components
@@ -75,7 +75,7 @@ SQLCheck/
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd SQLCheck
+cd ROSE
 ```
 
 2. Install dependencies:

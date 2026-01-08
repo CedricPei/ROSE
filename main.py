@@ -4,7 +4,6 @@ import argparse
 import re
 from concurrent.futures import ThreadPoolExecutor
 from typing import List
-from evaluators.PartialGrader import PartialScoringPipeline
 from evaluators.utils import execute_sql, write_result_to_file, run_with_timeout, compare_result
 from tqdm import tqdm
 from evaluators.Prover import Prover
@@ -47,8 +46,6 @@ def _process_question(question):
                 return qid
             score = 1.0 if not refuter_verdict else 0.0
 
-        if score != 1.0 and partial:
-            score = PartialEval.eval(question, pred_sql)
 
     write_result_to_file(question, pred_sql, score, prover_verdict, refuter_verdict, output_dir)
     return None
@@ -60,8 +57,6 @@ if __name__ == "__main__":
     parser.add_argument("--input", type=str, default="sample.json")
     args = parser.parse_args()
     reasoning_model = "deepseek/deepseek-r1-0528"
-    instruct_model = "deepseek-chat"
-    partial = False
 
     input_stem = os.path.splitext(os.path.basename(args.input))[0]
     reasoning_model_safe = reasoning_model.replace("/", "-")
@@ -73,7 +68,6 @@ if __name__ == "__main__":
 
     Prover = Prover(model=reasoning_model, output_dir=output_dir)
     Refuter = Refuter(model=reasoning_model, output_dir=output_dir)
-    PartialEval = PartialScoringPipeline(model=instruct_model)
 
     problem_ids: List[str] = []
     num_threads = max(1, int(args.threads))
